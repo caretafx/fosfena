@@ -1,0 +1,40 @@
+/* Fosfena · marca v1.0: grafite, giz, um único âmbar, roxo noturno como segundo fundo. Sem gradientes. */
+:root{
+  --fos-grafite:#18191C; --fos-lousa:#232529; --fos-lousa-2:#2E3036; --fos-giz:#ECEAE4; --fos-cinza:#8B8E96;
+  --fos-ambar:#E0A84E; --fos-azul:#7F9CC0; --fos-roxo:#3B2A52;
+  --bg:var(--fos-grafite); --panel:var(--fos-lousa); --raise:var(--fos-lousa-2); --line:rgba(236,234,228,.11);
+  --fg:var(--fos-giz); --soft:#c4c3c0; --muted:#aeb0b5; --faint:var(--fos-cinza);
+  --accent:var(--fos-ambar); --link:var(--fos-azul);
+  --f-display:"Instrument Sans", system-ui, sans-serif;
+  --f-body:"Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --f-mao:"Shantell Sans", "Comic Neue", ui-rounded, system-ui, sans-serif;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;letter-spacing:-.03em;line-height:1.05;margin:0;text-wrap:balance}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.mao{font-family:var(--f-mao);font-weight:600;color:var(--accent)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);font-weight:500}
+.container{width:min(1160px,100% - 32px);margin-inline:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:10px;font-weight:600;font-size:15px;white-space:nowrap;transition:filter .15s,background .15s}
+.btn-primary{background:var(--accent);color:var(--fos-grafite)}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-ghost{box-shadow:inset 0 0 0 1px var(--line);color:var(--fg)}
+.btn-ghost:hover{background:var(--raise)}
+.btn-block{width:100%}
+.tag{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:3px 9px;border-radius:99px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.tag.acc{border-color:var(--accent);color:var(--accent)}
+.brand{display:inline-flex;align-items:center}
+.brand img{height:34px;width:auto;display:block}
+.preview-bar{background:var(--fos-roxo);color:var(--fg);font-size:13.5px;text-align:center;padding:8px 16px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--fos-giz);color:var(--fos-grafite);padding:11px 16px;border-radius:8px;font-weight:500;font-size:14px;opacity:0;pointer-events:none;transition:.2s;max-width:calc(100% - 32px);z-index:50}
+.toast.show{opacity:1;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
