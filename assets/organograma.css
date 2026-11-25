@@ -64,9 +64,14 @@ button.mb.lv2:hover{box-shadow:0 0 0 1px var(--c),0 0 26px -4px var(--c)}
 
 /* roteiro (gaveta) */
 .rot{margin:0;padding:0;list-style:none;counter-reset:r;display:flex;flex-direction:column;gap:10px}
-.rot li{counter-increment:r;display:grid;grid-template-columns:28px 1fr;gap:2px 10px;font-size:14px;line-height:1.45}
+.rot li{counter-increment:r;display:grid;grid-template-columns:36px 1fr;gap:2px 10px;font-size:14px;line-height:1.45}
 .rot li::before{content:counter(r,decimal-leading-zero);grid-row:1/3;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--og-ambar,#FFB547);padding-top:2px}
-.rot b{font-size:14.5px}
+.rot b{font-size:14.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rot b em{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:1px 7px;border-radius:99px;border:1px solid rgba(92,200,255,.45);color:#9fdcff}
+.rot li.ex{background:rgba(255,181,71,.07);border:1px solid rgba(255,181,71,.35);border-radius:10px;padding:8px 10px 8px 0}
+.rot li.ex b em{border-color:rgba(255,181,71,.6);color:#FFB547}
+.rot li.ex::before{padding-left:8px}
+.rot-obj{margin:0 0 12px;font-size:14px;color:#ECEAE4;border-left:2px solid #9B6BFF;padding-left:10px;line-height:1.45}
 .rot span{color:#c9c8c4}
 .rot-src,.rot-empty{font-size:13px;color:#9a9da6;margin:10px 0 0}
 .rot-empty{margin:0;color:#c9c8c4}
@@ -79,7 +84,7 @@ button.mb.lv2:hover{box-shadow:0 0 0 1px var(--c),0 0 26px -4px var(--c)}
 .mb.lv2.sel.m-in{animation:m-in .42s cubic-bezier(.2,.7,.2,1) var(--d,0ms) both}
 .mk{transition:opacity .22s ease,transform .22s ease}
 .mk.m-out{opacity:0;transform:translateX(-18px) scale(.97);transform-origin:left center}
-.m-wires line{transition:opacity .22s ease}
+.m-wires path{transition:opacity .22s ease}
 .m-wires .w-out{opacity:0}
 .m-car{transition:transform .3s cubic-bezier(.2,.7,.2,1)}
-@media (prefers-reduced-motion:reduce){button.mb,.m-car,.mk,.m-wires line{transition:none}.mb.m-in,.mb.lv2.sel{animation:none}}
+@media (prefers-reduced-motion:reduce){button.mb,.m-car,.mk,.m-wires path{transition:none}.mb.m-in,.mb.lv2.sel{animation:none}}
