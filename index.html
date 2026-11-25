@@ -161,7 +161,7 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
 
   <section class="reel" id="reel">
     <div class="container">
-      <h2>Aprenda <em>do zero</em> a criar efeitos como estes.</h2>
+      <h2>Aprenda <span class="pencil"><em>do zero</em><svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M4 14 C 40 6, 80 4, 120 9 S 180 14, 196 6"/></svg></span> a criar efeitos como estes.</h2>
       <div class="frame">
         <iframe src="https://www.youtube-nocookie.com/embed/FrW4hCxw1GY?rel=0" title="Demoreel Fosfena" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div>
@@ -169,6 +169,17 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
     </div>
   </section>
 
+  <div class="ticker " aria-hidden="true"><div class="track"><span>Nuke</span><span>do zero</span><span>Flame</span><span>Roto</span><span>Tracking</span><span>em português</span><span>Keying</span><span>Cleanup</span><span>footage 4K</span><span>CornerPin</span><span>Grade</span><span>planos reais</span><span>Paint</span><span>Merge</span><span>correção do professor</span><span>Nuke</span><span>do zero</span><span>Flame</span><span>Roto</span><span>Tracking</span><span>em português</span><span>Keying</span><span>Cleanup</span><span>footage 4K</span><span>CornerPin</span><span>Grade</span><span>planos reais</span><span>Paint</span><span>Merge</span><span>correção do professor</span></div></div>
+  <section class="blk" style="border-top:0;padding-top:72px">
+    <div class="container">
+      <div class="stats-row">
+        <div class="stat fx-st"><b data-count="2">2</b><span>ferramentas de estúdio: Nuke e Flame</span></div>
+        <div class="stat fx-st"><b data-count="4">4<small>K</small></b><span>footage dos exercícios na resolução original</span></div>
+        <div class="stat fx-st"><b data-count="100">100<small>%</small></b><span>em português, do primeiro node ao render</span></div>
+        <div class="stat fx-st"><b data-count="7">7<small>dias</small></b><span>de garantia para testar sem risco</span></div>
+      </div>
+    </div>
+  </section>
   <section class="blk" id="como">
     <div class="container">
       <div class="head"><span class="eyebrow">Como funciona</span><h2>Assistir não basta. Aqui você refaz.</h2><p>Cada aula vem com o material do plano que foi trabalhado, para você repetir o processo na sua máquina até ele ficar natural.</p></div>
@@ -217,6 +228,7 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
     </div>
   </section>
 
+  <div class="ticker rev" aria-hidden="true"><div class="track"><span>Assista</span><span>refaça</span><span>Envie</span><span>receba comentário</span><span>Assista</span><span>refaça</span><span>Envie</span><span>receba comentário</span><span>Assista</span><span>refaça</span><span>Envie</span><span>receba comentário</span><span>Assista</span><span>refaça</span><span>Envie</span><span>receba comentário</span></div></div>
   <section class="blk" id="precos">
     <div class="container">
       <div class="head"><span class="eyebrow" style="color:var(--soft)">Assinatura</span><h2>Um preço, o curso inteiro</h2><p>Os dois planos dão acesso a tudo. No anual você paga menos por mês.</p></div>
@@ -305,7 +317,7 @@ document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',(
   if(dlg.showModal) dlg.showModal();
 }));
 </script>
-<script>window.FX={glass:'.step,.mod,.plan,dialog',glow:'.btn-ghost,.frame',tilt:'.step,.mod,.plan',reveal:'.head,.step,.mod,.who>div,.plan,.faq details,.frame,.reel h2,.final .container>*,.guarantee',words:'.hero h1'};</script>
+<script>window.FX={glass:'.step,.mod,.plan,dialog,.fx-st',glow:'.btn-ghost,.frame',tilt:'.step,.mod,.plan,.fx-st',reveal:'.fx-st,.head,.step,.mod,.who>div,.plan,.faq details,.frame,.reel h2,.final .container>*,.guarantee',words:'.hero h1'};</script>
 <script src="assets/fx.js" defer></script>
 </body>
 </html>
