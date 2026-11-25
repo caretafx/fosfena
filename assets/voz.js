@@ -7,6 +7,7 @@
     tokenUrl: 'https://fosfena-livekit.maumau-c-rod.workers.dev',
     lib: 'assets/vendor/livekit-client-2.23.0.umd.js',
   };
+  const dataFns={}; /* outros recursos (ex.: assistir junto) usam o mesmo canal de dados, cada um com o seu tópico */
   let room=null, cur=null, me=null, els=new Map(), host=null, onChange=()=>{};
 
   const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -52,7 +53,7 @@
       room.on(E.TrackSubscribed,(track)=>{ if(track.kind==='audio'){ const a=track.attach(); a.dataset.sid=track.sid; a.muted=deaf; document.getElementById('lkAudio').append(a); } });
       room.on(E.TrackUnsubscribed,(track)=>{ track.detach().forEach(x=>x.remove()); els.delete(track.sid); });
       room.on(E.ParticipantConnected,()=>chime(true)); room.on(E.ParticipantDisconnected,()=>chime(false));
-      room.on(E.DataReceived,(payload, participant, kind, topic)=>{ if(topic!=='chat') return; try{ const m=JSON.parse(new TextDecoder().decode(payload)); addMsg({name:(participant&&(participant.name||participant.identity))||'?', text:String(m.text||'').slice(0,500), t:Date.now()}); }catch(e){} });
+      room.on(E.DataReceived,(payload, participant, kind, topic)=>{ if(topic!=='chat'){ const f=dataFns[topic]; if(f) try{ f(JSON.parse(new TextDecoder().decode(payload)), (participant&&(participant.name||participant.identity))||'?'); }catch(e){} return; } try{ const m=JSON.parse(new TextDecoder().decode(payload)); addMsg({name:(participant&&(participant.name||participant.identity))||'?', text:String(m.text||'').slice(0,500), t:Date.now()}); }catch(e){} });
       room.on(E.Disconnected,()=>{ window.FosFluid&&FosFluid.pause(false); room=null; cur=null; els.clear(); paint(); onChange(); });
       await room.connect(LK.url, j.token);
       await room.startAudio().catch(()=>{});
@@ -259,5 +260,5 @@
     if(!document.querySelector('.vwho')){ rosterT=null; return; }
     if(!document.hidden&&LK.tokenUrl){ try{ const r=await fetch(LK.tokenUrl.replace(/\/$/,'')+'/?list=1'); if(r.ok){ const j=await r.json(); if(j.rooms){ roster=j.rooms; onRoster(); } } }catch(e){} }
     rosterT=setTimeout(pollRoster,6000); }
-  window.FosfenaVoz={ watch:()=>{ if(!rosterT) pollRoster(); }, roster:room=>roster[room]||[], onRoster:f=>{onRoster=f;}, show, leave, refresh:()=>paint(), popOut, ready:()=>!!LK.tokenUrl, current:()=>cur, people:()=>people().map(x=>({name:x.name,speaking:x.speaking,mic:x.mic})), onChange:f=>{onChange=f;} };
+  window.FosfenaVoz={ watch:()=>{ if(!rosterT) pollRoster(); }, roster:room=>roster[room]||[], onRoster:f=>{onRoster=f;}, show, leave, refresh:()=>paint(), popOut, name:()=>(me&&me.name)||'', onData:(topic,f)=>{ dataFns[topic]=f; }, send:(topic,obj)=>room?room.localParticipant.publishData(new TextEncoder().encode(JSON.stringify(obj)),{reliable:true, topic}).catch(()=>{}):Promise.resolve(), ready:()=>!!LK.tokenUrl, current:()=>cur, people:()=>people().map(x=>({name:x.name,speaking:x.speaking,mic:x.mic})), onChange:f=>{onChange=f;} };
 })();

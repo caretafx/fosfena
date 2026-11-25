@@ -333,6 +333,15 @@ body.full .chat{height:100vh;height:100dvh;border:0;border-radius:0;background:r
 .vpip.doc{position:static;width:auto;height:100vh;border:0;border-radius:0;box-shadow:none}.vpip.doc .vpip-h{cursor:default}.vpip.doc .vpip-stage{max-height:none;flex:1}
 body.vpipdoc{margin:0;background:#0c0b12;color:#ECEAE4;overflow:hidden}
 @media (max-width:900px){.vpip{width:236px;right:10px;bottom:84px}.vpip-stage{grid-template-columns:1fr 1fr;gap:4px;padding:4px}.vpip .vname{font-size:10px}}
+/* assistir junto */
+.lh-acts{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.wt-btn{display:inline-flex;align-items:center;gap:8px}.wt-btn svg{width:18px;height:18px}
+.wt-on{display:flex;align-items:center;gap:8px;padding:7px 8px 7px 12px;border-radius:999px;border:1px solid rgba(123,224,165,.5);background:rgba(16,22,20,.6);font-size:13.5px}
+.wt-on button{font-size:12.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(20,18,30,.6);color:var(--fg);cursor:pointer}.wt-on button:hover{border-color:rgba(155,107,255,.7)}
+.wt-dot{width:8px;height:8px;border-radius:50%;background:#7be0a5;box-shadow:0 0 8px #7be0a5;flex:none}
+.wt-inv{position:fixed;left:50%;transform:translateX(-50%);top:18px;z-index:70;display:flex;flex-direction:column;gap:4px;padding:14px 16px;min-width:min(340px,calc(100vw - 24px));border-radius:14px;background:rgba(12,11,18,.96);border:1px solid rgba(255,181,71,.5);box-shadow:0 18px 50px -12px rgba(0,0,0,.8),0 0 30px -12px rgba(255,181,71,.7);font-size:14px}
+.wt-inv span{color:var(--muted);font-size:13px}.wt-inv div{display:flex;gap:8px;margin-top:8px}.wt-inv .btn{padding:8px 14px}
+@media (max-width:600px){.lh-acts{width:100%;justify-content:flex-start}}
 .is-locked{opacity:.55}.is-locked .t{color:var(--muted)}
 .state.lockd{display:grid;place-items:center;color:var(--muted)}
 .nextlock{display:inline-flex;align-items:center;gap:8px;cursor:default;opacity:.8}
@@ -439,7 +448,8 @@ a.mcard:hover{background:var(--raise)}
 
 <script src="assets/nk101-pratica.js?v=20261125k"></script>
 <script src="assets/pratica.js?v=20261125i"></script>
-<script src="assets/voz.js?v=20261125n"></script>
+<script src="assets/voz.js?v=20261125o"></script>
+<script src="assets/junto.js?v=2"></script>
 <script>
 const COURSE = [
   { id:'NK101', course:'nuke', code:'NK101', tool:'Nuke', title:'Fundamentos do Nuke', desc:'Tudo o que você precisa para começar a trabalhar no Nuke, da instalação aos primeiros trabalhos de comp.', lessons:[
@@ -600,7 +610,7 @@ function lessonView(l){
         </div>
         <div class="lesson-head">
           <div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span class="eyebrow">${l.module.code} · Aula ${String(l.n).padStart(2,'0')}</span><h1>${esc(l.title)}</h1></div>
-          <button class="btn btn-ghost done-btn ${p.done?'is-done':''}" id="done">${p.done?'✓ Concluída':'Marcar como concluída'}</button>
+          <div class="lh-acts">${yt?'<span id="wtSlot"></span>':''}<button class="btn btn-ghost done-btn ${p.done?'is-done':''}" id="done">${p.done?'✓ Concluída':'Marcar como concluída'}</button></div>
         </div>
         <div class="tabs" role="tablist">${tabs.map((t,k)=>`<button role="tab" data-t="${t[0]}" aria-selected="${k===0}">${t[0]==='prova'&&S.quiz[l.id]?`Prova · ${S.quiz[l.id].best}/${S.quiz[l.id].total}`:t[1]}</button>`).join('')}</div>
         <div id="panel" class="tabpanel"></div>
@@ -780,6 +790,7 @@ function bindYT(l, id, onEnd){
   const vin=document.getElementById('vin'), btn=document.getElementById('vinplay'); if(!vin||!btn) return;
   const som=new Audio('vinheta/som.m4a'); som.preload='auto'; som.volume=.8;
   const finish=()=>{ removeEventListener('message',onMsg); vin.remove(); btn.remove(); };
+  if(window.FosJunto) FosJunto.bind(l.id, `${l.module.code} · Aula ${String(l.n).padStart(2,'0')} · ${l.title}`, {pl:()=>pl, ready:()=>ready, skipVin:()=>{ if(document.body.contains(vin)){ priming=false; som.pause(); finish(); } }});
   const reveal=()=>{ priming=false; if(ready){ pl.unMute(); pl.seekTo(start(),true); pl.playVideo(); } };
   const onMsg=e=>{ if(e.source!==vin.contentWindow||!e.data) return; if(e.data.vin==='reveal') reveal(); if(e.data.vin==='done') finish(); };
   addEventListener('message',onMsg);
@@ -862,7 +873,7 @@ function exercises(){
 let toastT; function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2600); }
 
 function route(){
-  clearInterval(timer); timer=null;
+  clearInterval(timer); timer=null; if(window.FosJunto) FosJunto.unbind();
   const h=(location.hash||'#inicio').slice(1), v=document.getElementById('view');
   const l=LESSONS.find(x=>x.id===h);
   let r='inicio';
