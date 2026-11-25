@@ -96,3 +96,7 @@ body{background:#141518}
   .pencil path{stroke-dashoffset:0;transition:none}
   .fx-cur,.fx-ring{display:none}
 }
+
+/* fumaça de luz (simulação de fluido) */
+.aura .fx-fluid{position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:.7;mix-blend-mode:screen}
+body:has(.app) .aura .fx-fluid{opacity:.45}

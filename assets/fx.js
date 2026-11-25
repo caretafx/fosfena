@@ -57,7 +57,7 @@
     const cv=document.createElement('canvas'); aura.append(cv);
     const ctx=cv.getContext('2d'); if(!ctx) return;
     let W=0,H=0,dpr=Math.min(devicePixelRatio||1,2), mx=-999, my=-999, pts=[], run=true;
-    const N = innerWidth<760 ? 22 : 54;
+    const N = innerWidth<760 ? 16 : 34;
     function size(){ W=cv.clientWidth; H=cv.clientHeight; cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
     size(); addEventListener('resize', size);
     for(let i=0;i<N;i++) pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:-(.1+Math.random()*.35),r:.6+Math.random()*2.2,a:Math.random()*Math.PI*2,amber:Math.random()<.7});
