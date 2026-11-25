@@ -22,7 +22,7 @@
         ${here&&here.id===n.id?'<span class="m-here">Você está aqui</span>':''}
         <span class="m-k"><i></i>${n.n?'Aula '+String(n.n).padStart(2,'0'):'Etapa'}${n.dur?' · '+esc(n.dur):''}</span>
         <b>${esc(n.titulo)}</b>
-        <span class="m-f"><span class="m-st">${LABEL[n.status]}</span><span class="m-r">${n.roteiro?'Roteiro':n.pendente?'Roteiro em breve':'Ver aula'}${o.admin&&fileTxt(n.id)?' · '+fileTxt(n.id):''}</span></span>
+        <span class="m-f"><span class="m-st">${LABEL[n.status]}</span><span class="m-r">${n.roteiro?(n.roteiro.some(r=>r.tipo==='tecnica')?'Roteiro':'Exercícios'):n.pendente?'Roteiro em breve':'Ver aula'}${o.admin&&fileTxt(n.id)?' · '+fileTxt(n.id):''}</span></span>
         <span class="m-car" aria-hidden="true"></span>
       </button>`;
     const node = (box, kids, id) => `<div class="mn"${id?` data-n="${esc(id)}"`:''}>${box}${kids&&kids.length?`<div class="mk">${kids.join('')}</div>`:''}</div>`;

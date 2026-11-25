@@ -14,7 +14,7 @@ window.NK101_PLANO = {
         { id: 'nk101-a01', n: 1, titulo: 'Como instalar o Nuke', status: 'feito', dur: '4:30',
           topicos: ['Apresentação do curso', 'Licença Non-Commercial', 'Conta e download na Foundry'] },
         { id: 'nk101-a02', n: 2, titulo: 'Iniciando o Nuke', status: 'feito', dur: '19:49',
-          topicos: ['Viewer, Node Graph e Properties', 'Canais, cor e timeline', 'Preferences e atalhos'] }
+          topicos: ['Node Graph, Viewer e Properties', 'Criar e ligar nodes', 'Salvar e versionar'] }
       ]
     },
     {
@@ -68,19 +68,13 @@ window.NK101_PLANO = {
       T('Cadastro', 'Individual, Compositing e país; validar pelo e-mail. Se der problema, Try Now de novo ou suporte.', '02:51'),
       T('Instalar e logar', 'Instalar e fazer login no painel do próprio Nuke (não mostrado na aula, o aluno faz por conta).', '03:50'),
       E('Exercício', 'Criar a conta na Foundry, pegar a licença Non-Commercial, instalar e abrir o Nuke logado.') ] },
-    'nk101-a02': { fonte: 'Tirado da transcrição da aula 02 (gravação bruta), com os tempos do vídeo', objetivo: 'Conhecer a interface do Nuke e deixá-la do seu jeito. Read, Write e Project Settings ficam para a aula 03.', passos: [
-      T('Como estudar', 'Dica do Mauricio: assistir cada aula duas vezes, uma só vendo e outra fazendo junto.', '01:54'),
-      T('Nuke limpo e plugins', 'A diferença entre o Nuke recém-instalado e o dele; a instalação de plugins fica para o fim do módulo 1.', '02:44'),
-      T('Os três painéis', 'Viewer, Node Graph e Properties: onde a imagem aparece, onde ficam os nodes e onde eles são configurados.', '04:48'),
-      T('Curve Editor e Dope Sheet', 'Para que servem e como separar e ver os painéis de forma independente.', '05:57'),
-      T('Canais', 'RGBA e alpha, e os canais vermelho, verde e azul separados no Viewer.', '09:51'),
-      T('Cor no Viewer', 'sRGB e Rec709, e os ajustes de visualização: gain, gamma e saturação.', '10:23'),
-      T('Opções do Viewer', 'Proxy e ROI para trabalhar mais leve.', '11:22'),
-      T('Timeline', 'Frames, fps, timecode, play e pular de 10 em 10 frames.', '12:17'),
-      T('Flipbook e Shift+F3', 'Ver o resultado em tempo real e os atalhos de visualização.', '15:55'),
-      T('Preferences', 'Threads e limite de render, e o workspace de inicialização.', '16:05'),
-      T('Atalhos', 'Os atalhos dependem de onde está o mouse (Tab, S), e o máximo de painéis de propriedades abertos.', '17:42'),
-      E('Exercício', 'Abrir o Nuke, organizar a interface do seu jeito, salvar como workspace de inicialização e testar cada atalho da aula.') ] },
+    'nk101-a02': { fonte: 'Aula gravada: estrutura sugerida, revisar contra a gravação', objetivo: 'Entender a interface e fazer o caminho completo: ler, mexer e renderizar.', passos: [
+      T('Interface', 'Node Graph, Viewer, Properties e a barra de ferramentas.'),
+      T('Read e Viewer', 'Importar uma imagem, navegar no Viewer (zoom, frames, canais RGBA).'),
+      T('Nodes e pipes', 'Criar com Tab, ligar inputs, usar Dots e manter o script organizado.'),
+      T('Project Settings', 'Formato, fps e frame range do projeto.'),
+      T('Salvar e versionar', 'Padrão de nomes v01, v02 e o Write para renderizar.'),
+      E('Exercício', 'Ler uma imagem, aplicar Grade e Transform e renderizar um JPG na pasta output.') ] },
     'nk101-a03': { fonte: 'Resumo tirado do script aula03_v01.nk', objetivo: 'Primeiro trabalho real: apagar um elemento de um plano com câmera em movimento.', passos: [
       T('Abertura', 'O que é um apagamento (cleanup) e o plano que vamos limpar: vertical 2160×3840, 101 frames.'),
       T('Read e organização', 'Importar o footage, conferir formato e frame range, organizar o script com Dots.'),
@@ -163,5 +157,8 @@ window.NK101_PLANO = {
       E('Entrega', 'Refazer um plano do projeto básico do zero, com script organizado e versionado.'),
       E('Correção', 'Enviar o render na comunidade e receber o retorno do professor.') ] }
   };
-  window.NK101_PLANO.fases.forEach(f => f.nodes.forEach(n => { const r = R[n.id]; if (r) { n.roteiro = r.passos; n.roteiroFonte = r.fonte; n.objetivo = r.objetivo; } }));
+  window.NK101_PLANO.fases.forEach(f => f.nodes.forEach(n => { const r = R[n.id]; if (!r) return; n.objetivo = r.objetivo;
+    /* Só a aula 01 está editada: ela tem o roteiro completo. As outras mostram apenas os exercícios até a edição sair. */
+    if (n.id === 'nk101-a01') { n.roteiro = r.passos; n.roteiroFonte = r.fonte; }
+    else { n.roteiro = r.passos.filter(p => p.tipo === 'exercicio').map(p => ({ tipo: p.tipo, t: p.t, txt: p.txt })); n.roteiroFonte = 'Por enquanto só os exercícios. O roteiro completo entra quando a aula for editada.'; } }));
 })();
