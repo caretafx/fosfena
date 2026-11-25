@@ -126,7 +126,8 @@ main{min-width:0;padding-block:28px 56px;padding-left:max(28px,env(safe-area-ins
 .vinplay{position:absolute;inset:0;width:100%;height:100%;cursor:pointer;background:none;border:0;padding:0}
 .vinplay:hover .bigplay{transform:translate(-50%,-50%) scale(1.08)}
 .vinplay.go{pointer-events:none}.vinplay.go .bigplay{opacity:0;transition:opacity .15s}
-.vinplay .bigplay{top:auto;bottom:9%;box-shadow:0 0 34px -4px rgba(255,181,71,.8)}.screen.yt iframe,.screen.yt #ytp{position:absolute;inset:0;width:100%;height:100%;border:0}
+.screen.yt{container-type:inline-size}
+.vinplay .bigplay{top:86%;width:clamp(40px,6.5cqw,76px);height:clamp(40px,6.5cqw,76px);box-shadow:0 0 34px -4px rgba(255,181,71,.8)}.vinplay .bigplay svg{width:42%;height:42%}.screen.yt iframe,.screen.yt #ytp{position:absolute;inset:0;width:100%;height:100%;border:0}
 .player.big{width:100%;max-width:min(100%,calc((100vh - 190px) * 16 / 9));box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
 .prat{display:flex;flex-direction:column;gap:16px;padding-top:26px;border-top:1px solid var(--line);scroll-margin-top:20px}
 .prat-h{display:flex;flex-direction:column;gap:6px}.prat-h h2{font-size:24px;margin:0}.prat-h p{margin:0;color:var(--muted)}
@@ -377,9 +378,9 @@ a.mcard:hover{background:var(--raise)}
 </div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/nk101-pratica.js?v=20261125c"></script>
-<script src="assets/pratica.js?v=20261125c"></script>
-<script src="assets/voz.js?v=20261125c"></script>
+<script src="assets/nk101-pratica.js?v=20261125d"></script>
+<script src="assets/pratica.js?v=20261125d"></script>
+<script src="assets/voz.js?v=20261125d"></script>
 <script>
 const COURSE = [
   { id:'NK101', course:'nuke', code:'NK101', tool:'Nuke', title:'Fundamentos do Nuke', desc:'Tudo o que você precisa para começar a trabalhar no Nuke, da instalação aos primeiros trabalhos de comp.', lessons:[
