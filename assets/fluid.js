@@ -526,6 +526,12 @@ const displayShaderSource = `
         c += bloom;
     #endif
 
+        // Fosfena: limita o brilho mantendo a cor, para não estourar em branco.
+        float m = max(c.r, max(c.g, c.b));
+        c *= min(1.0, 0.78 / max(m, 0.0001));
+        float lum = dot(c, vec3(0.299, 0.587, 0.114));
+        c = mix(vec3(lum), c, 1.15);
+        c = clamp(c, 0.0, 0.78);
         float a = max(c.r, max(c.g, c.b));
         gl_FragColor = vec4(c, a);
     }
@@ -1361,7 +1367,10 @@ function blur (target, temp, iterations) {
 function splatPointer (pointer) {
     let dx = pointer.deltaX * config.SPLAT_FORCE;
     let dy = pointer.deltaY * config.SPLAT_FORCE;
-    splat(pointer.texcoordX, pointer.texcoordY, dx, dy, pointer.color);
+    // Fosfena: movimento pequeno solta pouca tinta, para não acumular em branco.
+    const k = Math.max(0.04, Math.min(1, Math.hypot(pointer.deltaX, pointer.deltaY) * 45));
+    const c = pointer.color;
+    splat(pointer.texcoordX, pointer.texcoordY, dx, dy, { r: c.r * k, g: c.g * k, b: c.b * k });
 }
 
 function multipleSplats (amount) {
