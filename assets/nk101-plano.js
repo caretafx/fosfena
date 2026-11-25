@@ -22,10 +22,28 @@ window.NK101_PLANO = {
       nodes: [
         { id: 'nk101-a03', n: 3, titulo: 'Primeiro apagamento', status: 'feito', dur: '40:13',
           topicos: ['Tracker4 no plano', 'Roto e RotoPaint', 'FrameHold: clean plate', 'CornerPin2D e Merge'],
-          nodes: ['Read', 'Tracker4', 'Roto', 'RotoPaint', 'FrameHold', 'CornerPin2D', 'Merge2', 'Write'] },
+          nodes: ['Read', 'Tracker4', 'Roto', 'RotoPaint', 'FrameHold', 'CornerPin2D', 'Merge2', 'Write'],
+          roteiroFonte: 'Resumo tirado do script aula03_v01.nk',
+          roteiro: [
+            { t: 'Abertura', txt: 'O que é um apagamento (cleanup) e o plano que vamos limpar: vertical 2160×3840, 101 frames.' },
+            { t: 'Read e organização', txt: 'Importar o footage, conferir formato e frame range, organizar o script com Dots.' },
+            { t: 'Tracker4', txt: 'Trackear o plano no ponto do apagamento para o patch acompanhar a câmera.' },
+            { t: 'Clean plate', txt: 'FrameHold num frame bom e RotoPaint (clone) para pintar o objeto fora.' },
+            { t: 'Recolocar o patch', txt: 'CornerPin2D com os dados do tracker e Roto para limitar a área do patch.' },
+            { t: 'Merge e Write', txt: 'Juntar o patch ao plano, revisar no Viewer e renderizar o .mov.' }
+          ] },
         { id: 'nk101-a04', n: 4, titulo: 'Primeira tela', status: 'feito', dur: '26:25',
           topicos: ['Tracker nos cantos', 'Keyer e FilterErode', 'Copy e Premult', 'Grade e HueCorrect'],
-          nodes: ['Reformat', 'Tracker4', 'CheckerBoard2', 'Keyer', 'FilterErode', 'Roto', 'HueCorrect', 'Copy', 'Premult', 'Merge2', 'Write'] }
+          nodes: ['Reformat', 'Tracker4', 'CheckerBoard2', 'Keyer', 'FilterErode', 'Roto', 'HueCorrect', 'Copy', 'Premult', 'Merge2', 'Write'],
+          roteiroFonte: 'Resumo tirado do script aula04_v01.nk',
+          roteiro: [
+            { t: 'Abertura', txt: 'Substituição de tela: o que precisa casar (movimento, luz, borda) e o plano de 65 frames.' },
+            { t: 'Reformat e Tracker4', txt: 'Deixar em 1920×1080 e trackear os cantos da tela.' },
+            { t: 'Tela provisória', txt: 'CheckerBoard posicionado com Transform para conferir o track antes da arte final.' },
+            { t: 'Matte', txt: 'Keyer na tela, FilterErode e Blur para refinar, Invert e Roto para os dedos na frente.' },
+            { t: 'Integração', txt: 'Grade e HueCorrect para a tela nova casar com a luz do plano.' },
+            { t: 'Copy, Premult, Merge e Write', txt: 'Levar o alpha com Copy, Premult, compor sobre o plano e renderizar.' }
+          ] }
       ]
     },
     {

@@ -31,7 +31,7 @@ a{color:var(--ciano)}
 .btn.pri{background:var(--ambar);color:#140c00;border-color:var(--ambar);font-weight:600}
 .btn.sm{font-size:13px;padding:5px 10px}
 .btn.del{border-color:rgba(255,123,123,.5);background:transparent;color:var(--danger)}
-main{max-width:1180px;margin:0 auto;padding:26px 16px 80px;position:relative;z-index:1}
+main{max-width:1320px;margin:0 auto;padding:26px 16px 80px;position:relative;z-index:1}
 .intro{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-start;margin-bottom:22px}
 .intro h1{margin:0 0 6px;font-size:32px}
 .intro p{margin:0;color:var(--muted);max-width:64ch;line-height:1.5}
@@ -90,7 +90,7 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
   <div class="intro">
     <div>
       <h1>Painel do professor</h1>
-      <p>Organograma do Curso de Nuke (módulo NK101) com o que já foi gravado e o que falta. Clique numa etapa para mudar o status, anotar e enviar os arquivos dela (vídeo, script, footage, referência). Só o login admin vê esta página.</p>
+      <p>Organograma do Curso de Nuke (módulo NK101) com o que já foi gravado e o que falta. Clique numa fase para abrir ou fechar, e numa aula para ver o roteiro, mudar o status, anotar e enviar os arquivos dela (vídeo, script, footage, referência). Só o login admin vê esta página.</p>
     </div>
     <div class="next" id="next"></div>
   </div>
@@ -151,6 +151,7 @@ async function open(id){
   document.getElementById('dTitle').textContent = n.titulo;
   document.getElementById('dBody').innerHTML = `
     <div><span class="lbl">Status</span><div class="seg" id="seg">${ORDER.map(k=>`<button type="button" class="s-${k}" data-k="${k}" aria-pressed="${k===cur}"><i></i>${Organograma.LABEL[k]}</button>`).join('')}</div></div>
+    <div><span class="lbl">Roteiro da videoaula</span>${Organograma.roteiroHTML(n)}</div>
     ${n.topicos&&n.topicos.length?`<div><span class="lbl">O que entra</span><ul>${n.topicos.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}
     ${n.nodes&&n.nodes.length?`<div><span class="lbl">Nodes usados</span><div class="chips">${n.nodes.map(t=>`<span>${esc(t)}</span>`).join('')}</div></div>`:''}
     <div><label class="lbl" for="nota">Anotações</label><textarea id="nota" placeholder="Roteiro, ideias, o que falta gravar...">${esc(ST.notas[id]||'')}</textarea></div>

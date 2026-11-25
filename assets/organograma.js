@@ -1,52 +1,97 @@
-/* Fosfena · organograma em árvore (de cima para baixo), como um organograma clássico:
-   curso → módulo → fases (colunas) → aulas → tópicos, com linhas retas ligando pai e filhos.
-   Organograma.render(el, plano, {admin, status, counts, onOpen})
-   O primeiro node com status 'agora' (ou o primeiro que não está feito) ganha o selo "Você está aqui". */
+/* Fosfena · organograma horizontal (mapa em leque, da esquerda para a direita):
+   módulo → fases → aulas → tópicos, com linhas retas saindo de um ponto do pai para cada filho.
+   Fases e aulas abrem e fecham com um clique; a aula aberta mostra seus tópicos e o roteiro (via onOpen).
+   Organograma.render(el, plano, {admin, status, counts, onOpen, selected})  → devolve {here, all, redraw} */
 (function(){
   const LABEL = { feito: 'Feito', agora: 'Fazendo agora', proximo: 'Próximo', depois: 'Depois' };
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  function flat(plano){ return plano.fases.flatMap(f => f.nodes.map(n => Object.assign({ fase: f }, n))); }
+  const flat = plano => plano.fases.flatMap(f => f.nodes.map(n => Object.assign({ fase: f }, n)));
+  const SVGNS = 'http://www.w3.org/2000/svg';
 
   function render(el, plano, o){
     o = o || {};
     const all = flat(plano).map(n => Object.assign(n, { status: (o.status && o.status[n.id]) || n.status }));
     const here = all.find(n => n.status === 'agora') || all.find(n => n.status !== 'feito');
-    const done = all.filter(n => n.status === 'feito').length;
-    const pct = Math.round(done / all.length * 100);
-    const tag = o.admin ? 'button type="button"' : 'div', end = o.admin ? 'button' : 'div';
+    const done = all.filter(n => n.status === 'feito').length, pct = Math.round(done / all.length * 100);
+    const open = el._open || (el._open = new Set(plano.fases.map(f => f.id).concat(here ? [here.id] : [])));
+    let sel = o.selected || null;
 
-    const lesson = n => {
-      const cnt = o.counts && o.counts[n.id] || 0, isHere = here && here.id === n.id;
-      return `<li><${tag} class="ob l3 s-${n.status}${isHere?' here':''}${n.pendente?' pend':''}" data-id="${esc(n.id)}">
-          ${isHere?'<span class="ot-here">Você está aqui</span>':''}
-          <span class="ob-k"><i></i>${n.n?'Aula '+String(n.n).padStart(2,'0'):'Etapa'}${n.dur?` · ${esc(n.dur)}`:''}</span>
-          <b>${esc(n.titulo)}</b>
-          <span class="ob-st">${LABEL[n.status]||''}${o.admin?` <em>${cnt?'· '+cnt+(cnt>1?' arquivos':' arquivo'):'· enviar arquivos'}</em>`:''}</span>
-        </${end}>
-        ${n.topicos&&n.topicos.length?`<ul class="ot-sp">${n.topicos.map(t=>`<li><div class="ob l4">${esc(t)}</div></li>`).join('')}</ul>`:''}
-      </li>`;
-    };
+    const fileTxt = id => { const c = o.counts && o.counts[id] || 0; return c ? c + (c > 1 ? ' arquivos' : ' arquivo') : ''; };
+    const lessonBox = n => `<button type="button" class="mb lv2 s-${n.status}${here&&here.id===n.id?' here':''}${n.pendente?' pend':''}${sel===n.id?' sel':''}" data-id="${esc(n.id)}" data-kind="aula" aria-expanded="${open.has(n.id)}">
+        ${here&&here.id===n.id?'<span class="m-here">Você está aqui</span>':''}
+        <span class="m-k"><i></i>${n.n?'Aula '+String(n.n).padStart(2,'0'):'Etapa'}${n.dur?' · '+esc(n.dur):''}</span>
+        <b>${esc(n.titulo)}</b>
+        <span class="m-f"><span class="m-st">${LABEL[n.status]}</span><span class="m-r">${n.roteiro?'Roteiro':n.pendente?'Roteiro em breve':'Ver aula'}${o.admin&&fileTxt(n.id)?' · '+fileTxt(n.id):''}</span></span>
+        <span class="m-car" aria-hidden="true"></span>
+      </button>`;
+    const node = (box, kids, id) => `<div class="mn"${id?` data-n="${esc(id)}"`:''}>${box}${kids&&kids.length?`<div class="mk">${kids.join('')}</div>`:''}</div>`;
+
+    const tree = node(
+      `<div class="mb lv0"><small>${esc(plano.curso||'Curso')}</small><span class="m-code">${esc(plano.code)}</span><b>${esc(plano.titulo)}</b></div>`,
+      plano.fases.map((f, i) => {
+        const ns = f.nodes.map(n0 => all.find(x => x.id === n0.id));
+        const fd = ns.filter(n => n.status === 'feito').length;
+        return node(
+          `<button type="button" class="mb lv1" data-id="${esc(f.id)}" data-kind="fase" aria-expanded="${open.has(f.id)}"><small>Fase ${i+1} · ${fd}/${ns.length}</small><b>${esc(f.titulo)}</b>${f.sub?`<span>${esc(f.sub)}</span>`:''}<span class="m-car" aria-hidden="true"></span></button>`,
+          open.has(f.id) ? ns.map(n => node(lessonBox(n), open.has(n.id) && n.topicos ? n.topicos.map(t => node(`<div class="mb lv3">${esc(t)}</div>`)) : null, n.id)) : null,
+          f.id);
+      }).concat([node(`<div class="mb lv1 side"><small>Em todas as aulas</small><b>Prova no fim da aula</b></div>`)])
+    );
 
     el.innerHTML = `<div class="og">
       <div class="og-top">
-        <div class="og-legend">${['feito','agora','proximo','depois'].map(k=>`<span class="og-l s-${k}"><i></i>${LABEL[k]}</span>`).join('')}</div>
+        <div class="og-legend">${['feito','agora','proximo','depois'].map(k=>`<span class="og-l s-${k}"><i></i>${LABEL[k]}</span>`).join('')}<span class="og-tip">Clique numa fase para abrir ou fechar. Clique numa aula para ver o roteiro.</span></div>
         <div class="og-prog" title="${done} de ${all.length} etapas feitas"><b>${done}/${all.length}</b><span>etapas feitas</span><i><em style="width:${pct}%"></em></i></div>
       </div>
-      <div class="ot-scroll"><div class="ot">
-        <div class="ot-chain">
-          <div class="ob l0">${esc(plano.curso||'Curso')}</div>
-          <span class="ot-v"></span>
-          <div class="ob l1"><small>${esc(plano.code)}</small>${esc(plano.titulo)}</div>
-          <div class="ot-mid"><span class="ot-v"></span><div class="ot-side"><div class="ob side">Prova no fim de cada aula</div><span class="ot-dash"></span></div></div>
-        </div>
-        <ul class="ot-cols">${plano.fases.map((f,i)=>`<li>
-          <div class="ob l2"><small>Fase ${i+1}</small>${esc(f.titulo)}${f.sub?`<span>${esc(f.sub)}</span>`:''}</div>
-          <ul class="ot-sp">${f.nodes.map(n0=>lesson(all.find(x=>x.id===n0.id))).join('')}</ul>
-        </li>`).join('')}</ul>
-      </div></div>
+      <div class="m-scroll"><div class="m-map"><svg class="m-wires" aria-hidden="true"></svg>${tree}</div></div>
     </div>`;
-    if (o.admin && o.onOpen) el.querySelectorAll('button.l3').forEach(b => b.addEventListener('click', () => o.onOpen(b.dataset.id)));
-    return { here, all };
+
+    const map = el.querySelector('.m-map'), svg = el.querySelector('.m-wires');
+    function redraw(){
+      const R = map.getBoundingClientRect();
+      svg.setAttribute('width', map.scrollWidth); svg.setAttribute('height', map.scrollHeight);
+      svg.textContent = '';
+      map.querySelectorAll('.mn').forEach(mn => {
+        const kids = mn.querySelector(':scope > .mk'); if (!kids) return;
+        const pb = mn.querySelector(':scope > .mb').getBoundingClientRect();
+        const x1 = pb.right - R.left + 2, y1 = pb.top + pb.height/2 - R.top;
+        const lvl = mn.querySelector(':scope > .mb').className.match(/lv(\d)/)[1];
+        kids.querySelectorAll(':scope > .mn > .mb').forEach(cb => {
+          const c = cb.getBoundingClientRect();
+          const l = document.createElementNS(SVGNS, 'line');
+          l.setAttribute('x1', x1); l.setAttribute('y1', y1);
+          l.setAttribute('x2', c.left - R.left - 2); l.setAttribute('y2', c.top + c.height/2 - R.top);
+          l.setAttribute('class', 'w w' + lvl + (cb.classList.contains('side') ? ' dash' : '') + (cb.classList.contains('here') || cb.classList.contains('sel') ? ' hot' : ''));
+          svg.appendChild(l);
+        });
+        const dot = document.createElementNS(SVGNS, 'circle');
+        dot.setAttribute('cx', x1); dot.setAttribute('cy', y1); dot.setAttribute('r', 3.5); dot.setAttribute('class', 'wd wd' + lvl);
+        svg.appendChild(dot);
+      });
+    }
+    redraw();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
+    if (el._ro) el._ro.disconnect();
+    if (window.ResizeObserver){ el._ro = new ResizeObserver(redraw); el._ro.observe(map); }
+
+    el.querySelectorAll('button.mb').forEach(b => b.addEventListener('click', () => {
+      const id = b.dataset.id;
+      if (b.dataset.kind === 'fase'){ open.has(id) ? open.delete(id) : open.add(id); }
+      else { if (sel === id && open.has(id)) { open.delete(id); sel = null; } else { open.add(id); sel = id; } }
+      const sx = el.querySelector('.m-scroll').scrollLeft;
+      render(el, plano, Object.assign({}, o, { selected: sel }));
+      el.querySelector('.m-scroll').scrollLeft = sx;
+      if (b.dataset.kind === 'aula' && sel && o.onOpen) o.onOpen(id);
+      const again = el.querySelector(`button.mb[data-id="${CSS.escape(id)}"]`); if (again) again.focus({ preventScroll: true });
+    }));
+    return { here, all, redraw };
   }
-  window.Organograma = { render, flat, LABEL };
+
+  /* HTML do roteiro de uma aula, para a gaveta de detalhes. */
+  function roteiroHTML(n){
+    if (n.roteiro && n.roteiro.length) return `<ol class="rot">${n.roteiro.map(r=>`<li><b>${esc(r.t)}</b><span>${esc(r.txt)}</span></li>`).join('')}</ol>${n.roteiroFonte?`<p class="rot-src">${esc(n.roteiroFonte)}</p>`:''}`;
+    if (n.pendente) return `<p class="rot-empty">O roteiro desta aula vai ser escrito a partir do Projeto_aulas_v02.nknc, assim que o arquivo for lido.</p>`;
+    return `<p class="rot-empty">Aula gravada. Os tópicos abaixo resumem o que ela cobre.</p>`;
+  }
+  window.Organograma = { render, flat, LABEL, roteiroHTML, esc };
 })();
