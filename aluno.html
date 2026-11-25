@@ -318,7 +318,6 @@ a.mcard:hover{background:var(--raise)}
     <nav class="nav" id="nav">
       <a href="#inicio" data-r="inicio"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a>
       <a href="#modulos" data-r="modulos"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/></svg><span>Cursos</span></a>
-      <a href="#exercicios" data-r="exercicios"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M7.5 9l3.3 6M16.5 9l-3.3 6"/></svg><span>Exercícios</span></a>
       <a href="#comunidade" data-r="comunidade"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-4 3v-3H6a2 2 0 0 1-2-2z"/><circle cx="9" cy="10.5" r="1" fill="currentColor"/><circle cx="15" cy="10.5" r="1" fill="currentColor"/></svg><span>Comunidade</span></a>
       <a href="admin.html" id="navAdmin" hidden><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2h12v2"/></svg><span>Painel do professor</span></a>
     </nav>
@@ -727,7 +726,7 @@ function route(){
   const l=LESSONS.find(x=>x.id===h);
   let r='inicio';
   if(l){ v.innerHTML=lessonView(l); bindLesson(l); r='modulos'; }
-  else if(h==='exercicios'){ v.innerHTML=exercises(); r='exercicios'; }
+  else if(h==='exercicios'){ location.replace('#modulos'); return; }
   else if(h==='comunidade'){ v.innerHTML=community(); r='comunidade'; bindCommunity(); }
   else if(h==='modulos'){ v.innerHTML=modulesView(); r='modulos'; }
   else if(COURSE.some(m=>m.id===h&&!m.soon)){ v.innerHTML=moduleView(COURSE.find(m=>m.id===h)); r='modulos'; }
