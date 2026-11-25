@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611252221';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611252226';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Área do aluno · Fosfena</title>
@@ -365,6 +365,36 @@ body.cinema.wide .wrap{max-width:none;padding-top:14px}
 .lightbox{position:fixed;inset:0;background:rgba(5,4,10,.88);display:grid;place-items:center;z-index:9000;cursor:zoom-out}
 .lightbox img{max-width:92vw;max-height:88vh;border-radius:10px}
 @media (max-width:820px), (max-height:500px) and (max-width:1000px){.chat{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);height:calc(100vh - 190px)}body.full .chat{height:calc(100dvh - 61px)}.cbrand,.cnote{display:none}.chans{flex-direction:row;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto;padding:8px}.chans .lbl,.chans button .cnt{display:none}.chans button{white-space:nowrap}.mact{display:flex;position:static;margin-top:4px;background:none;border:0;padding:0;grid-column:2}}
+.priv{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:12px;border:1px solid rgba(123,224,165,.35);background:rgba(123,224,165,.07);font-size:14.5px;line-height:1.55;color:var(--fg)}
+.priv svg{width:20px;height:20px;color:#7be0a5;flex:none;margin-top:2px}
+.priv b{color:#7be0a5;font-family:var(--f-mono);font-weight:500}
+.dq{display:flex;flex-direction:column;gap:12px}
+.dq textarea{min-height:110px}
+.dq-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.dq-row label{font-size:13.5px;color:var(--muted)}
+.dq-t{width:84px;font:500 15px var(--f-mono);text-align:center;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--fg)}
+.btn.sm{padding:7px 12px;font-size:13.5px}
+.hint{font-size:13px;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.dlist{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.ditem{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.ditem p{color:var(--fg)}
+.dmeta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.dmeta .mono{color:var(--accent);font-size:13px}
+.dmeta .when{margin-left:auto}
+.st{font-family:var(--f-mono);font-size:11.5px;padding:2px 8px;border-radius:99px;border:1px solid var(--line)}
+.st-nova,.st-pendente{color:#f6d36b;border-color:rgba(246,211,107,.4)}
+.st-respondida,.st-publicada,.st-revisado{color:#7be0a5;border-color:rgba(123,224,165,.4)}
+.dans{border-left:2px solid var(--accent);padding-left:10px;display:flex;flex-direction:column;gap:2px}
+.dans b{font-size:12.5px;color:var(--accent)}
+.empty{font-size:14px;color:var(--muted)}
+.drop2{border:1.5px dashed rgba(224,168,78,.55);border-radius:12px;padding:22px;text-align:center;color:var(--muted);cursor:pointer;background:rgba(224,168,78,.04);display:flex;flex-direction:column;gap:4px}
+.drop2 b{color:var(--accent)}.drop2 small{font-family:var(--f-mono);font-size:12px}
+.drop2.over{background:rgba(224,168,78,.14);color:var(--fg)}
+.evsel{display:flex;flex-wrap:wrap;gap:8px}.evsel:empty{display:none}
+.fchip{display:inline-flex;align-items:center;gap:8px;padding:6px 6px 6px 10px;border-radius:8px;border:1px solid var(--line);font-size:13.5px}
+.fchip small{color:var(--muted);font-family:var(--f-mono)}
+.fchip button{color:var(--muted);font-size:16px;line-height:1;padding:2px 6px}
 .deliver{background:var(--fos-roxo);border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 textarea{width:100%;min-height:160px;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--fg);font:inherit;padding:12px;resize:vertical;box-sizing:border-box}
 .list{background:var(--panel);border:1px solid var(--line);border-radius:12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);overflow:hidden}
@@ -463,6 +493,7 @@ a.mcard:hover{background:var(--raise)}
 <script src="assets/nk101-pratica.js?v=20261125r"></script>
 <script src="assets/pratica.js?v=20261125r"></script>
 <script src="assets/nk101-interativo.js?v=2"></script>
+<script src="assets/revisao.js?v=1"></script>
 <script src="assets/gamifica.js?v=2"></script>
 <script src="assets/voz.js?v=20261125r"></script>
 <script src="assets/junto.js?v=2"></script>
@@ -603,7 +634,7 @@ function lockView(l){ const prev=LESSONS[LESSONS.findIndex(x=>x.id===l.id)-1];
   <a class="btn btn-primary" href="#${prev.id}">Ir para a aula ${String(prev.n).padStart(2,'0')} · ${esc(prev.title)}</a></div>`; }
 function lessonView(l){
   const i=LESSONS.indexOf(l), prev=LESSONS[i-1], next=LESSONS[i+1], p=P(l.id);
-  const tabs = [['sobre','Sobre a aula'],['materiais','Materiais'],['exercicio','Exercício'],['prova','Prova'],['notas','Anotações']].filter(t=> t[0]!=='materiais'||l.files.length).filter(t=>t[0]!=='exercicio'||l.exercise).filter(t=>t[0]!=='prova'||QUIZ[l.id]);
+  const tabs = [['sobre','Sobre a aula'],['materiais','Materiais'],['exercicio','Exercício'],['prova','Prova'],['duvidas','Dúvidas'],['envio','Enviar arquivo']].filter(t=> t[0]!=='materiais'||l.files.length).filter(t=>t[0]!=='exercicio'||l.exercise).filter(t=>t[0]!=='prova'||QUIZ[l.id]);
   const list = COURSE.filter(m=>m.course===l.module.course).map(m=>`<div class="grp">${m.code} · ${esc(m.title)}</div>` + (m.soon? `<div class="litem lock"><span class="state">·</span><span class="t">${esc(m.note)}</span><span class="tag">Em breve</span></div>` :
     m.lessons.map(x=>`<a class="litem ${x.id===l.id?'cur':''} ${locked(x)?'is-locked':''}" href="#${x.id}">${stateIcon(x)}<span class="t">${esc(x.title)}</span><span class="d">${fmt(x.dur)}</span></a>`).join(''))).join('');
   const s=stats(), vsrc=window.FosPratica&&FosPratica.videoFor(l.id), hasPrat=!!(window.FosPratica&&FosPratica.has(l)), yt=vsrc&&FosPratica.ytId(vsrc);
@@ -662,10 +693,64 @@ function panel(l, t){
   }
   if(t==='prova'){ quizPanel(l, el); return; }
   if(t==='praticar'){ FosPratica.render(l, el); return; }
-  if(t==='notas') el.innerHTML = `<p style="color:var(--muted)">Suas anotações desta aula. Ficam salvas neste navegador.</p><textarea id="notes-${l.id}" placeholder="Ex.: 12:40, por que o FrameHold vem antes do RotoPaint?">${esc(S.notes[l.id]||'')}</textarea>`;
-  el.querySelectorAll('.dl').forEach(b=>b.onclick=()=>toast('Na plataforma real, esse botão baixa ou envia o arquivo.'));
+  if(t==='duvidas'){ duvidasPanel(l, el); return; }
+  if(t==='envio'){ envioPanel(l, el); return; }
+  el.querySelectorAll('.dl').forEach(b=>b.onclick=()=>{ if(b.id==='send'){ const tb=document.querySelector('.tabs button[data-t="envio"]'); if(tb) tb.click(); return; } toast('Na plataforma real, esse botão baixa o arquivo.'); });
   el.querySelectorAll('.step input').forEach(c=>c.onchange=()=>{ S.steps[l.id][c.dataset.k]=c.checked; c.closest('.step').classList.toggle('ok',c.checked); save(); });
   const ta=el.querySelector('textarea'); if(ta) ta.oninput=()=>{ S.notes[l.id]=ta.value; save(); };
+}
+const fmtData=d=>new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+' · '+new Date(d).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+const fsize=b=>b<1048576?Math.max(1,Math.round(b/1024))+' KB':b<1073741824?(b/1048576).toFixed(1)+' MB':(b/1073741824).toFixed(2)+' GB';
+const LOCK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+/* Dúvidas: anônimas, com o tempo do vídeo; o professor pode responder e publicar no canal de dúvidas sem identificar o aluno */
+async function duvidasPanel(l, el){
+  const canal=/^FL/i.test(l.module.code)?'duvidas-flame':'duvidas-nuke';
+  const now=()=>FosRev.tc(P(l.id).pos||0);
+  el.innerHTML=`<div class="priv">${LOCK_SVG}<div><strong>Sua dúvida é anônima.</strong> O professor recebe só a pergunta, a aula e o minuto do vídeo, sem o seu nome nem o seu e-mail.
+      Se a dúvida ajudar outros alunos, ela pode ser publicada no canal <b>#${canal}</b> junto com a resposta, também sem nada que identifique você.</div></div>
+    <form class="dq" id="dq">
+      <div class="dq-row"><label for="dqT">Minuto do vídeo</label><input id="dqT" class="dq-t" value="${now()}" inputmode="numeric" aria-describedby="dqTh"><button type="button" class="btn btn-ghost sm" id="dqNow">Usar o tempo atual</button><span id="dqTh" class="hint">preenchido com onde o vídeo está agora</span></div>
+      <label for="dqX" class="sr">Sua dúvida</label><textarea id="dqX" maxlength="2000" placeholder="Ex.: por que o FrameHold vem antes do RotoPaint?" required></textarea>
+      <div class="dq-row"><button class="btn btn-primary" type="submit">Enviar dúvida anônima</button><span class="hint" id="dqMsg" role="status"></span></div>
+    </form>
+    <div class="dlist"><span class="eyebrow">Suas dúvidas nesta aula</span><div id="dqList"></div></div>`;
+  const T=el.querySelector('#dqT');
+  el.querySelector('#dqNow').onclick=()=>{ T.value=now(); };
+  const list=async()=>{ const ds=await FosRev.minhas(l.id); const box=el.querySelector('#dqList'); if(!box) return;
+    box.innerHTML=ds.length?ds.map(d=>`<div class="ditem"><div class="dmeta"><span class="mono">${FosRev.tc(d.tempo)}</span><span class="st st-${d.status}">${({nova:'Aguardando o professor',respondida:'Respondida',publicada:'Respondida e publicada'})[d.status]}</span><span class="when">${fmtData(d.data)}</span></div><p>${esc(d.texto)}</p>${d.resposta?`<div class="dans"><b>Professor</b><p>${esc(d.resposta)}</p></div>`:''}${d.publicada?`<a class="hint" href="#comunidade">Publicada em #${esc(d.publicada.canal)} como dúvida anônima →</a>`:''}</div>`).join('')
+      :'<p class="empty">Você ainda não mandou dúvidas nesta aula.</p>'; };
+  el.querySelector('#dq').onsubmit=async e=>{ e.preventDefault(); const x=el.querySelector('#dqX'); const txt=x.value.trim(); if(!txt){ x.focus(); return; }
+    const t=FosRev.parseTc(T.value); await FosRev.perguntar({aula:l.id, aulaTitulo:`Aula ${String(l.n).padStart(2,'0')} · ${l.title}`, curso:canal==='duvidas-flame'?'flame':'nuke', tempo:t==null?(P(l.id).pos||0):t, texto:txt});
+    x.value=''; el.querySelector('#dqMsg').textContent='Enviada. A resposta aparece aqui embaixo.'; toast('Dúvida enviada, de forma anônima.'); list(); };
+  list();
+}
+/* Envio de arquivo para revisão: aqui o envio é identificado, para o professor devolver o comentário para você */
+async function envioPanel(l, el){
+  let files=[];
+  el.innerHTML=`<p>Mande o seu script (.nk), render (.mov, .mp4, .exr) ou um print para o professor revisar. Esse envio leva o seu nome, para a revisão voltar para você.</p>
+    <div class="drop2" id="evDrop" tabindex="0" role="button" aria-label="Escolher arquivos para enviar"><b>Arraste os arquivos aqui</b> ou clique para escolher<small>.nk, .mov, .mp4, .exr, .png, .jpg, .zip</small></div>
+    <input type="file" id="evPick" multiple hidden accept=".nk,.nknc,.mov,.mp4,.exr,.png,.jpg,.jpeg,.zip,.pdf">
+    <div class="evsel" id="evSel"></div>
+    <label for="evNota" class="sr">Recado para o professor</label><textarea id="evNota" style="min-height:90px" maxlength="2000" placeholder="O que você quer que o professor olhe? Ex.: o key está mordendo o cabelo no frame 1040."></textarea>
+    <div class="dq-row"><button class="btn btn-primary" id="evGo" disabled>Enviar para revisão</button><span class="hint" id="evMsg" role="status"></span></div>
+    <div class="dlist"><span class="eyebrow">Seus envios nesta aula</span><div id="evList"></div></div>`;
+  const drop=el.querySelector('#evDrop'), pick=el.querySelector('#evPick'), go=el.querySelector('#evGo');
+  const sel=()=>{ el.querySelector('#evSel').innerHTML=files.map((f,i)=>`<span class="fchip">${esc(f.name)} <small>${fsize(f.size)}</small><button type="button" data-rm="${i}" aria-label="Tirar ${esc(f.name)}">×</button></span>`).join(''); go.disabled=!files.length;
+    el.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{ files.splice(+b.dataset.rm,1); sel(); }); };
+  const add=fs=>{ files=files.concat([...fs]); sel(); };
+  drop.onclick=()=>pick.click(); drop.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick.click(); } };
+  drop.ondragover=e=>{ e.preventDefault(); drop.classList.add('over'); }; drop.ondragleave=()=>drop.classList.remove('over');
+  drop.ondrop=e=>{ e.preventDefault(); drop.classList.remove('over'); add(e.dataTransfer.files); };
+  pick.onchange=()=>{ add(pick.files); pick.value=''; };
+  const list=async()=>{ const es=await FosRev.meusEnvios(me().name, l.id); const box=el.querySelector('#evList'); if(!box) return;
+    box.innerHTML=es.length?es.map(e=>`<div class="ditem"><div class="dmeta"><span class="st st-${e.status}">${e.status==='revisado'?'Revisado':'Na fila do professor'}</span><span class="when">${fmtData(e.data)}</span></div><p class="mono" style="font-size:13px">${e.arquivos.map(a=>esc(a.name)).join(' · ')}</p>${e.nota?`<p>${esc(e.nota)}</p>`:''}${e.comentario?`<div class="dans"><b>Comentário do professor</b><p>${esc(e.comentario)}</p></div>`:''}</div>`).join('')
+      :'<p class="empty">Nenhum envio nesta aula ainda.</p>'; };
+  go.onclick=async()=>{ if(!files.length) return; go.disabled=true; el.querySelector('#evMsg').textContent='Enviando…';
+    try{ try{ navigator.storage&&navigator.storage.persist&&navigator.storage.persist(); }catch(e){}
+      await FosRev.enviar({aula:l.id, aulaTitulo:`Aula ${String(l.n).padStart(2,'0')} · ${l.title}`, aluno:me().name, nota:el.querySelector('#evNota').value.trim(), arquivos:files});
+      files=[]; sel(); el.querySelector('#evNota').value=''; el.querySelector('#evMsg').textContent='Enviado! O comentário do professor aparece aqui.'; toast('Arquivo enviado para revisão.'); list(); }
+    catch(e){ el.querySelector('#evMsg').textContent='Não consegui guardar: o arquivo pode ser grande demais para a prévia.'; go.disabled=false; } };
+  list();
 }
 function quizPanel(l, el){
   const qs=QUIZ[l.id], r=S.quiz[l.id];
@@ -732,7 +817,9 @@ const SAMPLE = {
   'vagas':[],'duvidas-flame':[],'off-topic':[],
 };
 let CH = loadChat(), curCh='duvidas-nuke', replyTo=null, pendingImg=null;
-function loadChat(){ try{ const v=JSON.parse(localStorage.getItem(CKEY)); if(v&&v.msgs) return v; }catch(e){} return {msgs:JSON.parse(JSON.stringify(SAMPLE))}; }
+function loadChat(){ let v=null; try{ v=JSON.parse(localStorage.getItem(CKEY)); }catch(e){} if(!v||!v.msgs) v={msgs:JSON.parse(JSON.stringify(SAMPLE))}; return mergeInbox(v); }
+/* dúvidas anônimas que o professor publicou pelo painel */
+function mergeInbox(v){ const box=window.FosRev?FosRev.inbox():[]; if(box.length){ box.forEach(({canal,m})=>{ const L=v.msgs[canal]||(v.msgs[canal]=[]); if(!L.some(x=>x.id===m.id)) L.push(m); }); try{ localStorage.setItem(CKEY, JSON.stringify(v)); }catch(e){} } return v; }
 function saveChat(){ try{ localStorage.setItem(CKEY, JSON.stringify(CH)); return true; }catch(e){ toast('Sem espaço para salvar no navegador. Tente uma imagem menor.'); return false; } }
 function me(){ const ss=FosfenaSessao.get()||{}; return {name: ss.nome||'aluno', role: ss.papel==='admin'?'Professor':null}; }
 const AVC=['#FFB547','#9B6BFF','#5CC8FF','#ff7fb0','#7be0a5','#f6d36b'];
@@ -759,6 +846,7 @@ function community(){
 `;
 }
 function bindCommunity(){
+  CH=mergeInbox(CH);
   const msgs=document.getElementById('msgs'), ta=document.getElementById('ctext'), extra=document.getElementById('cxtra');
   const drawExtra=()=>{ const list=CH.msgs[curCh]||[]; const q=replyTo&&list.find(x=>x.id===replyTo);
     extra.innerHTML=(q?`<div class="replying">Respondendo a <b>${esc(q.a.name)}</b><button type="button" id="xr" aria-label="Cancelar resposta">✕</button></div>`:'')+(pendingImg?`<div class="attach"><img src="${pendingImg}" alt="">Imagem pronta para enviar<button type="button" id="xi" aria-label="Remover imagem">✕</button></div>`:'');

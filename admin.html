@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611252221';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611252226';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Painel do professor · Fosfena</title>
@@ -92,6 +92,32 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
 .empty{font-size:13.5px;color:var(--muted);margin:8px 0 0}
 .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;background:#1d1b2a;border:1px solid rgba(155,107,255,.5);padding:10px 16px;border-radius:10px;font-size:14px;z-index:40;transition:.2s;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+.area{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 22px}
+.area button{font:inherit;color:var(--fg);cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 18px;border-radius:12px;background:rgba(20,16,34,.6);border:1px solid var(--line);font-size:16px;font-weight:600}
+.area button small{font-size:12px;color:var(--muted);font-weight:400}
+.area button[aria-selected="true"]{border-color:var(--ambar);background:rgba(255,181,71,.1);box-shadow:0 0 26px -10px rgba(255,181,71,.9)}
+.area em{font-style:normal;font:600 11px "JetBrains Mono",monospace;background:var(--ambar);color:#140c00;border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:2px}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+@media (max-width:980px){.rgrid{grid-template-columns:1fr}}
+.rh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.rh h2{margin:0;font-size:20px}
+.seg button{--c:var(--roxo)}
+.rlist{display:flex;flex-direction:column;gap:12px}
+.rcard{border:1px solid var(--line);border-radius:14px;padding:16px;background:rgba(18,16,28,.72);display:flex;flex-direction:column;gap:10px}
+.rcard.new{border-color:rgba(255,181,71,.45)}
+.rmeta{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:13px;color:var(--muted)}
+.rmeta b{color:var(--fg);font-size:15px}
+.rmeta .when{margin-left:auto}
+.rmeta .tc{font-family:"JetBrains Mono",monospace;color:var(--ambar)}
+.pill{font:11.5px "JetBrains Mono",monospace;padding:2px 8px;border-radius:99px;border:1px solid var(--line)}
+.pill.pendente,.pill.nova{color:#f6d36b;border-color:rgba(246,211,107,.45)}
+.pill.revisado,.pill.respondida,.pill.publicada{color:var(--ok);border-color:rgba(111,211,160,.45)}
+.rcard p{margin:0;line-height:1.5}
+.rcard .q{font-size:15px}
+.rcard textarea{min-height:76px}
+.racts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.racts .hint{font-size:12.5px;color:var(--muted)}
+.anon{font:11.5px "JetBrains Mono",monospace;color:#7be0a5}
 @media (max-width:560px){.top nav .btn span{display:none}.intro h1{font-size:26px}}
 </style>
 </head>
@@ -104,6 +130,11 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
   </nav>
 </header>
 <main>
+  <div class="area" role="tablist" aria-label="Áreas do painel">
+    <button type="button" role="tab" data-a="plan" aria-selected="true">Planejamento<small>organograma e aulas</small></button>
+    <button type="button" role="tab" data-a="rev" aria-selected="false"><span>Revisão<em id="revN" hidden></em></span><small>arquivos e dúvidas dos alunos</small></button>
+  </div>
+  <section id="aPlan">
   <div class="intro">
     <div>
       <h1>Painel do professor</h1>
@@ -118,6 +149,15 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
   <p class="prop" id="prop" hidden>Proposta inicial de estrutura: nada do Flame foi gravado ainda. Ajuste as aulas e me diga o que mudar.</p>
   <div id="og" role="tabpanel"></div>
   <p class="store" id="store"></p>
+  </section>
+  <section id="aRev" hidden>
+    <div class="intro"><div><h1>Revisão</h1><p>Aqui chegam os arquivos que os alunos mandam para revisão e as dúvidas anônimas feitas nas aulas. Comente, marque como revisado e, quando uma dúvida ajudar a turma, publique no canal de dúvidas. A publicação não leva nada que identifique o aluno.</p></div></div>
+    <div class="rgrid">
+      <div class="rcol"><div class="rh"><h2>Arquivos dos alunos</h2><div class="seg" id="fEnv"><button type="button" data-f="pendente" aria-pressed="true">Pendentes</button><button type="button" data-f="revisado" aria-pressed="false">Revisados</button><button type="button" data-f="" aria-pressed="false">Todos</button></div></div><div id="lEnv" class="rlist"></div></div>
+      <div class="rcol"><div class="rh"><h2>Dúvidas anônimas</h2><div class="seg" id="fDuv"><button type="button" data-f="nova" aria-pressed="true">Novas</button><button type="button" data-f="respondida" aria-pressed="false">Respondidas</button><button type="button" data-f="publicada" aria-pressed="false">Publicadas</button><button type="button" data-f="" aria-pressed="false">Todas</button></div></div><div id="lDuv" class="rlist"></div></div>
+    </div>
+    <p class="store"><b>Modo prévia:</b> por enquanto, envios e dúvidas ficam no navegador em que foram feitos. Você só vê aqui o que foi enviado neste mesmo navegador, como nos testes com o login user1. Para chegar de verdade do aluno ao professor, falta um pequeno servidor. A ideia é um Worker na Cloudflare, na mesma conta da chamada, com D1 para as dúvidas e envios e R2 para os arquivos. As telas continuam as mesmas.</p>
+  </section>
 </main>
 
 <div class="scrim" id="scrim"></div>
@@ -127,6 +167,7 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
 </aside>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="assets/revisao.js?v=1"></script>
 <script src="assets/nk101-plano.js"></script>
 <script src="assets/fl101-plano.js"></script>
 <script src="assets/organograma.js"></script>
@@ -224,6 +265,48 @@ document.getElementById('dClose').onclick=close; document.getElementById('scrim'
 addEventListener('keydown',e=>{ if(e.key==='Escape'&&OPEN) close(); });
 document.getElementById('sair').onclick=()=>{ FosfenaSessao.sair(); location.href='index.html'; };
 draw();
+
+/* ---------- Revisão: arquivos e dúvidas anônimas (assets/revisao.js) ---------- */
+const fData=d=>new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+' · '+new Date(d).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+let fEnv='pendente', fDuv='nova'; const rUrls=[];
+async function badge(){ const [e,d]=await Promise.all([FosRev.envios(),FosRev.duvidas()]); const n=e.filter(x=>x.status==='pendente').length+d.filter(x=>x.status==='nova').length; const b=document.getElementById('revN'); b.hidden=!n; b.textContent=n; }
+async function drawRev(part){
+  /* part: 'env' ou 'duv' redesenha só uma coluna, para não apagar o que você está digitando na outra */
+  if(part!=='duv') rUrls.splice(0).forEach(u=>URL.revokeObjectURL(u));
+  const env=(await FosRev.envios()).filter(e=>!fEnv||e.status===fEnv), duv=(await FosRev.duvidas()).filter(d=>!fDuv||d.status===fDuv);
+  const le=document.getElementById('lEnv');
+  if(part!=='duv'){
+  le.innerHTML=env.length?env.map(e=>`<article class="rcard ${e.status==='pendente'?'new':''}" data-e="${e.id}">
+      <div class="rmeta"><b>${esc(e.aluno)}</b><span>${esc(e.aulaTitulo)}</span><span class="pill ${e.status}">${e.status==='pendente'?'Pendente':'Revisado'}</span><span class="when">${fData(e.data)}</span></div>
+      ${e.nota?`<p>${esc(e.nota)}</p>`:''}
+      <div class="files">${e.arquivos.map((a,i)=>{ const u=URL.createObjectURL(a.blob); rUrls.push(u); return `<div class="file"><span class="n">${esc(a.name)}</span><span class="m">${size(a.size)}</span><span class="a"><a class="btn sm" href="${u}" target="_blank" rel="noopener">Abrir</a><a class="btn sm" href="${u}" download="${esc(a.name)}">Baixar</a></span></div>`; }).join('')}</div>
+      <label class="lbl" for="c-${e.id}">Comentário para o aluno</label><textarea id="c-${e.id}" placeholder="O que está bom, o que ajustar, em qual frame...">${esc(e.comentario||'')}</textarea>
+      <div class="racts"><button class="btn pri sm" data-ok>${e.status==='revisado'?'Salvar comentário':'Marcar como revisado'}</button>${e.status==='revisado'?'<button class="btn sm" data-back>Voltar para pendente</button>':''}</div></article>`).join('')
+    :`<p class="empty">${fEnv==='pendente'?'Nenhum arquivo esperando revisão.':'Nada por aqui.'}</p>`;
+  le.querySelectorAll('.rcard').forEach(c=>{ const id=c.dataset.e, ta=c.querySelector('textarea');
+    c.querySelector('[data-ok]').onclick=async()=>{ await FosRev.revisar(id, ta.value.trim(), 'revisado'); toast('Revisão salva. O aluno vê o comentário na aula.'); drawRev('env'); badge(); };
+    const bk=c.querySelector('[data-back]'); if(bk) bk.onclick=async()=>{ await FosRev.revisar(id, ta.value.trim(), 'pendente'); drawRev('env'); badge(); }; });
+  }
+  if(part==='env') return;
+  const ld=document.getElementById('lDuv');
+  ld.innerHTML=duv.length?duv.map(d=>{ const canal=d.curso==='flame'?'duvidas-flame':'duvidas-nuke'; const st={nova:'Nova',respondida:'Respondida',publicada:'Publicada'}[d.status];
+    return `<article class="rcard ${d.status==='nova'?'new':''}" data-d="${d.id}">
+      <div class="rmeta"><span class="anon">anônima</span><span>${esc(d.aulaTitulo||d.aula)}</span><a class="tc" href="aluno.html#${esc(d.aula)}" target="_blank" rel="noopener" title="Abrir a aula">${FosRev.tc(d.tempo)}</a><span class="pill ${d.status}">${st}</span><span class="when">${fData(d.data)}</span></div>
+      <p class="q">${esc(d.texto)}</p>
+      <label class="lbl" for="r-${d.id}">Resposta</label><textarea id="r-${d.id}" placeholder="Sua resposta. O aluno vê na própria aula.">${esc(d.resposta||'')}</textarea>
+      <div class="racts"><button class="btn pri sm" data-ans>Responder</button>${d.publicada?`<span class="hint">Publicada em #${esc(d.publicada.canal)} · ${fData(d.publicada.em)}</span>`:`<button class="btn sm" data-pub>Publicar em #${canal}</button><span class="hint">sem nome nem e-mail do aluno</span>`}</div></article>`; }).join('')
+    :`<p class="empty">${fDuv==='nova'?'Nenhuma dúvida nova.':'Nada por aqui.'}</p>`;
+  ld.querySelectorAll('.rcard').forEach(c=>{ const id=c.dataset.d, ta=c.querySelector('textarea');
+    c.querySelector('[data-ans]').onclick=async()=>{ if(!ta.value.trim()){ ta.focus(); return; } await FosRev.responder(id, ta.value.trim()); toast('Resposta enviada para o aluno.'); drawRev('duv'); badge(); };
+    const pb=c.querySelector('[data-pub]'); if(pb) pb.onclick=async()=>{ if(ta.value.trim()) await FosRev.responder(id, ta.value.trim()); const d=(await FosRev.duvidas()).find(x=>x.id===id); await FosRev.publicar(id, d.curso==='flame'?'duvidas-flame':'duvidas-nuke'); toast('Publicada no canal de dúvidas, como dúvida anônima.'); drawRev('duv'); badge(); }; });
+}
+const segF=(id,set)=>document.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed',x===b)); set(b.dataset.f); drawRev(id==='fEnv'?'env':'duv'); });
+segF('fEnv',v=>fEnv=v); segF('fDuv',v=>fDuv=v);
+function area(a){ document.querySelectorAll('.area button').forEach(b=>b.setAttribute('aria-selected',b.dataset.a===a)); document.getElementById('aPlan').hidden=a!=='plan'; document.getElementById('aRev').hidden=a!=='rev';
+  try{ localStorage.setItem('fosfena-admin-area',a); }catch(e){} if(a==='rev') drawRev(); }
+document.querySelectorAll('.area button').forEach(b=>b.onclick=()=>area(b.dataset.a));
+try{ if(localStorage.getItem('fosfena-admin-area')==='rev'||location.hash==='#revisao') area('rev'); }catch(e){}
+badge(); addEventListener('focus',()=>badge());
 </script>
 <script>window.FX={glass:'',glow:'',tilt:'',reveal:'',words:''};</script>
 <script src="assets/fx.js?v=7" defer></script>
