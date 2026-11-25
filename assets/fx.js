@@ -108,6 +108,17 @@
     el.classList.add('fx-pencil'); const o=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ el.classList.add('in'); o.disconnect(); } }),{threshold:1}); o.observe(el);
   });
 
+  /* faixas infinitas: repete o conteúdo até cobrir telas largas (a animação anda 50%) */
+  function fillTracks(){
+    document.querySelectorAll('.ticker .track, .ptrack').forEach(t=>{
+      let guard=0;
+      while(t.scrollWidth < innerWidth*2 + 400 && guard++ < 6){
+        [...t.children].forEach(c=>{ const k=c.cloneNode(true); k.setAttribute('aria-hidden','true'); t.append(k); });
+      }
+    });
+  }
+  fillTracks(); addEventListener('resize', fillTracks);
+
   window.fxScan = scan;
   scan();
   new MutationObserver(ms=>{ if(ms.some(m=>[...m.addedNodes].some(n=>n.nodeType===1 && !(n.classList&&n.classList.contains('w'))))) scan(); }).observe(document.body, {childList:true, subtree:true});
