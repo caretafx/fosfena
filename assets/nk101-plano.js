@@ -29,12 +29,19 @@ window.NK101_PLANO = {
       ]
     },
     {
-      id: 'f3', titulo: 'Projeto básico', sub: 'Do Projeto_aulas_v02.nknc', fonte: 'Projeto_aulas_v02.nknc',
+      id: 'f3', titulo: 'Projeto básico', sub: 'Do Projeto_aulas_v03.nknc, do básico ao avançado', fonte: 'Projeto_aulas_v03.nknc',
       nodes: [
-        { id: 'nk101-a05', n: 5, titulo: 'Projetão inicial', status: 'agora', pendente: true,
-          topicos: ['Pastas do projeto', 'Imagens de apoio (6 jpg)', 'Sequência EXR Shot_04_5F'] },
-        { id: 'nk101-bas-resto', titulo: 'Demais aulas do projeto', status: 'proximo', pendente: true,
-          topicos: ['Sai dos backdrops do .nknc'] }
+        { id: 'nk101-a05', n: 5, titulo: 'Projeto, fotos e shots', status: 'agora', topicos: ['Pastas e Read', 'Fotos & Shots', 'Viewer e Alt+E'] },
+        { id: 'nk101-a06', n: 6, titulo: 'O que é uma imagem?', status: 'proximo', topicos: ['Cores aditivas e canais', 'Por que o chroma é verde', 'Canal alpha e masking'] },
+        { id: 'nk101-a07', n: 7, titulo: 'Resoluções e tamanhos', status: 'proximo', topicos: ['Diferença de tamanhos', 'Reformat e Crop', 'Cuidado no Merge'] },
+        { id: 'nk101-a08', n: 8, titulo: 'Nodes essenciais: Merge', status: 'proximo', topicos: ['A e B, atalho M', 'Operações em RGB e RGB+Alpha', 'Stencil e ChannelMerge'] },
+        { id: 'nk101-a09', n: 9, titulo: 'Nodes de Transform', status: 'proximo', topicos: ['Transform e Mirror', 'CornerPin', 'Crop e Reformat'] },
+        { id: 'nk101-a10', n: 10, titulo: 'Nodes de desfoque', status: 'proximo', topicos: ['Atalho B', 'Principais blurs', 'O blur afeta o alpha'] },
+        { id: 'nk101-a11', n: 11, titulo: 'Nodes essenciais para as cores', status: 'proximo', topicos: ['Contrast, Saturation, Hue, Lift', 'Gain, Gamma, Whitepoint, Blackpoint', 'Gamma × Ganho'] },
+        { id: 'nk101-a12', n: 12, titulo: 'Nodes de alpha e clone', status: 'proximo', topicos: ['Principais nodes', 'Atalhos'] },
+        { id: 'nk101-a13', n: 13, titulo: 'Pré-multiplicação', status: 'proximo', topicos: ['O que é e a matemática', 'Concatenação: grade antes do premult', 'Bordas integradas'] },
+        { id: 'nk101-a14', n: 14, titulo: 'Keying', status: 'proximo', topicos: ['Uso do Keyer', 'Matte e despill', 'Integração'] },
+        { id: 'nk101-a15', n: 15, titulo: 'Nodes de criação', status: 'proximo', topicos: ['Noise: chuva, poeira, atmosfera', 'LightWrap', 'VolumeRays (godrays)'] }
       ]
     },
     {
@@ -81,13 +88,63 @@ window.NK101_PLANO = {
       T('Integração', 'Grade e HueCorrect para a tela nova casar com a luz do plano.'),
       T('Copy, Premult, Merge e Write', 'Levar o alpha com Copy, Premult, compor sobre o plano e renderizar.'),
       E('Exercício', 'Trocar o CheckerBoard por uma imagem ou vídeo seu e entregar o .mov final.') ] },
-    'nk101-a05': { fonte: 'Rascunho a partir das pastas da aula 05; ajusto quando ler o Projeto_aulas_v02.nknc', objetivo: 'Voltar à base com calma: projeto organizado e os nodes essenciais, um de cada vez.', passos: [
-      T('Estrutura do projeto', 'Pastas Footages, Nuke/Script, precomp, assets e Output, e por que cada uma existe.'),
-      T('Formatos de imagem', 'JPG, PNG com alpha e sequência EXR: Read, frame range, colorspace e canais.'),
-      E('Exercício', 'Importar as 6 imagens, o PNG de exemplo e a sequência Shot_04_5F, todas com o formato certo.'),
-      T('Merge e alpha', 'Como o Merge (over) usa o alpha, Premult e Unpremult.'),
-      T('Transform e Reformat', 'Posicionar, escalar e adaptar imagens de tamanhos diferentes ao formato do projeto.'),
-      E('Exercício', 'Montar uma composição simples com as imagens (por exemplo, o tigre na paisagem) e renderizar.') ] },
+    'nk101-a05': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Abrir o projeto básico e conhecer o material que vamos usar no módulo.', passos: [
+      T('O projeto', 'As pastas Footages, Nuke/Script, precomp, assets e Output, e como o script está dividido em seções.'),
+      T('Fotos & Shots', 'Ler as fotos (Fazenda, Flores, Paisagem, Sala, Tigre, Universo, PNG de exemplo) e a sequência EXR Shot_04_5F.'),
+      T('Viewer e atalhos', 'Ligar o Viewer, trocar de input e usar Alt+E para mostrar e esconder as linhas laranjas.'),
+      E('Exercício', 'Abrir o projeto, ler todas as fotos e o shot, e conferir cada uma no Viewer.') ] },
+    'nk101-a06': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Entender do que uma imagem é feita antes de mexer nela.', passos: [
+      T('Cores aditivas', 'RGB: como vermelho, verde e azul formam todas as cores na tela.'),
+      T('Canais de uma imagem', 'Separar e ver cada canal no Viewer.'),
+      T('Por que o chroma key é verde', 'Verde e azul são cores "puras"; o verde se destaca da pele e é a cor mais clara do espectro visível, o que facilita o recorte.'),
+      T('Canal alpha', 'Um canal binário de contém e não contém, que permite recortar a imagem; exemplo de masking.'),
+      E('Exercício', 'Separar os canais de uma foto e criar uma máscara simples para recortar uma parte dela.') ] },
+    'nk101-a07': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Evitar o erro mais comum de iniciante: juntar imagens de tamanhos diferentes.', passos: [
+      T('Diferença de tamanhos', 'Comparar imagens de resoluções diferentes no mesmo script.'),
+      T('O problema no Merge', 'O ColorWheel em 4K_DCP com uma imagem menor dá um resultado estranho no "over".'),
+      T('Reformat e Crop', 'Como corrigir o tamanho; o Transform raramente é usado para isso.'),
+      E('Exercício', 'Ativar e desativar o Reformat do exemplo e depois corrigir os tamanhos das fotos do projeto para o formato do projeto.') ] },
+    'nk101-a08': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Dominar o Merge, o node que aparece em todo script.', passos: [
+      T('A e B', 'A é o foreground (em cima) e B o background (embaixo); atalho M para criar.'),
+      T('Operações em RGB', 'Testar as operações do Merge só nas cores.'),
+      T('Operações em RGB+Alpha', 'Como o alpha muda o resultado; o Stencil subtrai o A do B e recorta pelo alpha.'),
+      T('Alpha influencia o RGB', 'Por isso trabalhamos o alpha separado; usar ChannelMerge para não estragar a imagem.'),
+      E('Exercício', 'Compor duas fotos testando over, stencil e mask, e explicar a diferença no resultado.') ] },
+    'nk101-a09': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Mover, espelhar e encaixar imagens.', passos: [
+      T('Transform', 'Mover e animar de forma simples; parâmetros são chamados de knobs no Nuke.'),
+      T('Mirror', 'Flipar na horizontal ou vertical (o Reformat também faz).'),
+      T('CornerPin', 'Ajustar a perspectiva movendo os 4 vértices.'),
+      T('Crop e Reformat', 'Cortar as bordas e mudar o tamanho para o formato do projeto.'),
+      E('Exercício', 'Encaixar uma foto em perspectiva sobre outra com CornerPin e animar a entrada com Transform.') ] },
+    'nk101-a10': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Usar desfoque sem estragar o recorte.', passos: [
+      T('Atalho B e principais nodes', 'Os blurs mais usados e para que serve cada um.'),
+      T('Exemplos', 'Repare nas cores dos nodes: eles também desfocam o recorte, ou seja, mexem no alpha.'),
+      E('Exercício', 'Brincar e testar cada blur nas imagens do projeto e anotar o que cada um faz.') ] },
+    'nk101-a11': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Falar a língua da cor e usar os nodes de cor com intenção.', passos: [
+      T('Termos de composição das cores', 'Contrast, Saturation, Hue e Lift, com exemplos.'),
+      T('Termos de color grading', 'Gain/Multiply, Gamma, Whitepoint, Blackpoint e Lift.'),
+      T('Relação Gamma e Ganho', 'O Gamma mexe nos meios-tons; o Gain mexe mais nas altas luzes.'),
+      E('Exercício', 'Casar a cor de uma foto com outra usando só Grade e ColorCorrect.') ] },
+    'nk101-a12': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Criar e copiar alphas com segurança.', passos: [
+      T('Principais nodes', 'Os nodes de alpha e de clone do backdrop, um por um.'),
+      T('Atalhos', 'Os atalhos do backdrop para trabalhar mais rápido.'),
+      E('Exercício', 'Levar o alpha de uma imagem para outra e limpar uma área com clone.') ] },
+    'nk101-a13': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Entender o premult, a base de toda borda bem feita.', passos: [
+      T('Premult explicado', 'O que acontece com o RGB quando multiplicamos pelo alpha.'),
+      T('A matemática do premult', 'A conta por trás, com os exemplos do backdrop.'),
+      T('Concatenação', 'O grade fica antes do premult; nunca inverta essa ordem.'),
+      T('Por que isso importa', 'No cinema a tela é gigante: borda integrada é metade da integração; ajuste bordas numa imagem não pré-multiplicada.'),
+      E('Exercício', 'Corrigir a borda de um recorte refazendo a ordem grade → premult e comparar antes e depois.') ] },
+    'nk101-a14': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Primeiro recorte de fundo com Keyer.', passos: [
+      T('Uso do Keyer', 'Como o Keyer gera o matte a partir da luminância ou de um canal.'),
+      T('Refinar o matte', 'Juntar e limpar mattes, e cuidar das bordas.'),
+      T('Composição', 'Premult e Merge sobre o novo fundo.'),
+      E('Exercício', 'Recortar um elemento do shot e colocar sobre uma das fotos do projeto.') ] },
+    'nk101-a15': { fonte: 'Tirado dos backdrops e notas do Projeto_aulas_v03.nknc', objetivo: 'Criar elementos do zero para dar vida ao plano.', passos: [
+      T('Noise', 'Funciona como no After: chuva, poeira e atmosfera; exemplos de onda solar e chuva simples.'),
+      T('LightWrap', 'Iluminar as bordas para integrar o elemento ao fundo.'),
+      T('VolumeRays', 'Godrays para cenas de alto impacto; procure referências.'),
+      E('Exercício', 'Juntar tudo: compor um elemento num fundo com LightWrap e criar uma atmosfera com Noise ou VolumeRays.') ] },
     'nk101-prova': { fonte: 'Estrutura sugerida', objetivo: 'Confirmar que o aluno domina a base antes do NK102.', passos: [
       T('Revisão', 'Resumo rápido das técnicas do módulo, na ordem em que apareceram.'),
       E('Prova', 'Questões de múltipla escolha sobre todas as aulas, aprovação com 70%.'),
