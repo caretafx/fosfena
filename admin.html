@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Painel do professor · Fosfena</title>
+<script src="assets/sessao.js"></script>
+<script>FosfenaSessao.exigir('admin');</script>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0c0b12">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/fx.css">
+<link rel="stylesheet" href="assets/neon.css">
+<link rel="stylesheet" href="assets/organograma.css">
+<style>
+:root{--bg:#0c0b12;--fg:#ECEAE4;--muted:#aeb0b5;--line:rgba(236,234,228,.12);--ambar:#FFB547;--roxo:#9B6BFF;--ciano:#5CC8FF;--ok:#6FD3A0;--danger:#ff7b7b}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:"Instrument Sans",system-ui,sans-serif}
+a{color:var(--ciano)}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px max(16px,env(safe-area-inset-left));
+  background:rgba(12,11,18,.78);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;color:var(--fg);text-decoration:none}
+.brand img{width:30px;height:30px}
+.brand b{font-size:17px}
+.tag{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#140c00;background:var(--ambar);padding:3px 8px;border-radius:99px;margin-left:6px}
+.top nav{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:14px;color:var(--fg);background:rgba(155,107,255,.08);border:1px solid rgba(155,107,255,.5);padding:8px 14px;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:rgba(155,107,255,.18)}
+.btn.pri{background:var(--ambar);color:#140c00;border-color:var(--ambar);font-weight:600}
+.btn.sm{font-size:13px;padding:5px 10px}
+.btn.del{border-color:rgba(255,123,123,.5);background:transparent;color:var(--danger)}
+main{max-width:1180px;margin:0 auto;padding:26px 16px 80px;position:relative;z-index:1}
+.intro{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-start;margin-bottom:22px}
+.intro h1{margin:0 0 6px;font-size:32px}
+.intro p{margin:0;color:var(--muted);max-width:64ch;line-height:1.5}
+.next{border:1px solid rgba(255,181,71,.55);background:rgba(255,181,71,.07);border-radius:12px;padding:12px 16px;min-width:260px;max-width:380px}
+.next small{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ambar)}
+.next b{display:block;font-size:16px;margin:4px 0 2px}
+.next span{font-size:13.5px;color:var(--muted)}
+.store{margin-top:28px;font-size:13.5px;color:var(--muted);line-height:1.55;border-top:1px solid var(--line);padding-top:16px;max-width:80ch}
+.store b{color:var(--fg)}
+
+/* gaveta da etapa */
+.scrim{position:fixed;inset:0;background:rgba(5,4,10,.55);z-index:20;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(480px,100vw);z-index:21;background:rgba(18,16,28,.97);border-left:1px solid rgba(155,107,255,.4);
+  box-shadow:-30px 0 80px -30px rgba(155,107,255,.6);transform:translateX(102%);transition:transform .25s;display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.dh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:18px 18px 12px;border-bottom:1px solid var(--line)}
+.dh small{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.1em;color:var(--ciano)}
+.dh h2{margin:4px 0 0;font-size:21px}
+.x{background:none;border:0;color:var(--muted);font-size:26px;line-height:1;cursor:pointer;padding:2px 6px}
+.db{padding:16px 18px 30px;overflow:auto;display:flex;flex-direction:column;gap:20px}
+.lbl{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:block}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:inherit;font-size:13px;padding:6px 11px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.seg button i{width:9px;height:9px;border-radius:3px;background:var(--c)}
+.seg button[aria-pressed="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 16%,transparent)}
+.s-feito{--c:var(--ok)} .s-agora{--c:var(--ambar)} .s-proximo{--c:var(--ciano)} .s-depois{--c:#6b6e78}
+.db ul{margin:0;padding-left:18px;line-height:1.55;color:#d6d5d1;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-family:"JetBrains Mono",monospace;font-size:12px;padding:3px 8px;border-radius:6px;background:rgba(92,200,255,.08);border:1px solid rgba(92,200,255,.3);color:#cfeeff}
+textarea{width:100%;min-height:96px;resize:vertical;font:inherit;font-size:14px;color:var(--fg);background:rgba(10,9,16,.7);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset:2px}
+.drop{border:1.5px dashed rgba(255,181,71,.55);border-radius:12px;padding:18px;text-align:center;color:var(--muted);font-size:14px;cursor:pointer;background:rgba(255,181,71,.04)}
+.drop.over{background:rgba(255,181,71,.14);color:var(--fg)}
+.drop b{color:var(--ambar)}
+.files{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.file{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.02)}
+.file .n{font-size:14px;overflow-wrap:anywhere}
+.file .m{grid-column:1;font-size:12px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.file .a{grid-column:2;grid-row:1/3;display:flex;gap:6px}
+.empty{font-size:13.5px;color:var(--muted);margin:8px 0 0}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;background:#1d1b2a;border:1px solid rgba(155,107,255,.5);padding:10px 16px;border-radius:10px;font-size:14px;z-index:40;transition:.2s;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:560px){.top nav .btn span{display:none}.intro h1{font-size:26px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="aluno.html"><img src="favicon.svg" alt=""><b>fosfena</b><span class="tag">Admin</span></a>
+  <nav>
+    <a class="btn" href="aluno.html">← <span>Área do aluno</span></a>
+    <button class="btn" id="sair" type="button">Sair</button>
+  </nav>
+</header>
+<main>
+  <div class="intro">
+    <div>
+      <h1>Painel do professor</h1>
+      <p>Organograma do módulo com o que já foi gravado e o que falta. Clique numa etapa para mudar o status, anotar e enviar os arquivos dela (vídeo, script, footage, referência). Só o login admin vê esta página.</p>
+    </div>
+    <div class="next" id="next"></div>
+  </div>
+  <div id="og"></div>
+  <p class="store" id="store"></p>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="dTitle">
+  <div class="dh"><div><small id="dKicker"></small><h2 id="dTitle"></h2></div><button class="x" id="dClose" aria-label="Fechar">×</button></div>
+  <div class="db" id="dBody"></div>
+</aside>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="assets/nk101-plano.js"></script>
+<script src="assets/organograma.js"></script>
+<script>
+/* Estado do painel: status e notas no localStorage; arquivos no IndexedDB deste navegador. Nada disso vai para o GitHub. */
+const PLANO = window.NK101_PLANO, KEY='fosfena-admin-plano';
+let ST = {status:{}, notas:{}};
+try{ ST = Object.assign(ST, JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){}
+const saveST = () => { try{ localStorage.setItem(KEY, JSON.stringify(ST)); }catch(e){} };
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let tt; function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),2600); }
+const size = b => b<1024?b+' B':b<1048576?(b/1024).toFixed(0)+' KB':b<1073741824?(b/1048576).toFixed(1)+' MB':(b/1073741824).toFixed(2)+' GB';
+
+/* IndexedDB */
+let dbp;
+function db(){ return dbp || (dbp = new Promise((ok,ko)=>{ const r=indexedDB.open('fosfena-admin',1);
+  r.onupgradeneeded=()=>{ const s=r.result.createObjectStore('files',{keyPath:'id'}); s.createIndex('node','node'); };
+  r.onsuccess=()=>ok(r.result); r.onerror=()=>ko(r.error); })); }
+async function tx(mode, fn){ const d=await db(); return new Promise((ok,ko)=>{ const t=d.transaction('files',mode); const s=t.objectStore('files'); let out; Promise.resolve(fn(s)).then(v=>out=v); t.oncomplete=()=>ok(out); t.onerror=()=>ko(t.error); t.onabort=()=>ko(t.error); }); }
+const req = r => new Promise((ok,ko)=>{ r.onsuccess=()=>ok(r.result); r.onerror=()=>ko(r.error); });
+async function listMeta(){ try{ return await tx('readonly', s=>req(s.getAll()).then(a=>a.map(({blob,...m})=>m))); }catch(e){ return []; } }
+async function filesOf(node){ return tx('readonly', s=>req(s.index('node').getAll(node))); }
+async function addFile(node, f){ const id=node+':'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  await tx('readwrite', s=>{ s.put({id,node,name:f.name,type:f.type,size:f.size,date:new Date().toISOString(),blob:f}); }); }
+async function delFile(id){ await tx('readwrite', s=>{ s.delete(id); }); }
+
+let COUNTS={}, OPEN=null;
+async function draw(){
+  const meta = await listMeta(); COUNTS={}; meta.forEach(m=>COUNTS[m.node]=(COUNTS[m.node]||0)+1);
+  const r = Organograma.render(document.getElementById('og'), PLANO, {admin:true, status:ST.status, counts:COUNTS, onOpen:open});
+  const h=r.here, nx = h && r.all[r.all.indexOf(h)+1];
+  document.getElementById('next').innerHTML = h
+    ? `<small>Onde você está</small><b>${esc(h.titulo)}</b><span>${nx?'Depois: '+esc(nx.titulo):'Última etapa do módulo'}</span>`
+    : `<small>Módulo</small><b>Tudo feito no ${esc(PLANO.code)}</b>`;
+  const total = meta.reduce((a,m)=>a+m.size,0);
+  let quota=''; try{ const e=await navigator.storage.estimate(); quota=` Espaço livre para o navegador: cerca de ${size(Math.max(0,e.quota-e.usage))}.`; }catch(e){}
+  document.getElementById('store').innerHTML = `<b>Onde ficam os arquivos:</b> só neste navegador, neste computador (${meta.length} ${meta.length===1?'arquivo':'arquivos'}, ${size(total)}).${quota} Eles não vão para o GitHub nem para os alunos, e somem se você limpar os dados do site. Para guardar de verdade, mantenha o original na pasta do curso.`;
+}
+
+const ORDER=['feito','agora','proximo','depois'];
+async function open(id){
+  const n = Organograma.flat(PLANO).find(x=>x.id===id); if(!n) return; OPEN=id;
+  const cur = ST.status[id] || n.status;
+  document.getElementById('dKicker').textContent = `${PLANO.code} · ${n.fase.titulo}${n.n?' · Aula '+String(n.n).padStart(2,'0'):''}`;
+  document.getElementById('dTitle').textContent = n.titulo;
+  document.getElementById('dBody').innerHTML = `
+    <div><span class="lbl">Status</span><div class="seg" id="seg">${ORDER.map(k=>`<button type="button" class="s-${k}" data-k="${k}" aria-pressed="${k===cur}"><i></i>${Organograma.LABEL[k]}</button>`).join('')}</div></div>
+    ${n.topicos&&n.topicos.length?`<div><span class="lbl">O que entra</span><ul>${n.topicos.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}
+    ${n.nodes&&n.nodes.length?`<div><span class="lbl">Nodes usados</span><div class="chips">${n.nodes.map(t=>`<span>${esc(t)}</span>`).join('')}</div></div>`:''}
+    <div><label class="lbl" for="nota">Anotações</label><textarea id="nota" placeholder="Roteiro, ideias, o que falta gravar...">${esc(ST.notas[id]||'')}</textarea></div>
+    <div><span class="lbl">Arquivos da etapa</span>
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Enviar arquivos para esta etapa"><b>Arraste arquivos aqui</b> ou clique para escolher<br><small>vídeo, .nk, footage, referência, PDF</small></div>
+      <input type="file" id="pick" multiple hidden>
+      <div class="files" id="files"></div>
+    </div>`;
+  document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{ ST.status[id]=b.dataset.k; if(b.dataset.k===n.status) delete ST.status[id]; saveST();
+    document.querySelectorAll('#seg button').forEach(x=>x.setAttribute('aria-pressed', x===b)); draw(); });
+  const nota=document.getElementById('nota'); let nt; nota.oninput=()=>{ clearTimeout(nt); nt=setTimeout(()=>{ ST.notas[id]=nota.value; saveST(); },300); };
+  const drop=document.getElementById('drop'), pick=document.getElementById('pick');
+  drop.onclick=()=>pick.click(); drop.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick.click(); } };
+  drop.ondragover=e=>{ e.preventDefault(); drop.classList.add('over'); }; drop.ondragleave=()=>drop.classList.remove('over');
+  drop.ondrop=e=>{ e.preventDefault(); drop.classList.remove('over'); upload(id,[...e.dataTransfer.files]); };
+  pick.onchange=()=>{ upload(id,[...pick.files]); pick.value=''; };
+  await listFiles(id);
+  document.getElementById('drawer').classList.add('on'); document.getElementById('drawer').setAttribute('aria-hidden','false');
+  document.getElementById('scrim').classList.add('on'); document.getElementById('dClose').focus();
+}
+async function upload(id, fs){
+  if(!fs.length) return;
+  try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+  for(const f of fs){ try{ await addFile(id,f); }catch(e){ toast('Não deu para guardar '+f.name+': falta espaço no navegador.'); } }
+  toast(fs.length===1?'Arquivo guardado.':fs.length+' arquivos guardados.'); await listFiles(id); draw();
+}
+const urls=[];
+async function listFiles(id){
+  urls.splice(0).forEach(u=>URL.revokeObjectURL(u));
+  const box=document.getElementById('files'); let fs=[]; try{ fs=await filesOf(id); }catch(e){}
+  fs.sort((a,b)=>b.date.localeCompare(a.date));
+  box.innerHTML = fs.length ? fs.map(f=>{ const u=URL.createObjectURL(f.blob); urls.push(u);
+    return `<div class="file"><span class="n">${esc(f.name)}</span><span class="m">${size(f.size)} · ${new Date(f.date).toLocaleDateString('pt-BR')}</span>
+      <span class="a"><a class="btn sm" href="${u}" target="_blank" rel="noopener">Abrir</a><a class="btn sm" href="${u}" download="${esc(f.name)}">Baixar</a><button class="btn sm del" data-del="${esc(f.id)}" type="button">Apagar</button></span></div>`; }).join('')
+    : `<p class="empty">Nenhum arquivo nesta etapa ainda.</p>`;
+  box.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{ if(b.dataset.armed){ await delFile(b.dataset.del); await listFiles(id); draw(); toast('Arquivo apagado.'); } else { b.dataset.armed=1; b.textContent='Confirmar'; setTimeout(()=>{ if(b.isConnected){ delete b.dataset.armed; b.textContent='Apagar'; } },3000); } });
+}
+function close(){ OPEN=null; document.getElementById('drawer').classList.remove('on'); document.getElementById('drawer').setAttribute('aria-hidden','true'); document.getElementById('scrim').classList.remove('on'); }
+document.getElementById('dClose').onclick=close; document.getElementById('scrim').onclick=close;
+addEventListener('keydown',e=>{ if(e.key==='Escape'&&OPEN) close(); });
+document.getElementById('sair').onclick=()=>{ FosfenaSessao.sair(); location.href='index.html'; };
+draw();
+</script>
+<script>window.FX={glass:'',glow:'',tilt:'',reveal:'.og-bd',words:''};</script>
+<script src="assets/fx.js" defer></script>
+<script src="assets/fluid.js" defer></script>
+</body>
+</html>
