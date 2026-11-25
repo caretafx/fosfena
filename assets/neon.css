@@ -1,0 +1,63 @@
+/* Fosfena · camada neon (arte digital). Base da marca: grafite, roxo noturno e âmbar; o neon entra como luz. */
+:root{
+  --neon-ambar:#FFB547; --neon-roxo:#9B6BFF; --neon-ciano:#5CC8FF;
+  --glow-ambar:0 0 6px rgba(255,181,71,.9),0 0 22px rgba(255,181,71,.55),0 0 48px rgba(255,181,71,.25);
+  --glow-roxo:0 0 8px rgba(155,107,255,.8),0 0 28px rgba(155,107,255,.45);
+  --accent:var(--neon-ambar);
+}
+body{background:#0c0b12}
+.aura{background:#0c0b12}
+.aura .b1{background:#3a1f6b}
+.aura .b2{background:#2a1a5c}
+.aura .b3{background:#ff9d2e;opacity:.12}
+
+/* grade digital ao fundo */
+.aura::before{opacity:1!important;background:
+  linear-gradient(rgba(155,107,255,.07) 1px,transparent 1px) 0 0/56px 56px,
+  linear-gradient(90deg,rgba(155,107,255,.07) 1px,transparent 1px) 0 0/56px 56px!important;
+  -webkit-mask:radial-gradient(ellipse 80% 70% at 50% 40%,#000 30%,transparent 80%);mask:radial-gradient(ellipse 80% 70% at 50% 40%,#000 30%,transparent 80%)}
+
+/* textos com luz */
+h1 em,h2 em,.hero h1 em .w{color:var(--neon-ambar)!important;text-shadow:var(--glow-ambar)}
+.hero h1{text-shadow:0 0 30px rgba(155,107,255,.35)}
+.eyebrow{color:var(--neon-ciano)!important;text-shadow:0 0 10px rgba(92,200,255,.55);letter-spacing:.14em}
+.mao{color:var(--neon-ambar);text-shadow:0 0 10px rgba(255,181,71,.6)}
+.brand img,.brand svg{filter:drop-shadow(0 0 6px rgba(255,181,71,.55))}
+
+/* botões */
+.btn-primary{background:var(--neon-ambar)!important;color:#140c00!important;box-shadow:var(--glow-ambar)!important}
+.btn-ghost{box-shadow:inset 0 0 0 1px rgba(155,107,255,.6),0 0 14px rgba(155,107,255,.25)!important}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1px var(--neon-roxo),var(--glow-roxo)!important;background:rgba(155,107,255,.1)!important}
+
+/* cards: borda em gradiente neon */
+.fx-glass{position:relative;border-color:transparent!important;background:rgba(20,16,34,.55)!important}
+.fx-glass::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;opacity:.85;
+  background:linear-gradient(135deg,rgba(155,107,255,.9),rgba(92,200,255,.35) 45%,rgba(255,181,71,.8));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.fx-glow:hover{box-shadow:0 0 0 1px rgba(155,107,255,.5),0 0 40px -6px rgba(155,107,255,.6),0 0 80px -20px rgba(255,181,71,.5)!important}
+.plan.best{box-shadow:0 0 0 1.5px var(--neon-ambar),var(--glow-ambar)!important}
+
+/* linhas de seção */
+section.blk{border-top:0!important;position:relative}
+section.blk::before{content:"";position:absolute;left:8%;right:8%;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--neon-roxo),var(--neon-ambar),transparent);opacity:.6;box-shadow:0 0 12px rgba(155,107,255,.6)}
+
+/* faixa e pôsteres */
+.ticker{border-block:1px solid rgba(155,107,255,.35);box-shadow:0 0 30px -10px rgba(155,107,255,.6) inset}
+.ticker span::after{background:var(--neon-ambar);box-shadow:var(--glow-ambar)}
+.pcard{box-shadow:0 0 0 1px rgba(155,107,255,.35),0 12px 40px -18px rgba(155,107,255,.8)}
+.pcard:hover{box-shadow:0 0 0 1.5px var(--neon-ambar),var(--glow-ambar)}
+.frame{box-shadow:0 0 0 1px rgba(155,107,255,.6),0 0 60px -10px rgba(155,107,255,.7)!important}
+
+/* números */
+.stat b{text-shadow:0 0 18px rgba(155,107,255,.55)}
+.stat b small{color:var(--neon-ambar);text-shadow:var(--glow-ambar)}
+
+/* área do aluno */
+.bar i{background:linear-gradient(90deg,var(--neon-roxo),var(--neon-ambar))!important;box-shadow:0 0 10px rgba(255,181,71,.6)}
+.code{color:var(--neon-ambar)!important;border-color:rgba(255,181,71,.6)!important;box-shadow:0 0 10px rgba(255,181,71,.3)}
+.nav a.on{box-shadow:inset 2px 0 0 var(--neon-ambar),0 0 18px -6px rgba(155,107,255,.8)}
+.state.done{box-shadow:0 0 12px rgba(255,181,71,.6)}
+.bigplay{box-shadow:var(--glow-ambar)}
+.fx-ring{border-color:rgba(92,200,255,.7)!important;box-shadow:0 0 12px rgba(92,200,255,.5)}
+
+@media (prefers-reduced-motion:reduce){.aura::before{-webkit-mask:none;mask:none}}

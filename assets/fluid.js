@@ -31,11 +31,11 @@ const FLUID_BASE = (document.currentScript && document.currentScript.src) ? docu
 try {
 let ambientTimer = 0;
 const FOSFENA_COLORS = [
-    { c: [224, 168, 78], w: 0.42 },
-    { c: [120, 82, 180], w: 0.30 },
-    { c: [ 59, 42, 82], w: 0.10 },
-    { c: [127, 156, 192], w: 0.10 },
-    { c: [236, 234, 228], w: 0.08 },
+    { c: [255, 181, 71], w: 0.38 },
+    { c: [155, 107, 255], w: 0.34 },
+    { c: [ 92, 200, 255], w: 0.16 },
+    { c: [ 59, 42, 82], w: 0.07 },
+    { c: [236, 234, 228], w: 0.05 },
 ];
 
 
