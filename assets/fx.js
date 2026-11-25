@@ -118,13 +118,23 @@
     el.classList.add('fx-pencil'); const o=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ el.classList.add('in'); o.disconnect(); } }),{threshold:1}); o.observe(el);
   });
 
-  /* faixas infinitas: repete o conteúdo até cobrir telas largas (a animação anda 50%) */
+  /* faixas infinitas: repete o conteúdo até cobrir telas largas (a animação anda 50%).
+     A velocidade fica fixa em px/s, mesmo depois de repetir. data-speed multiplica a velocidade;
+     data-hover é a velocidade com o mouse em cima (fração da velocidade normal), com transição suave. */
   function fillTracks(){
     document.querySelectorAll('.ticker .track, .ptrack').forEach(t=>{
+      const dur=parseFloat(getComputedStyle(t).animationDuration)||0;
+      if(!t._pps && dur) t._pps=(t.scrollWidth/2)/dur;
       let guard=0;
       while(t.scrollWidth < innerWidth*2 + 400 && guard++ < 6){
         [...t.children].forEach(c=>{ const k=c.cloneNode(true); k.setAttribute('aria-hidden','true'); t.append(k); });
       }
+      if(t._pps) t.style.animationDuration=((t.scrollWidth/2)/(t._pps*(parseFloat(t.dataset.speed)||1))).toFixed(2)+'s';
+      if(t.dataset.hover && !t._hov){ t._hov=1; const host=t.closest('.pmarquee,.ticker')||t; let raf=0;
+        const ease=to=>{ cancelAnimationFrame(raf); const an=t.getAnimations()[0]; if(!an) return; const from=an.playbackRate, t0=performance.now();
+          (function f(now){ const k=Math.min(1,(now-t0)/450), e=1-Math.pow(1-k,3); an.playbackRate=from+(to-from)*e; if(k<1) raf=requestAnimationFrame(f); })(t0); };
+        host.addEventListener('mouseenter',()=>ease(parseFloat(t.dataset.hover)));
+        host.addEventListener('mouseleave',()=>ease(1)); }
     });
   }
   fillTracks(); addEventListener('resize', fillTracks);
