@@ -39,6 +39,16 @@ main{max-width:1320px;margin:0 auto;padding:26px 16px 80px;position:relative;z-i
 .next small{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ambar)}
 .next b{display:block;font-size:16px;margin:4px 0 2px}
 .next span{font-size:13.5px;color:var(--muted)}
+.tabs{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px}
+.tabs button{font:inherit;color:var(--fg);text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:10px 16px;border-radius:12px;background:rgba(20,16,34,.6);border:1px solid var(--line);font-size:15px;font-weight:600;transition:border-color .3s,box-shadow .3s,background-color .3s}
+.tabs button small{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:400}
+.tabs button[aria-selected="true"]{border-color:var(--roxo);background:rgba(155,107,255,.16);box-shadow:0 0 26px -8px rgba(155,107,255,.9)}
+.tabs button[aria-selected="true"] small{color:var(--ciano)}
+.tabs button:focus-visible{outline:2px solid var(--ambar);outline-offset:3px}
+.prop{margin:0 0 8px;font-size:13.5px;color:#d9ccff;border-left:2px solid var(--roxo);padding-left:10px}
+#og{transition:opacity .18s ease}
+#og.swap{opacity:0}
+.s-planejado{--c:#c39bff}
 .store{margin-top:28px;font-size:13.5px;color:var(--muted);line-height:1.55;border-top:1px solid var(--line);padding-top:16px;max-width:80ch}
 .store b{color:var(--fg)}
 
@@ -48,6 +58,11 @@ main{max-width:1320px;margin:0 auto;padding:26px 16px 80px;position:relative;z-i
 .drawer{position:fixed;top:0;right:0;bottom:0;width:min(480px,100vw);z-index:21;background:rgba(18,16,28,.97);border-left:1px solid rgba(155,107,255,.4);
   box-shadow:-30px 0 80px -30px rgba(155,107,255,.6);transform:translateX(102%);transition:transform .25s;display:flex;flex-direction:column}
 .drawer.on{transform:none}
+.drawer{transition:transform .38s cubic-bezier(.2,.8,.2,1)!important}
+@keyframes dIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.drawer.on .db>*{animation:dIn .4s ease both}
+.drawer.on .db>*:nth-child(2){animation-delay:.05s}.drawer.on .db>*:nth-child(3){animation-delay:.1s}.drawer.on .db>*:nth-child(4){animation-delay:.15s}.drawer.on .db>*:nth-child(n+5){animation-delay:.2s}
+@media (prefers-reduced-motion:reduce){.drawer.on .db>*{animation:none}}
 .dh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:18px 18px 12px;border-bottom:1px solid var(--line)}
 .dh small{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.1em;color:var(--ciano)}
 .dh h2{margin:4px 0 0;font-size:21px}
@@ -90,11 +105,16 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
   <div class="intro">
     <div>
       <h1>Painel do professor</h1>
-      <p>Organograma do Curso de Nuke (módulo NK101) com o que já foi gravado e o que falta. Clique numa fase para abrir ou fechar, e numa aula para ver o roteiro, mudar o status, anotar e enviar os arquivos dela (vídeo, script, footage, referência). Só o login admin vê esta página.</p>
+      <p>Um organograma por curso, com o que já foi gravado e o que falta. Clique numa fase para abrir ou fechar, e numa aula para ver o roteiro, mudar o status, anotar e enviar os arquivos dela (vídeo, script, footage, referência). Só o login admin vê esta página.</p>
     </div>
     <div class="next" id="next"></div>
   </div>
-  <div id="og"></div>
+  <div class="tabs" role="tablist" aria-label="Cursos">
+    <button type="button" role="tab" id="tab-nuke" data-c="nuke"><small>Curso de Nuke</small>NK101 · Fundamentos do Nuke</button>
+    <button type="button" role="tab" id="tab-flame" data-c="flame"><small>Curso de Flame</small>FL101 · Fundamentos do Flame</button>
+  </div>
+  <p class="prop" id="prop" hidden>Proposta inicial de estrutura: nada do Flame foi gravado ainda. Ajuste as aulas e me diga o que mudar.</p>
+  <div id="og" role="tabpanel"></div>
   <p class="store" id="store"></p>
 </main>
 
@@ -106,10 +126,13 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
 <div class="toast" id="toast" role="status"></div>
 
 <script src="assets/nk101-plano.js"></script>
+<script src="assets/fl101-plano.js"></script>
 <script src="assets/organograma.js"></script>
 <script>
 /* Estado do painel: status e notas no localStorage; arquivos no IndexedDB deste navegador. Nada disso vai para o GitHub. */
-const PLANO = window.NK101_PLANO, KEY='fosfena-admin-plano';
+const PLANOS = { nuke: window.NK101_PLANO, flame: window.FL101_PLANO }, KEY='fosfena-admin-plano';
+let CUR = 'nuke'; try{ if(PLANOS[localStorage.getItem('fosfena-admin-curso')]) CUR=localStorage.getItem('fosfena-admin-curso'); }catch(e){}
+let PLANO = PLANOS[CUR];
 let ST = {status:{}, notas:{}};
 try{ ST = Object.assign(ST, JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){}
 const saveST = () => { try{ localStorage.setItem(KEY, JSON.stringify(ST)); }catch(e){} };
@@ -133,17 +156,22 @@ async function delFile(id){ await tx('readwrite', s=>{ s.delete(id); }); }
 let COUNTS={}, OPEN=null;
 async function draw(){
   const meta = await listMeta(); COUNTS={}; meta.forEach(m=>COUNTS[m.node]=(COUNTS[m.node]||0)+1);
+  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.c===CUR));
+  document.getElementById('prop').hidden = !PLANO.proposta;
   const r = Organograma.render(document.getElementById('og'), PLANO, {admin:true, status:ST.status, counts:COUNTS, onOpen:open});
   const h=r.here, nx = h && r.all[r.all.indexOf(h)+1];
   document.getElementById('next').innerHTML = h
     ? `<small>Onde você está</small><b>${esc(h.titulo)}</b><span>${nx?'Depois: '+esc(nx.titulo):'Última etapa do módulo'}</span>`
-    : `<small>Módulo</small><b>Tudo feito no ${esc(PLANO.code)}</b>`;
+    : PLANO.proposta ? `<small>${esc(PLANO.curso)}</small><b>Estrutura proposta</b><span>Comece pela aula 01 quando for gravar</span>` : `<small>Módulo</small><b>Tudo feito no ${esc(PLANO.code)}</b>`;
   const total = meta.reduce((a,m)=>a+m.size,0);
   let quota=''; try{ const e=await navigator.storage.estimate(); quota=` Espaço livre para o navegador: cerca de ${size(Math.max(0,e.quota-e.usage))}.`; }catch(e){}
   document.getElementById('store').innerHTML = `<b>Onde ficam os arquivos:</b> só neste navegador, neste computador (${meta.length} ${meta.length===1?'arquivo':'arquivos'}, ${size(total)}).${quota} Eles não vão para o GitHub nem para os alunos, e somem se você limpar os dados do site. Para guardar de verdade, mantenha o original na pasta do curso.`;
 }
 
-const ORDER=['feito','agora','proximo','depois'];
+const ORDER=['feito','agora','proximo','depois','planejado'];
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ if(b.dataset.c===CUR) return; CUR=b.dataset.c; PLANO=PLANOS[CUR];
+  try{ localStorage.setItem('fosfena-admin-curso',CUR); }catch(e){}
+  const og=document.getElementById('og'); og._shown=null; og._open=null; og.classList.add('swap'); setTimeout(()=>{ og.classList.remove('swap'); draw(); },180); });
 async function open(id){
   const n = Organograma.flat(PLANO).find(x=>x.id===id); if(!n) return; OPEN=id;
   const cur = ST.status[id] || n.status;

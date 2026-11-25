@@ -6,7 +6,7 @@
 .og-l{display:inline-flex;align-items:center;gap:7px}
 .og-l i{width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
 .og-tip{flex-basis:100%;font-size:12.5px;color:#8b8e96}
-.s-feito{--c:var(--og-ok)} .s-agora{--c:var(--og-ambar)} .s-proximo{--c:var(--og-ciano)} .s-depois{--c:#7a7d88}
+.s-feito{--c:var(--og-ok)} .s-agora{--c:var(--og-ambar)} .s-proximo{--c:var(--og-ciano)} .s-depois{--c:#7a7d88} .s-planejado{--c:#c39bff}
 .og-prog{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:baseline;min-width:220px}
 .og-prog b{font-family:"JetBrains Mono",monospace;font-size:20px;color:var(--og-ambar);text-shadow:0 0 12px rgba(255,181,71,.6)}
 .og-prog span{font-size:13px;color:#aeb0b5}
@@ -31,7 +31,7 @@
 .mb{position:relative;z-index:1;flex:none;display:flex;flex-direction:column;gap:3px;text-align:left;font:inherit;color:inherit;border-radius:10px;
   padding:10px 14px;background:rgba(18,15,30,.88);border:1px solid rgba(236,234,228,.14);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .mb small{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.9}
-button.mb{cursor:pointer;transition:transform .15s,box-shadow .2s,border-color .2s}
+button.mb{cursor:pointer;transition:transform .2s,box-shadow .35s ease,border-color .35s ease,background-color .35s ease}
 button.mb:hover{transform:translateX(2px)}
 button.mb:focus-visible{outline:2px solid var(--og-ambar);outline-offset:3px}
 .m-car{position:absolute;right:10px;top:50%;width:7px;height:7px;margin-top:-5px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);opacity:.6;transition:transform .2s}
@@ -70,4 +70,16 @@ button.mb.lv2:hover{box-shadow:0 0 0 1px var(--c),0 0 26px -4px var(--c)}
 .rot span{color:#c9c8c4}
 .rot-src,.rot-empty{font-size:13px;color:#9a9da6;margin:10px 0 0}
 .rot-empty{margin:0;color:#c9c8c4}
-@media (prefers-reduced-motion:reduce){button.mb,.m-car{transition:none}}
+/* animações: galhos se desenham, caixas abrem da esquerda para a direita, ao fechar recolhem */
+@keyframes m-grow{to{stroke-dashoffset:0}}
+@keyframes m-in{from{opacity:0;clip-path:inset(0 100% 0 0 round 10px)}to{opacity:1;clip-path:inset(0 0 0 0 round 10px)}}
+@keyframes m-glow{0%{box-shadow:0 0 0 0 rgba(92,200,255,0)}40%{box-shadow:0 0 0 3px rgba(92,200,255,.55),0 0 40px 0 rgba(92,200,255,.9)}100%{}}
+.mb.m-in{animation:m-in .42s cubic-bezier(.2,.7,.2,1) var(--d,0ms) both}
+.mb.lv2.sel{animation:m-glow .7s ease-out}
+.mb.lv2.sel.m-in{animation:m-in .42s cubic-bezier(.2,.7,.2,1) var(--d,0ms) both}
+.mk{transition:opacity .22s ease,transform .22s ease}
+.mk.m-out{opacity:0;transform:translateX(-18px) scale(.97);transform-origin:left center}
+.m-wires line{transition:opacity .22s ease}
+.m-wires .w-out{opacity:0}
+.m-car{transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+@media (prefers-reduced-motion:reduce){button.mb,.m-car,.mk,.m-wires line{transition:none}.mb.m-in,.mb.lv2.sel{animation:none}}
