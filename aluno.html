@@ -120,6 +120,10 @@ main{min-width:0;padding-block:28px 56px;padding-left:max(28px,env(safe-area-ins
 .poster .ttl{font-family:var(--f-display);font-weight:600;letter-spacing:-.025em;font-size:clamp(18px,2.4vw,30px);line-height:1.1}
 /* lesson page */
 .lesson{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+.stagev{display:flex;justify-content:center}
+.player.big{width:100%;max-width:min(100%,calc((100vh - 190px) * 16 / 9));box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.prat{display:flex;flex-direction:column;gap:16px;padding-top:26px;border-top:1px solid var(--line);scroll-margin-top:20px}
+.prat-h{display:flex;flex-direction:column;gap:6px}.prat-h h2{font-size:24px;margin:0}.prat-h p{margin:0;color:var(--muted)}
 .crumbs{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;flex-wrap:wrap}
 .crumbs a{color:var(--link)}.crumbs a:hover{text-decoration:underline}
 .player{border-radius:var(--r);overflow:hidden;background:var(--fos-grafite)}
@@ -493,15 +497,14 @@ function home(){
 let timer=null, speedIdx=0; const SPEEDS=[1,1.25,1.5,2];
 function lessonView(l){
   const i=LESSONS.indexOf(l), prev=LESSONS[i-1], next=LESSONS[i+1], p=P(l.id);
-  const tabs = [['sobre','Sobre a aula'],['materiais','Materiais'],['praticar','Praticar'],['exercicio','Exercício'],['prova','Prova'],['notas','Anotações']].filter(t=> t[0]!=='materiais'||l.files.length).filter(t=>t[0]!=='praticar'||(window.FosPratica&&FosPratica.has(l))).filter(t=>t[0]!=='exercicio'||l.exercise).filter(t=>t[0]!=='prova'||QUIZ[l.id]);
+  const tabs = [['sobre','Sobre a aula'],['materiais','Materiais'],['exercicio','Exercício'],['prova','Prova'],['notas','Anotações']].filter(t=> t[0]!=='materiais'||l.files.length).filter(t=>t[0]!=='exercicio'||l.exercise).filter(t=>t[0]!=='prova'||QUIZ[l.id]);
   const list = COURSE.filter(m=>m.course===l.module.course).map(m=>`<div class="grp">${m.code} · ${esc(m.title)}</div>` + (m.soon? `<div class="litem lock"><span class="state">·</span><span class="t">${esc(m.note)}</span><span class="tag">Em breve</span></div>` :
     m.lessons.map(x=>`<a class="litem ${x.id===l.id?'cur':''}" href="#${x.id}">${stateIcon(x)}<span class="t">${esc(x.title)}</span><span class="d">${fmt(x.dur)}</span></a>`).join(''))).join('');
-  const s=stats(), vsrc=window.FosPratica&&FosPratica.videoFor(l.id);
+  const s=stats(), vsrc=window.FosPratica&&FosPratica.videoFor(l.id), hasPrat=!!(window.FosPratica&&FosPratica.has(l));
   return `
     <div class="crumbs"><a href="#inicio">Início</a><span>›</span><a href="#${l.module.id}">${l.module.code} · ${esc(l.module.title)}</a><span>›</span><span style="color:var(--fg)">Aula ${l.n}</span></div>
-    <div class="lesson">
-      <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
-        <div class="player">
+    <div class="stagev">
+        <div class="player big">
           <div class="screen" id="screen" role="button" tabindex="0" aria-label="Reproduzir ou pausar">${vsrc?`<video id="vid" src="${esc(vsrc)}" preload="metadata" playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>`:poster(l,true)+'<span class="sample">Prévia · sem vídeo real</span>'}<span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
           <div class="controls">
             <div class="scrub" id="scrub" role="slider" aria-label="Posição do vídeo" tabindex="0"><i id="fill"></i><b id="knob"></b></div>
@@ -516,12 +519,16 @@ function lessonView(l){
             </div>
           </div>
         </div>
+    </div>
+    <div class="lesson">
+      <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
         <div class="lesson-head">
           <div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span class="eyebrow">${l.module.code} · Aula ${String(l.n).padStart(2,'0')}</span><h1>${esc(l.title)}</h1></div>
           <button class="btn btn-ghost done-btn ${p.done?'is-done':''}" id="done">${p.done?'✓ Concluída':'Marcar como concluída'}</button>
         </div>
         <div class="tabs" role="tablist">${tabs.map((t,k)=>`<button role="tab" data-t="${t[0]}" aria-selected="${k===0}">${t[0]==='prova'&&S.quiz[l.id]?`Prova · ${S.quiz[l.id].best}/${S.quiz[l.id].total}`:t[1]}</button>`).join('')}</div>
         <div id="panel" class="tabpanel"></div>
+        ${hasPrat?`<section class="prat" id="prat"><div class="prat-h"><span class="eyebrow">Prática · final da aula</span><h2>Agora é com você</h2></div><div id="pratBox"></div></section>`:''}
         <div class="pager">
           ${prev?`<a class="btn btn-ghost" href="#${prev.id}">← ${esc(prev.title)}</a>`:'<span></span>'}
           ${next?`<a class="btn btn-primary" href="#${next.id}">Próxima: ${esc(next.title)} →</a>`:''}
@@ -682,12 +689,13 @@ function bindLesson(l){
   const vid=document.getElementById('vid'); /* vídeo real quando a aula tem arquivo em FOS_VIDEOS; senão, simulação */
   if(vid){ vid.addEventListener('loadedmetadata',()=>{ if(p.pos>5&&p.pos<vid.duration-5) vid.currentTime=p.pos; },{once:true});
     vid.addEventListener('timeupdate',()=>{ p.pos=vid.currentTime; upd(); if(p.pos/l.dur>0.95&&!p.done) markDone(true); save(); });
-    vid.addEventListener('ended',()=>setPlay(false)); }
+    vid.addEventListener('ended',()=>{ setPlay(false); goPrat(); }); }
+  const goPrat=()=>{ const pr=document.getElementById('prat'); if(pr) pr.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth', block:'start'}); };
   const seek=t=>{ p.pos=Math.max(0,Math.min(l.dur,t)); if(vid) vid.currentTime=p.pos; upd(); save(); };
   const setPlay=on=>{ clearInterval(timer); timer=null; if(vid){ vid.playbackRate=SPEEDS[speedIdx]; on? vid.play().catch(()=>{}) : vid.pause(); } document.getElementById('screen').classList.toggle('playing',on);
     document.getElementById('ppIc').innerHTML = on? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>' : '<path d="M7 4.5v15l13-7.5z"/>';
     document.getElementById('pp').setAttribute('aria-label', on?'Pausar':'Reproduzir');
-    if(on&&!vid) timer=setInterval(()=>{ p.pos=Math.min(p.pos+0.25*SPEEDS[speedIdx]*8, l.dur); upd(); if(p.pos/l.dur>0.95 && !p.done) markDone(true); if(p.pos>=l.dur) setPlay(false); save(); },250); };
+    if(on&&!vid) timer=setInterval(()=>{ p.pos=Math.min(p.pos+0.25*SPEEDS[speedIdx]*8, l.dur); upd(); if(p.pos/l.dur>0.95 && !p.done) markDone(true); if(p.pos>=l.dur){ setPlay(false); goPrat(); } save(); },250); };
   const toggle=()=>setPlay(vid? vid.paused : !timer);
   const markDone=v=>{ p.done=v; const b=document.getElementById('done'); b.classList.toggle('is-done',v); b.textContent=v?'✓ Concluída':'Marcar como concluída'; save(); sidebar(); refreshList(l); if(v) toast(QUIZ[l.id]&&!S.quiz[l.id]?'Aula concluída! Agora faça a prova da aula.':'Aula concluída. Bom trabalho!'); };
   document.getElementById('screen').onclick=toggle;
@@ -702,6 +710,7 @@ function bindLesson(l){
   document.getElementById('done').onclick=()=>markDone(!p.done);
   document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b)); panel(l,b.dataset.t); });
   panel(l,'sobre'); upd();
+  const pb=document.getElementById('pratBox'); if(pb) FosPratica.render(l, pb);
 }
 function refreshList(l){ document.querySelectorAll('.list .litem[href]').forEach(a=>{ const x=LESSONS.find(y=>'#'+y.id===a.getAttribute('href')); a.querySelector('.state').outerHTML=stateIcon(x); }); const tb=document.querySelector('.tabs button[data-t="prova"]'); const rq=S.quiz[l.id]; if(tb&&rq) tb.textContent=`Prova · ${rq.best}/${rq.total}`; const s=stats(); const h=document.querySelector('.list header'); if(h){ h.querySelector('.bar i').style.width=(s.pct*100).toFixed(1)+'%'; h.querySelector('span').textContent=`${s.done} de ${LESSONS.length} aulas concluídas`; } }
 
