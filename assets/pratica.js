@@ -68,6 +68,8 @@ const st=document.createElement('style'); st.textContent=css; document.head.appe
 
 /* ---------- player de trecho (in/out) ---------- */
 function videoFor(lessonId){ return (window.FOS_VIDEOS||{})[lessonId] || null; }
+/* aceita link do YouTube (watch, youtu.be, shorts, embed) ou só o ID de 11 caracteres */
+function ytId(src){ if(!src) return null; const m=String(src).match(/(?:youtu\.be\/|v=|\/embed\/|\/shorts\/|\/live\/)([\w-]{11})/)||String(src).match(/^([\w-]{11})$/); return m?m[1]:null; }
 function openClip(lesson, d){
   const src = videoFor(lesson.id);
   const dur = lesson.dur || d.out;
@@ -75,7 +77,9 @@ function openClip(lesson, d){
   const range = `<span>${tcode(d.in)}</span> → <span>${tcode(d.out)}</span>`;
   wrap.innerHTML = `<div class="box">
     <div class="hd"><b>Aula ${String(lesson.n).padStart(2,'0')} · ${esc(lesson.title)} · trecho</b><button class="x" aria-label="Fechar">×</button></div>
-    <div class="scr">${src
+    <div class="scr">${ytId(src)
+      ? `<iframe src="https://www.youtube-nocookie.com/embed/${ytId(src)}?start=${Math.floor(d.in)}&end=${Math.ceil(d.out)}&autoplay=1&rel=0&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0;display:block" title="Trecho da aula"></iframe>`
+      : src
       ? `<video controls playsinline preload="metadata" src="${esc(src)}#t=${d.in.toFixed(2)},${d.out.toFixed(2)}"></video>`
       : `<div class="pv"><span class="eyebrow">Prévia · vídeo ainda sem hospedagem</span><div class="tcs">${range}</div>
          <div class="rng" aria-hidden="true"><i style="left:${(d.in/dur*100).toFixed(2)}%;width:${Math.max(.6,(d.out-d.in)/dur*100).toFixed(2)}%"></i></div>
@@ -204,5 +208,5 @@ function render(lesson, el, idx=0){
 }
 const x_tipo = ex => ({grafo:'Conecte os nodes', ordem:'Coloque em ordem', escolha:'Escolha o node certo'})[ex.tipo];
 
-window.FosPratica = { has, render, openClip, videoFor, tcode, helpBtn };
+window.FosPratica = { has, render, openClip, videoFor, ytId, tcode, helpBtn };
 })();
