@@ -16,7 +16,8 @@ body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 .split{flex:1;display:grid;grid-template-columns:1fr 1fr}
 .art{background:var(--fos-roxo);padding:40px;display:flex;flex-direction:column;justify-content:space-between;gap:32px;position:relative;overflow:hidden}
 .art .big{position:absolute;right:-60px;bottom:-40px;width:min(520px,80%);opacity:.18;color:var(--fg)}
-.art blockquote{margin:0;max-width:22em;position:relative}
+.art blockquote{margin:0;max-width:22em;position:relative;z-index:1}
+.art .brand{position:relative;z-index:1}
 .art blockquote p{font-family:var(--f-display);font-size:clamp(26px,3vw,38px);font-weight:600;letter-spacing:-.03em;line-height:1.1}
 .art .mao{font-size:19px;display:block;margin-top:16px;transform:rotate(-2deg);transform-origin:left}
 .side{display:flex;align-items:center;justify-content:center;padding:40px 16px}
@@ -25,7 +26,7 @@ body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 .card .sub{color:var(--muted)}
 form{display:flex;flex-direction:column;gap:16px}
 label{display:flex;flex-direction:column;gap:7px;font-size:14px;font-weight:500;color:var(--soft)}
-input[type=email],input[type=password]{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:15px;color:var(--fg);width:100%}
+input[type=text],input[type=password]{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:15px;color:var(--fg);width:100%}
 input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
 .row{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px}
 .row label{flex-direction:row;align-items:center;gap:8px;font-weight:400;color:var(--muted)}
@@ -40,9 +41,9 @@ input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:tran
 <link rel="stylesheet" href="assets/fx.css">
 <link rel="stylesheet" href="assets/neon.css">
 <style>
-.art{background:rgba(59,42,82,.45)!important;-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);border-right:1px solid rgba(236,234,228,.08)}
+.art{background:linear-gradient(160deg,rgba(59,42,82,.7),rgba(40,22,70,.55))!important;border-right:1px solid rgba(236,234,228,.08)}
 .card{padding:32px;border-radius:20px}
-input[type=email],input[type=password]{background:rgba(20,21,24,.55)!important}
+input[type=text],input[type=password]{background:rgba(20,21,24,.55)!important}
 @media (max-width:820px){.card{padding:22px}}
 </style>
 </head>
@@ -57,13 +58,13 @@ input[type=email],input[type=password]{background:rgba(20,21,24,.55)!important}
     <div class="card">
       <div style="display:flex;flex-direction:column;gap:8px"><span class="eyebrow">Área do aluno</span><h1>Entrar</h1><p class="sub">Use o e-mail da sua assinatura.</p></div>
       <form id="f" novalidate>
-        <label>E-mail<input type="email" id="email" autocomplete="email" placeholder="voce@email.com" required></label>
+        <label>E-mail<input type="text" inputmode="email" id="email" autocomplete="username" placeholder="voce@email.com" autocapitalize="none" spellcheck="false" required></label>
         <label>Senha<input type="password" id="pw" autocomplete="current-password" placeholder="••••••••" required></label>
         <div class="row"><label><input type="checkbox" checked> Manter conectado</label><a href="#" id="forgot">Esqueci minha senha</a></div>
         <p class="err" id="err" role="alert"></p>
         <button class="btn btn-primary btn-block" type="submit">Entrar</button>
       </form>
-      <p class="note">Prévia: o login ainda não confere senha. Qualquer e-mail abre a área do aluno de exemplo.</p>
+      <p class="note">Prévia: o login ainda não confere senha. Qualquer e-mail, ou admin / admin, abre a área do aluno de exemplo.</p>
       <p class="alt">Ainda não é aluno? <a href="index.html#precos">Conheça os planos</a></p>
     </div>
   </main>
@@ -74,7 +75,9 @@ const f=document.getElementById('f'), err=document.getElementById('err');
 f.addEventListener('submit',e=>{
   e.preventDefault();
   const em=document.getElementById('email').value.trim(), pw=document.getElementById('pw').value;
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ err.textContent='Digite um e-mail válido.'; return; }
+  const admin = em.toLowerCase()==='admin'; /* acesso da prévia: admin / admin. Não é segurança, o código é público. */
+  if(admin && pw!=='admin'){ err.textContent='Senha incorreta.'; return; }
+  if(!admin && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ err.textContent='Digite um e-mail válido.'; return; }
   if(!pw){ err.textContent='Digite sua senha.'; return; }
   err.textContent='';
   try{ localStorage.setItem('fosfena-sessao', JSON.stringify({email:em})); }catch(x){}
