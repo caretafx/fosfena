@@ -60,6 +60,7 @@ const css = `
 .px-clip .ft{padding:12px 16px;display:flex;flex-direction:column;gap:6px;overflow-y:auto}
 .px-clip .ft q{font-size:14px;color:var(--muted);quotes:none;border-left:2px solid var(--accent);padding-left:10px;display:block}
 .px-clip .x{font-size:20px;line-height:1;color:var(--muted);padding:4px 8px}
+.px-nav button.skip{opacity:.6;text-decoration:line-through}
 .qhelp{align-self:flex-start;font-size:13px;color:var(--link,#7F9CC0);padding:0;display:none}
 .quiz.checked .qhelp{display:inline}
 .qhelp:hover{text-decoration:underline}
@@ -195,18 +196,22 @@ function render(lesson, el, idx=0){
   const ex=list[idx];
   el.innerHTML = `<div class="px">
     <p>Exercícios curtos, um por etapa da aula. Se travar, o botão de dúvida abre a própria videoaula no trecho em que isso é explicado.</p>
-    <div class="px-nav" role="tablist">${list.map((x,i)=>`<button role="tab" aria-selected="${i===idx}" class="${i===idx?'on':''} ${okSet[x.id]?'ok':''}" data-i="${i}">${i+1}. ${esc(x.etapa)}</button>`).join('')}</div>
+    <div class="px-nav" role="tablist">${list.map((x,i)=>`<button role="tab" aria-selected="${i===idx}" class="${i===idx?'on':''} ${okSet[x.id]?'ok':((S._pulos||{})[x.id]?'skip':'')}" data-i="${i}">${i+1}. ${esc(x.etapa)}</button>`).join('')}</div>
     <div class="px-card"><span class="px-eb">Etapa ${idx+1} de ${list.length} · ${esc(x_tipo(ex))}</span><h3>${esc(ex.titulo)}</h3><p>${esc(ex.enunciado)}</p><div class="px-body"></div></div>
-    <div class="px-row" style="justify-content:space-between"><span class="mono" style="font-size:12.5px;color:var(--muted)">${Object.keys(okSet).filter(k=>list.some(x=>x.id===k)).length} de ${list.length} feitos</span>${idx<list.length-1?`<button class="btn btn-ghost" data-next>Próximo exercício →</button>`:''}</div>
+    <div class="px-row" style="justify-content:space-between"><span class="mono" style="font-size:12.5px;color:var(--muted)">${Object.keys(okSet).filter(k=>list.some(x=>x.id===k)).length} de ${list.length} feitos</span><span class="px-row" style="margin:0">${okSet[ex.id]?'':`<button class="btn btn-ghost" data-skip title="Você pode voltar a ele depois pela lista de etapas">Pular exercício</button>`}${idx<list.length-1?`<button class="btn btn-ghost" data-next>Próximo exercício →</button>`:''}</span></div>
   </div>`;
   el.querySelectorAll('.px-nav button').forEach(b=>b.onclick=()=>render(lesson,el,+b.dataset.i));
   const nx=el.querySelector('[data-next]'); if(nx) nx.onclick=()=>render(lesson,el,idx+1);
+  const sk=el.querySelector('[data-skip]'); if(sk) sk.onclick=()=>{ const s=load(); (s._pulos=s._pulos||{})[ex.id]=true; save(s);
+    if(idx<list.length-1) render(lesson,el,idx+1); else { const c=el.querySelector('.px-card'); c.innerHTML=`<span class="px-eb">Prática</span><h3>Exercício pulado</h3><p>Sem problema. Quando quiser, volte a qualquer etapa pela lista acima.</p>`; } };
   const body=el.querySelector('.px-body');
   const done=()=>{ const s=load(); (s[lesson.id]=s[lesson.id]||{})[ex.id]=true; save(s); const b=el.querySelector(`.px-nav button[data-i="${idx}"]`); if(b) b.classList.add('ok'); const c=el.querySelector('.px > .px-row .mono'); if(c){ const o=s[lesson.id]; c.textContent=`${Object.keys(o).filter(k=>list.some(x=>x.id===k)).length} de ${list.length} feitos`; } };
-  ({grafo:graphEx, ordem:orderEx, escolha:choiceEx})[ex.tipo](ex, body, done);
+  (TIPOS[ex.tipo]||choiceEx)(ex, body, done);
   body.querySelectorAll('[data-help]').forEach(b=>b.onclick=()=>openClip(lesson, ex.duvida));
 }
-const x_tipo = ex => ({grafo:'Conecte os nodes', ordem:'Coloque em ordem', escolha:'Escolha o node certo'})[ex.tipo];
+/* tipos de exercício; outros arquivos podem registrar novos (ex.: simulações interativas da interface do Nuke) com FosPratica.tipo(nome, rótulo, função) */
+const TIPOS={grafo:graphEx, ordem:orderEx, escolha:choiceEx}, ROTULOS={grafo:'Conecte os nodes', ordem:'Coloque em ordem', escolha:'Escolha o node certo'};
+const x_tipo = ex => ROTULOS[ex.tipo]||'Exercício';
 
-window.FosPratica = { has, render, openClip, videoFor, ytId, tcode, helpBtn };
+window.FosPratica = { has, render, openClip, videoFor, ytId, tcode, helpBtn, tipo:(nome,rotulo,fn)=>{ TIPOS[nome]=fn; ROTULOS[nome]=rotulo; } };
 })();

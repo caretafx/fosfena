@@ -2,7 +2,7 @@
    Trechos (in/out) em segundos do vídeo de cada aula. Não edite à mão: rode o script de novo. */
 /* Arquivo de vídeo de cada aula. Quando houver hospedagem, coloque a URL aqui (ex.: 'https://.../nk101-aula01.mp4').
    Com URL, o player da aula toca o vídeo real e o botão de dúvida abre o mesmo arquivo com #t=in,out. */
-window.FOS_VIDEOS = window.FOS_VIDEOS || { 'aula-1': 'https://youtu.be/fFZRUfEX49o', 'aula-2': null, 'aula-3': null, 'aula-4': null };
+window.FOS_VIDEOS = window.FOS_VIDEOS || { 'aula-1': 'https://youtu.be/fFZRUfEX49o', 'aula-2': 'https://youtu.be/ivaORAiMvq8', 'aula-3': null, 'aula-4': null };
 // Onde a aula começa de verdade em cada vídeo do YouTube. A aula 01 foi enviada com a vinheta antiga (a da mãozinha) embutida
 // nos primeiros 1,73 s; como a vinheta agora roda no site, o vídeo entra logo depois dela. Se a aula for reenviada sem vinheta, apague a linha.
 window.FOS_VIDEO_INICIO = { 'aula-1': 1.75 };
