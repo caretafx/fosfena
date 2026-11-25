@@ -332,27 +332,29 @@ a.mcard:hover{background:var(--raise)}
 </div>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="assets/nk101-pratica.js"></script>
+<script src="assets/pratica.js"></script>
 <script>
 const COURSE = [
   { id:'NK101', course:'nuke', code:'NK101', tool:'Nuke', title:'Fundamentos do Nuke', desc:'Tudo o que você precisa para começar a trabalhar no Nuke, da instalação aos primeiros trabalhos de comp.', lessons:[
-    { id:'aula-1', n:1, title:'Como instalar o Nuke', dur:599.37,
-      summary:'Do download à primeira abertura. Você escolhe a licença certa para estudar, instala o Nuke no Windows e confere se está tudo pronto para a próxima aula.',
-      topics:['Onde baixar o Nuke e quais licenças existem para estudo','Instalação passo a passo no Windows','Ativação da licença e primeira abertura','Ajustes iniciais antes de começar'],
+    { id:'aula-1', n:1, title:'Como instalar o Nuke', dur:270.22,
+      summary:'Apresentação do curso e da licença gratuita. Você cria a conta no site da Foundry, pega a licença Non-commercial e deixa o Nuke instalado para a próxima aula.',
+      topics:['Como o curso funciona e quem vai te guiar','Licença Non-commercial: gratuita, com algumas limitações','Criar a conta na Foundry e pegar o trial','Ativar a licença e instalar o Nuke'],
       nodes:[], files:[] },
     { id:'aula-2', n:2, title:'Iniciando o Nuke', dur:1189.07,
-      summary:'Um tour pela interface e pela lógica de nodes. Ao final você sabe trazer um footage, navegar pelo Node Graph e ver o resultado no Viewer.',
-      topics:['Painéis: Node Graph, Viewer e Properties','Como os nodes se conectam e o fluxo da imagem','Project Settings: formato, fps e frame range','Ler um footage com Read e renderizar com Write'],
-      nodes:['Read','Viewer','Write'], files:[] },
+      summary:'Primeiro tour pelo Nuke. Você conhece os painéis principais, entende o que o Viewer mostra e deixa a interface configurada para trabalhar.',
+      topics:['Viewer, Node Graph e Properties: ver, trabalhar e ajustar','Curve Editor, Dope Sheet e os painéis que podem esperar','Canais RGBA, alpha e controles de visualização do Viewer','Timeline: frame range, fps, in e out','Large Viewer (Shift + F3), Preferences e atalhos que dependem do mouse'],
+      nodes:['Viewer'], files:[] },
     { id:'aula-3', n:3, title:'Primeiro apagamento', dur:2412.73, note:'congela, pinta, reaplica ↘',
       summary:'Seu primeiro cleanup de verdade. A partir de um plano vertical, você trackeia a cena, congela um frame limpo, pinta o patch e projeta de volta no movimento original.',
-      topics:['Tracking de pontos com Tracker','Clean plate com FrameHold e RotoPaint','Recortando o patch com Roto','Reaplicando o movimento com CornerPin e Transform','Merge e render final com Write'],
+      topics:['Project Settings, formato vertical e organização de pastas','Clean plate com RotoPaint e FrameHold','Tracking de pontos e reference frame','Recorte do patch com Roto e Merge em mask','CornerPin para o movimento planar e render com Write'],
       nodes:['Read','Tracker4','FrameHold','RotoPaint','Roto','CornerPin2D','Transform','Merge2','Write'],
       specs:[['Formato','2160 × 3840'],['Frames','1 – 101'],['FPS','24'],['Orientação','Vertical']],
       exercise:['Abra o aula03_v01.nk ou comece do zero com o ftg.mov','Trackeie a área a ser apagada com Tracker','Escolha um frame de referência e congele com FrameHold','Pinte o clean plate no RotoPaint','Recorte o patch com Roto e reaplique o movimento com CornerPin','Renderize o resultado de 1 a 101 e compare com aula03_v01.mov'],
       files:[['mov','ftg.mov','Footage da aula','362 MB'],['nk','aula03_v01.nk','Script do Nuke','223 KB'],['mov','aula03_v01.mov','Resultado de referência','354 MB']] },
     { id:'aula-4', n:4, title:'Primeira tela', dur:1585.43, note:'a matte manda em tudo ↘',
       summary:'Substituição de tela. Você extrai a tela com um keyer, trackeia o movimento, encaixa a nova imagem e integra com cor, blur e bordas.',
-      topics:['Keyer e refinamento da matte com FilterErode, Blur e Invert','Tracking da tela e encaixe da nova imagem','Copy e Premult para combinar o alpha','Integração de cor com Grade e HueCorrect','Reformat e render em HD'],
+      topics:['Reformat do footage 4K para o projeto HD','Keyer em Green Screen e leitura do alpha','Matte com Roto, Invert, FilterErode e Blur','Copy, Premult e despill com HueCorrect','Fundo com CheckerBoard em Merge under, Grade e render de 1 a 65'],
       nodes:['Read','Keyer','Tracker4','Roto','FilterErode','Blur','Invert','Copy','Premult','Grade','HueCorrect','Reformat','CheckerBoard2','Transform','Merge2','Write'],
       specs:[['Formato do render','1920 × 1080'],['Frames','1 – 65'],['FPS','24'],['Footage','4K DCP']],
       exercise:['Leia o ftg.mov e extraia a tela com Keyer','Limpe a matte com FilterErode e Blur','Trackeie os cantos da tela','Encaixe uma imagem nova no lugar (use o CheckerBoard para testar)','Ajuste cor com Grade e HueCorrect para integrar','Renderize em 1920 × 1080, frames 1 a 65'],
@@ -365,37 +367,14 @@ const COURSES = [ {id:'nuke', title:'Curso de Nuke', pill:'NK', status:'No ar'},
 const LESSONS = COURSE.flatMap(m => (m.lessons||[]).map(l => ({...l, module:m})));
 const TOTAL = LESSONS.reduce((s,l)=>s+l.dur,0);
 
-// Provas: perguntas de múltipla escolha no fim de cada aula. a = índice da resposta certa.
-const QUIZ = {
-  'aula-1':[
-    {q:'Qual licença da Foundry é gratuita para estudar, sem uso comercial?', o:['Nuke Indie','Nuke Non-commercial','NukeX','Nuke Studio'], a:1, why:'A Non-commercial é gratuita para aprender. A Indie é paga, mas barata, para quem fatura pouco.'},
-    {q:'Qual é a principal limitação de render da licença Non-commercial?', o:['Só renderiza 10 frames','Não abre arquivos .mov','O render fica limitado a resolução HD','Não tem o node Write'], a:2, why:'Você pode trabalhar normalmente, mas o render sai limitado a 1920 × 1080.'},
-    {q:'De onde você deve baixar o Nuke?', o:['De qualquer site de downloads','Do site oficial da Foundry','De um torrent','Ele já vem no Windows'], a:1, why:'Baixe sempre do site da Foundry: é seguro e a licença funciona sem dor de cabeça.'},
-  ],
-  'aula-2':[
-    {q:'Qual node traz um footage para dentro do script?', o:['Write','Viewer','Read','Merge'], a:2, why:'O Read lê o arquivo do disco. O atalho é a tecla R no Node Graph.'},
-    {q:'Onde você vê o resultado da imagem?', o:['No Viewer','No Properties','No Dope Sheet','No Script Editor'], a:0, why:'O Viewer mostra a imagem do node que está conectado a ele.'},
-    {q:'Onde se ajusta formato, fps e frame range do projeto?', o:['No node Read','Em Project Settings','No Viewer','No Write'], a:1, why:'Project Settings abre com a tecla S sobre o Node Graph.'},
-    {q:'Qual node grava o resultado final no disco?', o:['Read','Write','Shuffle','Backdrop'], a:1, why:'O Write define o caminho e o formato do arquivo e faz o render.'},
-  ],
-  'aula-3':[
-    {q:'Para que serve o FrameHold nesse apagamento?', o:['Acelerar o render','Congelar um frame para pintar o clean plate','Estabilizar a câmera','Trocar o fps do plano'], a:1, why:'Você pinta uma vez em um frame congelado e depois reaplica o movimento.'},
-    {q:'Qual node usamos para pintar o clean plate?', o:['RotoPaint','Grade','Blur','Keyer'], a:0, why:'O RotoPaint tem clone e paint para cobrir o que precisa sumir.'},
-    {q:'O que o Tracker entrega para reaplicar o patch?', o:['Uma matte pronta','O movimento da área ao longo dos frames','A cor média do plano','Um arquivo .mov'], a:1, why:'Os dados de track alimentam o CornerPin ou o Transform para o patch seguir a cena.'},
-    {q:'Qual node coloca o patch por cima da imagem original?', o:['Copy','Merge','Reformat','Read'], a:1, why:'O Merge, na operação over, junta o patch (A) sobre o plano (B).'},
-  ],
-  'aula-4':[
-    {q:'Para que serve o Keyer nesta aula?', o:['Gerar uma matte (alpha) da tela','Trackear os cantos','Mudar o formato do render','Corrigir a cor da imagem nova'], a:0, why:'O Keyer cria o alpha a partir da imagem, isolando a tela.'},
-    {q:'O que o FilterErode faz com a matte?', o:['Muda a cor dela','Encolhe ou expande as bordas','Inverte preto e branco','Apaga a matte'], a:1, why:'Valores positivos encolhem e negativos expandem a matte.'},
-    {q:'O que o Premult faz?', o:['Multiplica o RGB pelo alpha','Duplica o alpha','Aumenta o contraste','Converte para HD'], a:0, why:'Premultiplicar recorta a imagem pelo alpha antes do Merge.'},
-    {q:'Qual node muda a resolução para 1920 × 1080 antes do render?', o:['Transform','Crop','Reformat','Grade'], a:2, why:'O Reformat adapta a imagem a um novo formato.'},
-  ],
-};
+// Provas do fim de cada aula, feitas a partir das transcrições: ficam em assets/nk101-pratica.js (window.FOS_PROVAS).
+// a = índice da resposta certa; duvida = {in,out} em segundos no vídeo da aula.
+const QUIZ = window.FOS_PROVAS || {};
 const PASS = 0.7;
 
 
 // Progresso de exemplo para o preview; salvo só neste navegador.
-const DEFAULT = { 'aula-1':{pos:599.37,done:true}, 'aula-2':{pos:512,done:false} };
+const DEFAULT = { 'aula-1':{pos:270.22,done:true}, 'aula-2':{pos:512,done:false} };
 const KEY = 'fosfena-preview-v1';
 let S = load();
 function load(){ try{ const v = JSON.parse(localStorage.getItem(KEY)); if(v && v.prog){ v.quiz=v.quiz||{}; return v; } }catch(e){} return {prog:JSON.parse(JSON.stringify(DEFAULT)), notes:{}, steps:{}, quiz:{}}; }
@@ -478,16 +457,16 @@ function home(){
 let timer=null, speedIdx=0; const SPEEDS=[1,1.25,1.5,2];
 function lessonView(l){
   const i=LESSONS.indexOf(l), prev=LESSONS[i-1], next=LESSONS[i+1], p=P(l.id);
-  const tabs = [['sobre','Sobre a aula'],['materiais','Materiais'],['exercicio','Exercício'],['prova','Prova'],['notas','Anotações']].filter(t=> t[0]!=='materiais'||l.files.length).filter(t=>t[0]!=='exercicio'||l.exercise).filter(t=>t[0]!=='prova'||QUIZ[l.id]);
+  const tabs = [['sobre','Sobre a aula'],['materiais','Materiais'],['praticar','Praticar'],['exercicio','Exercício'],['prova','Prova'],['notas','Anotações']].filter(t=> t[0]!=='materiais'||l.files.length).filter(t=>t[0]!=='praticar'||(window.FosPratica&&FosPratica.has(l))).filter(t=>t[0]!=='exercicio'||l.exercise).filter(t=>t[0]!=='prova'||QUIZ[l.id]);
   const list = COURSE.filter(m=>m.course===l.module.course).map(m=>`<div class="grp">${m.code} · ${esc(m.title)}</div>` + (m.soon? `<div class="litem lock"><span class="state">·</span><span class="t">${esc(m.note)}</span><span class="tag">Em breve</span></div>` :
     m.lessons.map(x=>`<a class="litem ${x.id===l.id?'cur':''}" href="#${x.id}">${stateIcon(x)}<span class="t">${esc(x.title)}</span><span class="d">${fmt(x.dur)}</span></a>`).join(''))).join('');
-  const s=stats();
+  const s=stats(), vsrc=window.FosPratica&&FosPratica.videoFor(l.id);
   return `
     <div class="crumbs"><a href="#inicio">Início</a><span>›</span><a href="#${l.module.id}">${l.module.code} · ${esc(l.module.title)}</a><span>›</span><span style="color:var(--fg)">Aula ${l.n}</span></div>
     <div class="lesson">
       <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
         <div class="player">
-          <div class="screen" id="screen" role="button" tabindex="0" aria-label="Reproduzir ou pausar">${poster(l,true)}<span class="sample">Prévia · sem vídeo real</span><span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
+          <div class="screen" id="screen" role="button" tabindex="0" aria-label="Reproduzir ou pausar">${vsrc?`<video id="vid" src="${esc(vsrc)}" preload="metadata" playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>`:poster(l,true)+'<span class="sample">Prévia · sem vídeo real</span>'}<span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>
           <div class="controls">
             <div class="scrub" id="scrub" role="slider" aria-label="Posição do vídeo" tabindex="0"><i id="fill"></i><b id="knob"></b></div>
             <div class="crow">
@@ -533,6 +512,7 @@ function panel(l, t){
       <div class="deliver"><div><strong>Entrega</strong><div style="color:var(--muted);font-size:13.5px">Arquivo .mov ou .mp4 com o seu resultado. O professor comenta em até 3 dias.</div></div><button class="btn btn-primary dl" id="send">Enviar meu render</button></div>`;
   }
   if(t==='prova'){ quizPanel(l, el); return; }
+  if(t==='praticar'){ FosPratica.render(l, el); return; }
   if(t==='notas') el.innerHTML = `<p style="color:var(--muted)">Suas anotações desta aula. Ficam salvas neste navegador.</p><textarea id="notes-${l.id}" placeholder="Ex.: 12:40, por que o FrameHold vem antes do RotoPaint?">${esc(S.notes[l.id]||'')}</textarea>`;
   el.querySelectorAll('.dl').forEach(b=>b.onclick=()=>toast('Na plataforma real, esse botão baixa ou envia o arquivo.'));
   el.querySelectorAll('.step input').forEach(c=>c.onchange=()=>{ S.steps[l.id][c.dataset.k]=c.checked; c.closest('.step').classList.toggle('ok',c.checked); save(); });
@@ -544,12 +524,13 @@ function quizPanel(l, el){
     <div class="qhead"><p style="margin:0">Responda para conferir o que ficou da aula. A correção sai na hora e a sua melhor nota fica no progresso.</p>${r?`<span class="qbadge ${r.best/r.total>=PASS?'ok':''}">Melhor nota: ${r.best}/${r.total}</span>`:''}</div>
     ${qs.map((x,i)=>`<fieldset class="q" data-i="${i}"><legend><span class="n">Pergunta ${i+1} de ${qs.length}</span>${esc(x.q)}</legend>
       ${x.o.map((o,k)=>`<label class="opt"><input type="radio" name="q${i}" value="${k}"><span>${esc(o)}</span></label>`).join('')}
-      <p class="why">${esc(x.why)}</p></fieldset>`).join('')}
+      <p class="why">${esc(x.why)}</p>${x.duvida&&window.FosPratica?`<button type="button" class="qhelp" data-q="${i}">Ver na aula · ${FosPratica.tcode(x.duvida.in).slice(0,8)} →</button>`:''}</fieldset>`).join('')}
     <p class="err" id="qerr" role="alert" style="color:#e8a39a;margin:0;min-height:1.2em"></p>
     <div id="qres"></div>
     <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary" id="qsend">Corrigir prova</button><button class="btn btn-ghost" id="qagain" hidden>Refazer</button></div>
   </div>`;
   const box=el.querySelector('#quiz');
+  box.querySelectorAll('.qhelp').forEach(b=>b.onclick=()=>FosPratica.openClip(l, qs[+b.dataset.q].duvida));
   el.querySelector('#qsend').onclick=()=>{
     const ans=qs.map((x,i)=>{ const c=box.querySelector(`input[name="q${i}"]:checked`); return c? +c.value : null; });
     if(ans.includes(null)){ el.querySelector('#qerr').textContent=`Falta responder ${ans.filter(a=>a===null).length} pergunta(s).`; return; }
@@ -664,21 +645,26 @@ function bindCommunity(){
 function bindLesson(l){
   const p=P(l.id);
   const upd=()=>{ const f=Math.min(p.pos/l.dur,1)*100; document.getElementById('fill').style.width=f+'%'; document.getElementById('knob').style.left=f+'%'; document.getElementById('cur').textContent=tc(p.pos); };
-  const setPlay=on=>{ clearInterval(timer); timer=null; document.getElementById('screen').classList.toggle('playing',on);
+  const vid=document.getElementById('vid'); /* vídeo real quando a aula tem arquivo em FOS_VIDEOS; senão, simulação */
+  if(vid){ vid.addEventListener('loadedmetadata',()=>{ if(p.pos>5&&p.pos<vid.duration-5) vid.currentTime=p.pos; },{once:true});
+    vid.addEventListener('timeupdate',()=>{ p.pos=vid.currentTime; upd(); if(p.pos/l.dur>0.95&&!p.done) markDone(true); save(); });
+    vid.addEventListener('ended',()=>setPlay(false)); }
+  const seek=t=>{ p.pos=Math.max(0,Math.min(l.dur,t)); if(vid) vid.currentTime=p.pos; upd(); save(); };
+  const setPlay=on=>{ clearInterval(timer); timer=null; if(vid){ vid.playbackRate=SPEEDS[speedIdx]; on? vid.play().catch(()=>{}) : vid.pause(); } document.getElementById('screen').classList.toggle('playing',on);
     document.getElementById('ppIc').innerHTML = on? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>' : '<path d="M7 4.5v15l13-7.5z"/>';
     document.getElementById('pp').setAttribute('aria-label', on?'Pausar':'Reproduzir');
-    if(on) timer=setInterval(()=>{ p.pos=Math.min(p.pos+0.25*SPEEDS[speedIdx]*8, l.dur); upd(); if(p.pos/l.dur>0.95 && !p.done) markDone(true); if(p.pos>=l.dur) setPlay(false); save(); },250); };
-  const toggle=()=>setPlay(!timer);
+    if(on&&!vid) timer=setInterval(()=>{ p.pos=Math.min(p.pos+0.25*SPEEDS[speedIdx]*8, l.dur); upd(); if(p.pos/l.dur>0.95 && !p.done) markDone(true); if(p.pos>=l.dur) setPlay(false); save(); },250); };
+  const toggle=()=>setPlay(vid? vid.paused : !timer);
   const markDone=v=>{ p.done=v; const b=document.getElementById('done'); b.classList.toggle('is-done',v); b.textContent=v?'✓ Concluída':'Marcar como concluída'; save(); sidebar(); refreshList(l); if(v) toast(QUIZ[l.id]&&!S.quiz[l.id]?'Aula concluída! Agora faça a prova da aula.':'Aula concluída. Bom trabalho!'); };
   document.getElementById('screen').onclick=toggle;
   document.getElementById('screen').onkeydown=e=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle();} };
   document.getElementById('pp').onclick=toggle;
-  document.getElementById('back').onclick=()=>{ p.pos=Math.max(0,p.pos-10); upd(); save(); };
-  document.getElementById('fwd').onclick=()=>{ p.pos=Math.min(l.dur,p.pos+10); upd(); save(); };
-  document.getElementById('speed').onclick=e=>{ speedIdx=(speedIdx+1)%SPEEDS.length; e.currentTarget.textContent=SPEEDS[speedIdx]+'×'; };
+  document.getElementById('back').onclick=()=>seek(p.pos-10);
+  document.getElementById('fwd').onclick=()=>seek(p.pos+10);
+  document.getElementById('speed').onclick=e=>{ speedIdx=(speedIdx+1)%SPEEDS.length; e.currentTarget.textContent=SPEEDS[speedIdx]+'×'; if(vid) vid.playbackRate=SPEEDS[speedIdx]; };
   const sc=document.getElementById('scrub');
-  sc.onclick=e=>{ const r=sc.getBoundingClientRect(); p.pos=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*l.dur; upd(); save(); };
-  sc.onkeydown=e=>{ if(e.key==='ArrowRight'){p.pos=Math.min(l.dur,p.pos+5);upd();} if(e.key==='ArrowLeft'){p.pos=Math.max(0,p.pos-5);upd();} };
+  sc.onclick=e=>{ const r=sc.getBoundingClientRect(); seek(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*l.dur); };
+  sc.onkeydown=e=>{ if(e.key==='ArrowRight') seek(p.pos+5); if(e.key==='ArrowLeft') seek(p.pos-5); };
   document.getElementById('done').onclick=()=>markDone(!p.done);
   document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b)); panel(l,b.dataset.t); });
   panel(l,'sobre'); upd();
