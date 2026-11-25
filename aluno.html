@@ -407,9 +407,9 @@ a.mcard:hover{background:var(--raise)}
 </div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/nk101-pratica.js?v=20261125h"></script>
-<script src="assets/pratica.js?v=20261125h"></script>
-<script src="assets/voz.js?v=20261125h"></script>
+<script src="assets/nk101-pratica.js?v=20261125i"></script>
+<script src="assets/pratica.js?v=20261125i"></script>
+<script src="assets/voz.js?v=20261125i"></script>
 <script>
 const COURSE = [
   { id:'NK101', course:'nuke', code:'NK101', tool:'Nuke', title:'Fundamentos do Nuke', desc:'Tudo o que você precisa para começar a trabalhar no Nuke, da instalação aos primeiros trabalhos de comp.', lessons:[
@@ -742,7 +742,7 @@ function bindYT(l, id, onEnd){
     pl=new YT.Player('ytp',{videoId:id, width:'100%', height:'100%', host:'https://www.youtube-nocookie.com',
       playerVars:{rel:0, modestbranding:1, playsinline:1, start:Math.floor(start())},
       events:{ onReady:()=>{ ready=true; },
-        onStateChange:e=>{ clearInterval(tick);
+        onStateChange:e=>{ clearInterval(tick); window.FosFluid&&FosFluid.pause(e.data===YT.PlayerState.PLAYING||e.data===YT.PlayerState.BUFFERING);
           if(e.data===YT.PlayerState.PLAYING&&priming){ pl.pauseVideo(); return; }
           if(e.data===YT.PlayerState.PLAYING) tick=setInterval(()=>{ if(!document.body.contains(pl.getIframe())){ clearInterval(tick); return; } p.pos=pl.getCurrentTime(); const d=pl.getDuration()||l.dur; if(p.pos/d>0.95&&!p.done) document.getElementById('done')?.click(); save(); },1000);
           if(e.data===YT.PlayerState.ENDED) onEnd(); } } }); };
@@ -768,7 +768,8 @@ function bindLesson(l){
     panel(l,'sobre'); const pb=document.getElementById('pratBox'); if(pb) FosPratica.render(l, pb); return; }
   const upd=()=>{ const f=Math.min(p.pos/l.dur,1)*100; document.getElementById('fill').style.width=f+'%'; document.getElementById('knob').style.left=f+'%'; document.getElementById('cur').textContent=tc(p.pos); };
   const vid=document.getElementById('vid'); /* vídeo real quando a aula tem arquivo em FOS_VIDEOS; senão, simulação */
-  if(vid){ vid.addEventListener('loadedmetadata',()=>{ if(p.pos>5&&p.pos<vid.duration-5) vid.currentTime=p.pos; },{once:true});
+  if(vid){ vid.addEventListener('play',()=>window.FosFluid&&FosFluid.pause(true)); vid.addEventListener('pause',()=>window.FosFluid&&FosFluid.pause(false));
+    vid.addEventListener('loadedmetadata',()=>{ if(p.pos>5&&p.pos<vid.duration-5) vid.currentTime=p.pos; },{once:true});
     vid.addEventListener('timeupdate',()=>{ p.pos=vid.currentTime; upd(); if(p.pos/l.dur>0.95&&!p.done) markDone(true); save(); });
     vid.addEventListener('ended',()=>{ setPlay(false); goPrat(); }); }
   const goPrat=()=>{ const pr=document.getElementById('prat'); if(pr) pr.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth', block:'start'}); };
@@ -842,6 +843,7 @@ function route(){
   else if(h==='modulos'){ v.innerHTML=modulesView(); r='modulos'; }
   else if(COURSE.some(m=>m.id===h&&!m.soon)){ v.innerHTML=moduleView(COURSE.find(m=>m.id===h)); r='modulos'; }
   else { v.innerHTML=home(); const rs=document.getElementById('reset'); if(rs) rs.onclick=()=>{ S={prog:JSON.parse(JSON.stringify(DEFAULT)),notes:{},steps:{},quiz:{}}; save(); route(); sidebar(); toast('Prévia recomeçada.'); }; }
+  if(window.FosFluid) FosFluid.pause(!!(window.FosfenaVoz&&FosfenaVoz.current()));
   document.body.classList.toggle('full', r==='comunidade'); document.body.classList.toggle('wide', !!l&&!locked(l));
   document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===r));
   sidebar(); window.scrollTo(0,0);
@@ -853,7 +855,7 @@ if(window.FosfenaSessao&&FosfenaSessao.isAdmin()) document.getElementById('navAd
 route();
 </script>
 <script>window.FX={glass:'.side,.stats,.lessons,.list,.mcard:not(.later),.ex,.controls,.files,.step,.ccard',glow:'.btn-ghost,.lrow,.litem',tilt:'.mcard,.ex,.continue',reveal:'.mcard,.lessons,.ex,.stats,.continue,.module-head,.mhead,.demo-note',words:''};</script>
-<script src="assets/fx.js" defer></script>
-<script src="assets/fluid.js" defer></script>
+<script src="assets/fx.js?v=2" defer></script>
+<script src="assets/fluid.js?v=2" defer></script>
 </body>
 </html>

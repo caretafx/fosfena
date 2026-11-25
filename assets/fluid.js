@@ -29,6 +29,8 @@ SOFTWARE.
 if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 const FLUID_BASE = (document.currentScript && document.currentScript.src) ? document.currentScript.src.replace(/[^/]*$/, '') : 'assets/';
 try {
+// O fundo é desfocado por natureza: renderizar em 60% dos pixels da tela não muda o visual e alivia muito a placa de vídeo.
+var RENDER_SCALE = 0.6, lastFrame = 0, fluidPaused = false;
 let ambientTimer = 0;
 const FOSFENA_COLORS = [
     { c: [255, 181, 71], w: 0.38 },
@@ -51,12 +53,12 @@ resizeCanvas();
 
 let config = {
     SIM_RESOLUTION: 128,
-    DYE_RESOLUTION: 1024,
+    DYE_RESOLUTION: 512,
     CAPTURE_RESOLUTION: 512,
     DENSITY_DISSIPATION: 1.35,
     VELOCITY_DISSIPATION: 0.25,
     PRESSURE: 0.8,
-    PRESSURE_ITERATIONS: 20,
+    PRESSURE_ITERATIONS: 14,
     CURL: 28,
     SPLAT_RADIUS: 0.22,
     SPLAT_FORCE: 5000,
@@ -67,7 +69,7 @@ let config = {
     BACK_COLOR: { r: 0, g: 0, b: 0 },
     TRANSPARENT: true,
     BLOOM: true,
-    BLOOM_ITERATIONS: 8,
+    BLOOM_ITERATIONS: 5,
     BLOOM_RESOLUTION: 256,
     BLOOM_INTENSITY: 0.35,
     BLOOM_THRESHOLD: 0.6,
@@ -1099,7 +1101,12 @@ let lastUpdateTime = Date.now();
 let colorUpdateTimer = 0.0;
 update();
 
-function update () {
+// Roda a ~30 quadros por segundo (o fluido é lento, não precisa de 60) e pausa quando a aula ou uma chamada está tocando.
+window.FosFluid = { pause (v) { fluidPaused = !!v; canvas.style.transition = 'opacity .6s'; canvas.style.opacity = v ? '.35' : ''; if (!v) { lastUpdateTime = Date.now(); requestAnimationFrame(update); } } };
+function update (now) {
+    if (fluidPaused || document.hidden) return;
+    if (now && now - lastFrame < 31) { requestAnimationFrame(update); return; }
+    lastFrame = now || performance.now();
     const dt = calcDeltaTime();
     if (resizeCanvas())
         initFramebuffers();
@@ -1130,7 +1137,7 @@ function ambient (dt) {
 function calcDeltaTime () {
     let now = Date.now();
     let dt = (now - lastUpdateTime) / 1000;
-    dt = Math.min(dt, 0.016666);
+    dt = Math.min(dt, 0.0334);
     lastUpdateTime = now;
     return dt;
 }
@@ -1569,7 +1576,7 @@ function getTextureScale (texture, width, height) {
 }
 
 function scaleByPixelRatio (input) {
-    let pixelRatio = window.devicePixelRatio || 1;
+    let pixelRatio = RENDER_SCALE;
     return Math.floor(input * pixelRatio);
 }
 

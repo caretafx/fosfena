@@ -63,21 +63,23 @@
     for(let i=0;i<N;i++) pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:-(.1+Math.random()*.35),r:.6+Math.random()*2.2,a:Math.random()*Math.PI*2,amber:Math.random()<.7});
     addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY},{passive:true});
     document.addEventListener('visibilitychange',()=>{ run=!document.hidden; if(run) requestAnimationFrame(tick); });
+    /* cada partícula é um brilho pré-desenhado uma vez só (antes era um gradiente novo por partícula a cada quadro) */
+    const sprite=c=>{ const k=document.createElement('canvas'); k.width=k.height=64; const x=k.getContext('2d'); const g=x.createRadialGradient(32,32,0,32,32,32); g.addColorStop(0,`rgba(${c},1)`); g.addColorStop(1,`rgba(${c},0)`); x.fillStyle=g; x.fillRect(0,0,64,64); return k; };
+    const SPR={a:sprite('224,168,78'), w:sprite('236,234,228')};
+    let last=0;
     function draw(move){
       ctx.clearRect(0,0,W,H);
       for(const p of pts){
         if(move){ p.x+=p.vx; p.y+=p.vy; p.a+=.03;
           const dx=p.x-mx, dy=p.y-my, d=Math.hypot(dx,dy); if(d<140&&d>0){ p.x+=dx/d*1.2; p.y+=dy/d*1.2; }
           if(p.y<-10){p.y=H+10;p.x=Math.random()*W} if(p.x<-10)p.x=W+10; if(p.x>W+10)p.x=-10; }
-        const tw=.45+.55*Math.sin(p.a);
-        const c=p.amber?'224,168,78':'236,234,228';
-        const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);
-        g.addColorStop(0,`rgba(${c},${.9*tw})`); g.addColorStop(1,`rgba(${c},0)`);
-        ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r*6,0,7); ctx.fill();
+        const tw=.45+.55*Math.sin(p.a), R=p.r*6;
+        ctx.globalAlpha=.9*tw; ctx.drawImage(p.amber?SPR.a:SPR.w, p.x-R, p.y-R, R*2, R*2);
       }
+      ctx.globalAlpha=1;
       if(mx>-900){ ctx.lineWidth=1; for(const p of pts){ const d=Math.hypot(p.x-mx,p.y-my); if(d<220){ ctx.strokeStyle=`rgba(224,168,78,${(1-d/220)*.35})`; ctx.beginPath(); ctx.moveTo(mx,my); ctx.lineTo(p.x,p.y); ctx.stroke(); } } }
     }
-    function tick(){ if(!run) return; draw(true); requestAnimationFrame(tick); }
+    function tick(t){ if(!run) return; if(!t||t-last>=31){ last=t||0; draw(true); } requestAnimationFrame(tick); }
     if(reduce) draw(false); else requestAnimationFrame(tick);
   })();
 
@@ -99,7 +101,9 @@
     addEventListener('blur',()=>show(false));
     document.addEventListener('visibilitychange',()=>{ if(document.hidden) show(false); });
     show(false);
-    (function loop(){ rx+=(x-rx)*.18; ry+=(y-ry)*.18; ring.style.transform=`translate3d(${rx}px,${ry}px,0)`; requestAnimationFrame(loop); })();
+    let looping=false;
+    const loop=()=>{ rx+=(x-rx)*.18; ry+=(y-ry)*.18; ring.style.transform=`translate3d(${rx}px,${ry}px,0)`; if(Math.abs(x-rx)+Math.abs(y-ry)>.3) requestAnimationFrame(loop); else looping=false; };
+    addEventListener('pointermove',()=>{ if(!looping){ looping=true; requestAnimationFrame(loop); } },{passive:true});
   }
 
   /* números contando */

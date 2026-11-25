@@ -38,14 +38,14 @@
       room.on(E.TrackSubscribed,(track)=>{ if(track.kind==='audio'){ const a=track.attach(); a.dataset.sid=track.sid; document.getElementById('lkAudio').append(a); } });
       room.on(E.TrackUnsubscribed,(track)=>{ track.detach().forEach(x=>x.remove()); els.delete(track.sid); });
       room.on(E.DataReceived,(payload, participant, kind, topic)=>{ if(topic!=='chat') return; try{ const m=JSON.parse(new TextDecoder().decode(payload)); addMsg({name:(participant&&(participant.name||participant.identity))||'?', text:String(m.text||'').slice(0,500), t:Date.now()}); }catch(e){} });
-      room.on(E.Disconnected,()=>{ room=null; cur=null; els.clear(); paint(); onChange(); });
+      room.on(E.Disconnected,()=>{ window.FosFluid&&FosFluid.pause(false); room=null; cur=null; els.clear(); paint(); onChange(); });
       await room.connect(LK.url, j.token);
       await room.startAudio().catch(()=>{});
       if(v.kind!=='live'){ await room.localParticipant.setMicrophoneEnabled(true).catch(()=>toast('Não consegui acessar o microfone. Libere a permissão no navegador.')); }
-      paint(); onChange();
+      paint(); onChange(); window.FosFluid&&FosFluid.pause(true);
     }catch(e){ room=null; cur=null; status(e.message==='lib'?'Não consegui carregar a voz. Recarregue a página.':'Não consegui entrar na sala agora. Tente de novo em instantes.', true); onChange(); }
   }
-  async function leave(silent){ const r=room; room=null; cur=null; els.clear(); chatLog=[]; unread=0; if(r) await r.disconnect(); document.getElementById('lkAudio')?.replaceChildren(); if(!silent){ paint(); onChange(); } }
+  async function leave(silent){ window.FosFluid&&FosFluid.pause(false); const r=room; room=null; cur=null; els.clear(); chatLog=[]; unread=0; if(r) await r.disconnect(); document.getElementById('lkAudio')?.replaceChildren(); if(!silent){ paint(); onChange(); } }
 
   function toast(m){ (window.toast||alert)(m); }
   function status(m, err){ if(!host) return; const s=host.querySelector('.vstatus'); if(s){ s.textContent=m; s.classList.toggle('err',!!err); } }
