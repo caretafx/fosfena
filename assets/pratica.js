@@ -11,18 +11,27 @@ const tcode = s => { s=Math.max(0,s); const t=Math.floor(s), f=Math.floor((s%1)*
 const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; };
 
 const css = `
-.px{display:flex;flex-direction:column;gap:14px}
-.px-nav{display:flex;gap:6px;flex-wrap:wrap}
-.px-nav button{font-family:var(--f-mono);font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.px{display:flex;flex-direction:column;gap:22px}
+.px-intro{color:var(--muted);font-size:14.5px;line-height:1.55;margin:0}
+.px-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.px-count{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
+.px-nav{display:flex;gap:8px;flex-wrap:wrap}
+.px-nav button{font-family:var(--f-mono);font-size:12px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .px-nav button.on{border-color:var(--accent);color:var(--fg);background:rgba(224,168,78,.12)}
 .px-nav button.ok::after{content:' ✓';color:#5fd38d}
-.px-card{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;background:var(--panel)}
-.px-card h3{font-size:18px;margin:0}
+.px-card{border:1px solid var(--line);border-radius:14px;padding:clamp(18px,3vw,28px);display:flex;flex-direction:column;gap:10px;background:var(--panel)}
+.px-card h3{font-size:21px;line-height:1.25;margin:2px 0 0}
 .px-card p{margin:0}
+.px-card > p{font-size:15.5px;line-height:1.6;color:var(--fg);max-width:70ch}
+.px-body{display:flex;flex-direction:column;gap:18px;margin-top:14px}
+.px-body > .px-row{border-top:1px solid var(--line);padding-top:18px}
+.px-body > p:not(.px-fb){font-size:13px;color:var(--muted);line-height:1.5}
+.px-body > .px-fb:empty{display:none}
+.px-foot{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
 .px-eb{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 .px-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.px-fb{font-size:14px;min-height:1.3em;margin:0}
-.px-fb.ok{color:#5fd38d}.px-fb.no{color:#e8a39a}
+.px-fb{font-size:14.5px;line-height:1.5;margin:0;padding:10px 14px;border-radius:8px;background:rgba(255,255,255,.04)}
+.px-fb.ok{color:#5fd38d;background:rgba(95,211,141,.08)}.px-fb.no{color:#e8a39a;background:rgba(232,116,106,.08)}
 .px-help{display:inline-flex;align-items:center;gap:8px}
 .px-help svg{width:16px;height:16px}
 .px-graph{width:100%;height:auto;max-height:440px;background:#141519;border:1px solid var(--line);border-radius:10px;touch-action:manipulation;user-select:none}
@@ -41,11 +50,14 @@ const css = `
 .px-ord button i{font-style:normal;font-family:var(--f-mono);font-size:12px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--muted);flex:none}
 .px-ord button.picked i{background:var(--accent);color:#18191C;border-color:var(--accent)}
 .px-ord button.ok{border-color:#5fd38d}.px-ord button.no{border-color:#e8746a}
-.px-chips{display:flex;gap:8px;flex-wrap:wrap}
-.px-chips button{font-family:var(--f-mono);font-size:13px;padding:8px 12px;border-radius:6px;background:#2E3036;color:#ECEAE4;border:1px solid #4a4d55}
-.px-chips button.sel{background:var(--accent);color:#18191C;border-color:var(--accent)}
-.px-chips button.ok{border-color:#5fd38d;box-shadow:0 0 0 2px rgba(95,211,141,.4)}
-.px-chips button.no{border-color:#e8746a;box-shadow:0 0 0 2px rgba(232,116,106,.4)}
+.px-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:12px}
+.px-chips button{display:flex;align-items:center;gap:12px;text-align:left;font-size:15px;line-height:1.35;padding:16px 18px;border-radius:12px;background:rgba(255,255,255,.03);color:var(--fg,#ECEAE4);border:1px solid var(--line);transition:border-color .15s,background .15s}
+.px-chips button::before{content:'';width:18px;height:18px;border-radius:50%;border:2px solid #6b6e76;flex:none;box-sizing:border-box;transition:all .15s}
+.px-chips button:hover{border-color:rgba(224,168,78,.6);background:rgba(224,168,78,.05)}
+.px-chips button.sel{border-color:var(--accent);background:rgba(224,168,78,.12);box-shadow:0 0 0 1px var(--accent)}
+.px-chips button.sel::before{border-color:var(--accent);background:var(--accent);box-shadow:inset 0 0 0 3px #18191C}
+.px-chips button.ok{border-color:#5fd38d;background:rgba(95,211,141,.1);box-shadow:0 0 0 1px #5fd38d}.px-chips button.ok::before{border-color:#5fd38d;background:#5fd38d}
+.px-chips button.no{border-color:#e8746a;background:rgba(232,116,106,.08);box-shadow:0 0 0 1px #e8746a}.px-chips button.no::before{border-color:#e8746a;background:#e8746a}
 .px-clip{position:fixed;inset:0;z-index:9500;background:rgba(5,4,10,.86);display:grid;place-items:center;padding:16px}
 .px-clip .box{width:min(900px,100%);background:var(--panel,#1c1d22);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;max-height:92vh}
 .px-clip .hd{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line)}
@@ -194,24 +206,25 @@ function has(lesson){ return !!((window.FOS_PRATICA||{})[lesson.id]||[]).length;
 function render(lesson, el, idx=0){
   const list=(window.FOS_PRATICA||{})[lesson.id]||[]; const S=load(); const okSet=S[lesson.id]||{};
   const ex=list[idx];
+  const feitos=()=>{ const o=load()[lesson.id]||{}; return `${Object.keys(o).filter(k=>list.some(x=>x.id===k)).length} de ${list.length} feitos`; };
   el.innerHTML = `<div class="px">
-    <p>Exercícios curtos, um por etapa da aula. Se travar, o botão de dúvida abre a própria videoaula no trecho em que isso é explicado.</p>
-    <div class="px-nav" role="tablist">${list.map((x,i)=>`<button role="tab" aria-selected="${i===idx}" class="${i===idx?'on':''} ${okSet[x.id]?'ok':((S._pulos||{})[x.id]?'skip':'')}" data-i="${i}">${i+1}. ${esc(x.etapa)}</button>`).join('')}</div>
+    <p class="px-intro">Exercícios curtos, um por etapa da aula. Se travar, o botão de dúvida abre a própria videoaula no trecho em que isso é explicado.</p>
+    <div class="px-top"><div class="px-nav" role="tablist">${list.map((x,i)=>`<button role="tab" aria-selected="${i===idx}" class="${i===idx?'on':''} ${okSet[x.id]?'ok':((S._pulos||{})[x.id]?'skip':'')}" data-i="${i}">${i+1}. ${esc(x.etapa)}</button>`).join('')}</div><span class="px-count">${feitos()}</span></div>
     <div class="px-card"><span class="px-eb">Etapa ${idx+1} de ${list.length} · ${esc(x_tipo(ex))}</span><h3>${esc(ex.titulo)}</h3><p>${esc(ex.enunciado)}</p><div class="px-body"></div></div>
-    <div class="px-row" style="justify-content:space-between"><span class="mono" style="font-size:12.5px;color:var(--muted)">${Object.keys(okSet).filter(k=>list.some(x=>x.id===k)).length} de ${list.length} feitos</span><span class="px-row" style="margin:0">${okSet[ex.id]?'':`<button class="btn btn-ghost" data-skip title="Você pode voltar a ele depois pela lista de etapas">Pular exercício</button>`}${idx<list.length-1?`<button class="btn btn-ghost" data-next>Próximo exercício →</button>`:''}</span></div>
+    <div class="px-foot">${okSet[ex.id]?'':`<button class="btn btn-ghost" data-skip title="Você pode voltar a ele depois pela lista de etapas">Pular exercício</button>`}${idx<list.length-1?`<button class="btn btn-ghost" data-next>Próximo exercício →</button>`:''}</div>
   </div>`;
   el.querySelectorAll('.px-nav button').forEach(b=>b.onclick=()=>render(lesson,el,+b.dataset.i));
   const nx=el.querySelector('[data-next]'); if(nx) nx.onclick=()=>render(lesson,el,idx+1);
   const sk=el.querySelector('[data-skip]'); if(sk) sk.onclick=()=>{ const s=load(); (s._pulos=s._pulos||{})[ex.id]=true; save(s);
     if(idx<list.length-1) render(lesson,el,idx+1); else { const c=el.querySelector('.px-card'); c.innerHTML=`<span class="px-eb">Prática</span><h3>Exercício pulado</h3><p>Sem problema. Quando quiser, volte a qualquer etapa pela lista acima.</p>`; } };
   const body=el.querySelector('.px-body');
-  const done=()=>{ const s=load(); (s[lesson.id]=s[lesson.id]||{})[ex.id]=true; save(s); const b=el.querySelector(`.px-nav button[data-i="${idx}"]`); if(b) b.classList.add('ok'); const c=el.querySelector('.px > .px-row .mono'); if(c){ const o=s[lesson.id]; c.textContent=`${Object.keys(o).filter(k=>list.some(x=>x.id===k)).length} de ${list.length} feitos`; } };
+  const done=()=>{ const s=load(); (s[lesson.id]=s[lesson.id]||{})[ex.id]=true; save(s); const b=el.querySelector(`.px-nav button[data-i="${idx}"]`); if(b) b.classList.add('ok'); const c=el.querySelector('.px-count'); if(c) c.textContent=feitos(); };
   (TIPOS[ex.tipo]||choiceEx)(ex, body, done);
   body.querySelectorAll('[data-help]').forEach(b=>b.onclick=()=>openClip(lesson, ex.duvida));
 }
 /* tipos de exercício; outros arquivos podem registrar novos (ex.: simulações interativas da interface do Nuke) com FosPratica.tipo(nome, rótulo, função) */
-const TIPOS={grafo:graphEx, ordem:orderEx, escolha:choiceEx}, ROTULOS={grafo:'Conecte os nodes', ordem:'Coloque em ordem', escolha:'Escolha o node certo'};
-const x_tipo = ex => ROTULOS[ex.tipo]||'Exercício';
+const TIPOS={grafo:graphEx, ordem:orderEx, escolha:choiceEx}, ROTULOS={grafo:'Conecte os nodes', ordem:'Coloque em ordem', escolha:'Escolha a resposta'};
+const x_tipo = ex => ex.rotulo||ROTULOS[ex.tipo]||(ex.tipo?'Exercício':ROTULOS.escolha);
 
 window.FosPratica = { has, render, openClip, videoFor, ytId, tcode, helpBtn, tipo:(nome,rotulo,fn)=>{ TIPOS[nome]=fn; ROTULOS[nome]=rotulo; } };
 })();
