@@ -4,7 +4,7 @@
 (function(){
   const LK = {
     url: 'wss://fosfena-0k1hsnkn.livekit.cloud',
-    tokenUrl: '',   // ex.: 'https://fosfena-livekit.SEUNOME.workers.dev'
+    tokenUrl: 'https://fosfena-livekit.maumau-c-rod.workers.dev',
     lib: 'assets/vendor/livekit-client-2.23.0.umd.js',
   };
   let room=null, cur=null, me=null, els=new Map(), host=null, onChange=()=>{};
