@@ -19,6 +19,10 @@
     screen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>',
     full:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
     chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 5h16v11H9l-5 4z"/></svg>',
+    head:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/></svg>',
+    headOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 15v-3a8 8 0 0 1 13.6-5.7M20 12v3"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/><path d="M3 3l18 18"/></svg>',
+    pip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="11" width="7" height="6" rx="1" fill="currentColor" stroke="none"/></svg>',
+    back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M14 4h6v6M20 4l-8 8M10 20H4v-6"/></svg>',
     leave:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 15c5-5 13-5 18 0l-2.5 2.5-3-1.5v-3a10 10 0 0 0-5 0v3l-3 1.5z"/></svg>',
   };
 
@@ -45,7 +49,7 @@
       const L=window.LivekitClient, E=L.RoomEvent;
       room=new L.Room({adaptiveStream:true, dynacast:true});
       ['ParticipantConnected','ParticipantDisconnected','TrackSubscribed','TrackUnsubscribed','TrackMuted','TrackUnmuted','LocalTrackPublished','LocalTrackUnpublished','ActiveSpeakersChanged','ConnectionStateChanged'].forEach(k=>room.on(E[k],()=>{ paint(); onChange(); }));
-      room.on(E.TrackSubscribed,(track)=>{ if(track.kind==='audio'){ const a=track.attach(); a.dataset.sid=track.sid; document.getElementById('lkAudio').append(a); } });
+      room.on(E.TrackSubscribed,(track)=>{ if(track.kind==='audio'){ const a=track.attach(); a.dataset.sid=track.sid; a.muted=deaf; document.getElementById('lkAudio').append(a); } });
       room.on(E.TrackUnsubscribed,(track)=>{ track.detach().forEach(x=>x.remove()); els.delete(track.sid); });
       room.on(E.ParticipantConnected,()=>chime(true)); room.on(E.ParticipantDisconnected,()=>chime(false));
       room.on(E.DataReceived,(payload, participant, kind, topic)=>{ if(topic!=='chat') return; try{ const m=JSON.parse(new TextDecoder().decode(payload)); addMsg({name:(participant&&(participant.name||participant.identity))||'?', text:String(m.text||'').slice(0,500), t:Date.now()}); }catch(e){} });
@@ -54,9 +58,10 @@
       await room.startAudio().catch(()=>{});
       if(v.kind!=='live'){ await room.localParticipant.setMicrophoneEnabled(true).catch(()=>toast('Não consegui acessar o microfone. Libere a permissão no navegador.')); }
       paint(); onChange(); window.FosFluid&&FosFluid.pause(true); chime(true);
+      try{ if('documentPictureInPicture' in window) navigator.mediaSession.setActionHandler('enterpictureinpicture', ()=>popOut()); }catch(e){} /* Chrome abre a janelinha sozinho ao trocar de aba durante a chamada */
     }catch(e){ room=null; cur=null; status(e.message==='lib'?'Não consegui carregar a voz. Recarregue a página.':'Não consegui entrar na sala agora. Tente de novo em instantes.', true); onChange(); }
   }
-  async function leave(silent){ window.FosFluid&&FosFluid.pause(false); const r=room; if(r) chime(false); room=null; cur=null; els.clear(); chatLog=[]; unread=0; if(r) await r.disconnect(); document.getElementById('lkAudio')?.replaceChildren(); if(!silent){ paint(); onChange(); } }
+  async function leave(silent){ window.FosFluid&&FosFluid.pause(false); const r=room; deaf=false; pipClosed=false; if(r) chime(false); room=null; cur=null; els.clear(); chatLog=[]; unread=0; if(r) await r.disconnect(); document.getElementById('lkAudio')?.replaceChildren(); if(!silent){ paint(); onChange(); } }
 
   function toast(m){ (window.toast||alert)(m); }
   function status(m, err){ if(!host) return; const s=host.querySelector('.vstatus'); if(s){ s.textContent=m; s.classList.toggle('err',!!err); } }
@@ -125,7 +130,7 @@
   }
   /* desenha a tela do canal de voz dentro de vbox */
   function show(v, vbox, who){
-    host=vbox; me=who; vbox.classList.remove('incall','chatopen');
+    host=vbox; me=who; lastV=v; vbox.classList.remove('incall','chatopen');
     const live=v.kind==='live';
     if(!LK.tokenUrl){
       vbox.innerHTML=`<div class="vempty"><span class="vring ${live?'live':''}">${live?IC.screen:IC.mic}</span><h2>${esc(v.name)}</h2><p>${esc(v.desc)}</p>
@@ -155,8 +160,12 @@
     paint();
   }
   function paint(){
-    if(!host || !document.body.contains(host)) return;
-    const stage=host.querySelector('#vstage'), bar=host.querySelector('#vbar'); if(!stage||!bar||!room) return;
+    /* a chamada aparece na tela do canal; fora dela (outra página do site ou outro canal) os quadros vão para a janelinha flutuante */
+    const inView=!!(room&&host&&document.body.contains(host)&&host.querySelector('#vstage'));
+    paintDock(inView);
+    if(!room){ closePip(); return; }
+    if(inView&&(pip||pipWin)) closePip();
+    const stage=inView?host.querySelector('#vstage'):pipStage(), bar=inView?host.querySelector('#vbar'):null; if(!stage) return;
     const ps=people(), live=cur&&cur.kind==='live', lp=room.localParticipant, canPub=lp.permissions?lp.permissions.canPublish!==false:true;
     const withVid=ps.filter(x=>x.vid);
     const order=[...ps.filter(x=>x.scr), ...ps.filter(x=>!x.scr)].map(tile);
@@ -166,11 +175,13 @@
     if(waitTxt&&!w){ w=document.createElement('p'); w.className='vwait'; } if(w) w.textContent=waitTxt;
     const want=waitTxt?[w,...order]:order, have=[...stage.children];
     if(want.length!==have.length||want.some((e,i)=>e!==have[i])) stage.replaceChildren(...want);
+    if(!bar){ paintPip(); return; }
     fit(stage);
     const btn=(id,ic,lbl,on,cls='')=>`<button class="vbtn ${on?'on':''} ${cls}" id="${id}" title="${lbl}" aria-label="${lbl}" aria-pressed="${!!on}">${ic}<span>${lbl}</span></button>`;
     bar.innerHTML=(canPub?btn('vmic',lp.isMicrophoneEnabled?IC.mic:IC.micOff,lp.isMicrophoneEnabled?'Microfone':'Mudo',lp.isMicrophoneEnabled)
       +btn('vcam',IC.cam,'Câmera',lp.isCameraEnabled)+btn('vscr',IC.screen,'Tela',lp.isScreenShareEnabled):'')
       +(document.fullscreenEnabled?btn('vfull',IC.full,'Tela cheia',!!document.fullscreenElement):'')
+      +(('documentPictureInPicture' in window)?btn('vpop',IC.pip,'Flutuante',false):'')
       +btn('vchatb',IC.chat+(unread?`<em class="vbadge">${unread>9?'9+':unread}</em>`:''),'Chat',chatOpen)
       +btn('vout',IC.leave,'Sair',false,'red');
     const g=id=>bar.querySelector('#'+id);
@@ -178,11 +189,65 @@
     if(g('vcam')) g('vcam').onclick=()=>lp.setCameraEnabled(!lp.isCameraEnabled).then(paint).catch(()=>toast('Não consegui acessar a câmera.'));
     if(g('vscr')) g('vscr').onclick=()=>lp.setScreenShareEnabled(!lp.isScreenShareEnabled,{audio:true}).then(paint).catch(()=>{});
     if(g('vfull')) g('vfull').onclick=()=>{ (document.fullscreenElement?document.exitFullscreen():host.requestFullscreen()).catch(()=>{}).then(paint); };
+    if(g('vpop')) g('vpop').onclick=()=>popOut();
     g('vchatb').onclick=()=>setChat(!chatOpen);
     g('vout').onclick=()=>{ const v=cur; leave().then(()=>{ if(v&&host) show(v,host,me); }); };
   }
 
-  document.addEventListener('fullscreenchange',()=>paint());
+
+  /* painel "em chamada" no menu lateral, como no Discord: canal, mudo, fone, janelinha e sair. A chamada segue viva ao navegar pelo site. */
+  let deaf=false, dock=null;
+  function setDeaf(v){ deaf=v; document.querySelectorAll('#lkAudio audio').forEach(a=>a.muted=v);
+    if(v&&room&&room.localParticipant.isMicrophoneEnabled) room.localParticipant.setMicrophoneEnabled(false).then(paint); else paint(); }
+  function paintDock(inView){
+    if(!room||!cur){ if(dock){ dock.remove(); dock=null; } return; }
+    const side=document.querySelector('.side'); if(!side) return;
+    if(!dock){ dock=document.createElement('div'); dock.className='vdock'; dock.onclick=e=>{ const b=e.target.closest('button'); if(!b||!room) return; const lp=room.localParticipant;
+      if(b.dataset.a==='mic'){ if(deaf) setDeaf(false); lp.setMicrophoneEnabled(!lp.isMicrophoneEnabled).then(paint).catch(()=>toast('Não consegui acessar o microfone.')); }
+      if(b.dataset.a==='deaf') setDeaf(!deaf);
+      if(b.dataset.a==='pip'){ pipClosed=false; if('documentPictureInPicture' in window) popOut(); else paint(); }
+      if(b.dataset.a==='out') leave().then(()=>{ if(cur===null&&host&&document.body.contains(host)&&me) { const v=lastV; if(v) show(v,host,me); } }); }; }
+    const narrow=matchMedia('(max-width:900px), (max-height:500px) and (max-width:1000px)').matches; /* no celular o menu vira barra no topo: o painel fica solto embaixo da tela */
+    if(narrow){ if(dock.parentNode!==document.body) document.body.append(dock); } else if(dock.parentNode!==side) side.insertBefore(dock, side.querySelector('.side-foot'));
+    const lp=room.localParticipant, live=cur.kind==='live', canPub=lp.permissions?lp.permissions.canPublish!==false:true, n=1+room.remoteParticipants.size, mic=lp.isMicrophoneEnabled;
+    const b=(a,ic,lbl,on,cls='')=>`<button data-a="${a}" class="${on?'on':''} ${cls}" title="${lbl}" aria-label="${lbl}" aria-pressed="${!!on}">${ic}</button>`;
+    const html=`<div class="vd-top"><span class="vd-dot ${live?'live':''}"></span><div class="vd-txt"><b>${live?'Na live':'Voz conectada'}</b><a href="#comunidade">${esc(cur.name)} · ${n} ${n>1?'pessoas':'pessoa'}</a></div></div>
+      <div class="vd-btns">${canPub?b('mic',mic?IC.mic:IC.micOff,mic?'Desligar microfone':'Ligar microfone',!mic,'warn'):''}${b('deaf',deaf?IC.headOff:IC.head,deaf?'Voltar a ouvir':'Parar de ouvir',deaf,'warn')}${b('pip',IC.pip,'Janela flutuante',false)}${b('out',IC.leave,'Sair da chamada',false,'red')}</div>`;
+    if(dock._h!==html){ dock._h=html; dock.innerHTML=html; } dock.classList.toggle('inview',!!inView);
+  }
+  let lastV=null;
+
+  /* janelinha flutuante (PiP): dentro do site é arrastável; com "Flutuante" vira uma janela do sistema que fica por cima de outras abas e apps */
+  let pip=null, pipWin=null, pipClosed=false;
+  const pipHTML=()=>`<header class="vpip-h"><b></b>${('documentPictureInPicture' in window)?`<button data-a="pop" title="Soltar em cima de outras abas" aria-label="Soltar em cima de outras abas">${IC.pip}</button>`:''}<button data-a="open" title="Voltar para a chamada" aria-label="Voltar para a chamada">${IC.back}</button><button data-a="x" title="Esconder" aria-label="Esconder">×</button></header><div class="vpip-stage" id="vpipStage"></div>`;
+  function pipClick(e){ const b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.a==='pop') popOut();
+    if(b.dataset.a==='open'){ try{ window.focus(); }catch(_){} location.hash='#comunidade'; }
+    if(b.dataset.a==='x'){ pipClosed=true; closePip(); } }
+  function pipStage(){
+    if(pipWin&&!pipWin.closed) return pipWin.document.getElementById('vpipStage');
+    if(pipClosed) return null;
+    if(!pip){ pip=document.createElement('div'); pip.className='vpip'; pip.innerHTML=pipHTML(); pip.onclick=pipClick; document.body.append(pip);
+      const h=pip.querySelector('.vpip-h'); h.onpointerdown=e=>{ if(e.target.closest('button')) return; const r=pip.getBoundingClientRect(), dx=e.clientX-r.left, dy=e.clientY-r.top; h.setPointerCapture(e.pointerId);
+        h.onpointermove=m=>{ pip.style.left=Math.max(4,Math.min(innerWidth-r.width-4,m.clientX-dx))+'px'; pip.style.top=Math.max(4,Math.min(innerHeight-40,m.clientY-dy))+'px'; pip.style.right='auto'; pip.style.bottom='auto'; };
+        h.onpointerup=()=>{ h.onpointermove=null; }; }; }
+    return pip.querySelector('#vpipStage');
+  }
+  function paintPip(){ const d=pipWin&&!pipWin.closed?pipWin.document:document; const t=d.querySelector('.vpip-h b'); if(t&&cur) t.textContent=(cur.kind==='live'?'🔴 ':'🔊 ')+cur.name; }
+  function closePip(){ if(pip){ pip.remove(); pip=null; } if(pipWin&&!pipWin.closed){ const w=pipWin; pipWin=null; w.close(); } pipWin=null; }
+  async function popOut(){
+    if(!room||!('documentPictureInPicture' in window)) return;
+    if(pipWin&&!pipWin.closed){ pipWin.focus(); return; }
+    let w; try{ w=await documentPictureInPicture.requestWindow({width:380,height:300}); }catch(e){ return; }
+    [...document.styleSheets].forEach(sh=>{ try{ const st=w.document.createElement('style'); st.textContent=[...sh.cssRules].map(r=>r.cssText).join('\n'); w.document.head.append(st); }catch(e){ if(sh.href){ const l=w.document.createElement('link'); l.rel='stylesheet'; l.href=sh.href; w.document.head.append(l); } } });
+    w.document.body.className='vpipdoc'; w.document.body.innerHTML=`<div class="vpip doc">${pipHTML().replace(/<button data-a="pop"[\s\S]*?<\/button>/,'')}</div>`;
+    w.document.body.onclick=pipClick;
+    pipWin=w; pipClosed=false; if(pip){ pip.remove(); pip=null; }
+    w.addEventListener('pagehide',()=>{ if(pipWin===w){ pipWin=null; } setTimeout(paint,0); });
+    paint();
+  }
+
+  document.addEventListener('fullscreenchange',()=>paint()); addEventListener('resize',()=>{ if(dock) paintDock(dock.classList.contains('inview')); });
   addEventListener('beforeunload',()=>{ if(room) room.disconnect(); });
   if(!document.getElementById('lkAudio')){ const d=document.createElement('div'); d.id='lkAudio'; d.hidden=true; document.body.append(d); }
 
@@ -194,5 +259,5 @@
     if(!document.querySelector('.vwho')){ rosterT=null; return; }
     if(!document.hidden&&LK.tokenUrl){ try{ const r=await fetch(LK.tokenUrl.replace(/\/$/,'')+'/?list=1'); if(r.ok){ const j=await r.json(); if(j.rooms){ roster=j.rooms; onRoster(); } } }catch(e){} }
     rosterT=setTimeout(pollRoster,6000); }
-  window.FosfenaVoz={ watch:()=>{ if(!rosterT) pollRoster(); }, roster:room=>roster[room]||[], onRoster:f=>{onRoster=f;}, show, leave, ready:()=>!!LK.tokenUrl, current:()=>cur, people:()=>people().map(x=>({name:x.name,speaking:x.speaking,mic:x.mic})), onChange:f=>{onChange=f;} };
+  window.FosfenaVoz={ watch:()=>{ if(!rosterT) pollRoster(); }, roster:room=>roster[room]||[], onRoster:f=>{onRoster=f;}, show, leave, refresh:()=>paint(), popOut, ready:()=>!!LK.tokenUrl, current:()=>cur, people:()=>people().map(x=>({name:x.name,speaking:x.speaking,mic:x.mic})), onChange:f=>{onChange=f;} };
 })();
