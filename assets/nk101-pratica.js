@@ -2,7 +2,7 @@
    Trechos (in/out) em segundos do vídeo de cada aula. Não edite à mão: rode o script de novo. */
 /* Arquivo de vídeo de cada aula. Quando houver hospedagem, coloque a URL aqui (ex.: 'https://.../nk101-aula01.mp4').
    Com URL, o player da aula toca o vídeo real e o botão de dúvida abre o mesmo arquivo com #t=in,out. */
-window.FOS_VIDEOS = window.FOS_VIDEOS || { 'aula-1': null, 'aula-2': null, 'aula-3': null, 'aula-4': null };
+window.FOS_VIDEOS = window.FOS_VIDEOS || { 'aula-1': 'https://youtu.be/fFZRUfEX49o', 'aula-2': null, 'aula-3': null, 'aula-4': null };
 window.FOS_PROVAS = {
  "aula-1": [
   {
