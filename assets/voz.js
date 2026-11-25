@@ -88,24 +88,29 @@
   }
 
   /* grade estilo Discord: quadros 16:9 do maior tamanho que caiba, centralizados */
-  let lastFit='', lastCols=0;
+  let lastFit='', lastCols=0, lastN=0;
   function fit(stage, force){
     const n=stage.querySelectorAll('.vtile').length; if(!n) return;
     const sig=[n, stage.clientWidth, stage.clientHeight, !!stage.querySelector('.vtile.scr'), !!stage.querySelector('.vwait')].join();
     if(sig===lastFit && !force) return; lastFit=sig;
-    const cs=getComputedStyle(stage), gap=12;
-    const W=stage.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-1;
-    const H=stage.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-(stage.querySelector('.vwait')?40:0)-1;
+    const cs=getComputedStyle(stage), pad=parseFloat(cs.getPropertyValue('--pad'))||16, gap=parseFloat(cs.columnGap)||12;
+    const W=stage.clientWidth-2*pad-1;
+    const H=stage.clientHeight-2*pad-(stage.querySelector('.vwait')?40:0)-1;
     const scr=stage.querySelector('.vtile.scr');
     if(scr){ const others=n-1, strip=others?Math.min(170,Math.max(110,H*0.2)):0, sw=Math.floor(strip*16/9);
       stage.classList.add('focus'); stage.style.setProperty('--sw', sw+'px');
       stage.style.setProperty('--tw', Math.floor(Math.min(W, (H-(others?strip+gap:0))*16/9))+'px'); return; }
     stage.classList.remove('focus');
-    const size=c=>{ const r=Math.ceil(n/c); return Math.min((W-gap*(c-1))/c, ((H-gap*(r-1))/r)*16/9); };
-    let bc=1; for(let c=2;c<=n;c++) if(size(c)>size(bc)) bc=c;
-    if(lastCols&&lastCols<=n&&bc!==lastCols&&size(bc)<size(lastCols)*1.08) bc=lastCols; // histerese: só muda a grade se ganhar 8%
-    lastCols=bc;
-    stage.style.setProperty('--tw', Math.max(120,Math.floor(size(bc)))+'px');
+    /* grade estilo Discord: testa todas as combinações de colunas e escolhe a que deixa os quadros 16:9 maiores,
+       preferindo lado a lado em área larga e empilhado em área alta (penalidade de 25% para a orientação contrária) */
+    const size=c=>{ const r=Math.ceil(n/c); return Math.floor(Math.min((W-gap*(c-1))/c, ((H-gap*(r-1))/r)*16/9))-2; };
+    const score=c=>{ const r=Math.ceil(n/c); return size(c)*(n>1&&(c>=r)!==(W>=H)&&c!==r?0.75:1)*(1-0.02*Math.abs(c-r)); }; // e, no empate, a grade mais quadrada
+    let bc=1; for(let c=2;c<=n;c++) if(score(c)>score(bc)) bc=c;
+    if(lastN===n&&lastCols&&lastCols<=n&&bc!==lastCols&&score(bc)<score(lastCols)*1.08) bc=lastCols; // histerese só ao redimensionar
+    lastCols=bc; lastN=n;
+    const tw=Math.max(96,size(bc)), gw=bc*tw+gap*(bc-1);
+    stage.style.setProperty('--tw', tw+'px');
+    stage.style.setProperty('--px', Math.max(0,Math.floor((W-gw)/2))+'px'); // trava a quebra de linha exatamente em bc colunas
   }
   /* desenha a tela do canal de voz dentro de vbox */
   function show(v, vbox, who){
