@@ -127,7 +127,7 @@ section.blk{padding:88px 0;border-top:1px solid var(--line)}
 @keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:none;opacity:1}}
 .quake{animation:quake .42s cubic-bezier(.36,.07,.19,.97)}
 @keyframes quake{10%,90%{transform:translate(-2px,1px)}20%,80%{transform:translate(4px,-2px)}30%,50%,70%{transform:translate(-6px,2px)}40%,60%{transform:translate(6px,-1px)}}
-.boom-cv{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:9000}
+.boom-cv{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9000}
 @media (prefers-reduced-motion:reduce){.prank .clock.glitch,.prank.shake,.prank.done,.quake{animation:none}}
 .compare{margin-top:34px;max-width:860px;border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:20px;background:rgba(20,16,34,.5)}
 .compare h3{font-size:22px;letter-spacing:-.02em}
@@ -420,39 +420,46 @@ document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',(
 }));
 </script>
 <script>window.FX={glass:'.step,.mod,.plan,dialog,.fx-st',glow:'.btn-ghost,.frame',tilt:'.step,.mod,.plan,.fx-st',reveal:'.pmarquee,.fx-st,.head,.step,.mod,.who>div,.plan,.faq details,.frame,.reel h2,.final .container>*,.guarantee',words:'.hero h1'};</script>
-<script src="assets/fx.js?v=4" defer></script>
+<script src="assets/fx.js?v=5" defer></script>
 <script src="assets/fluid.js?v=3" defer></script>
 <script>/* brincadeira do contador: corre rápido, trava, quebra e revela que o preço já é o final */
 (function(){
   const box=document.getElementById('prank'), clock=document.getElementById('pclock'); if(!box) return;
   const finish=()=>{ box.classList.remove('broken','shake'); box.classList.add('done'); };
   if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)){ finish(); return; }
+  /* a explosão: o canvas nasce antes (sem engasgo na hora), os brilhos são pré-desenhados (antes era shadowBlur em cada caco,
+     que travava) e só a caixa e o próprio canvas tremem (antes a seção inteira tremia e deixava um resto branco embaixo). */
+  let cv=null, ctx=null, SPR={};
+  function prep(){ if(cv) return; cv=document.createElement('canvas'); cv.className='boom-cv'; cv.style.opacity='0'; document.body.append(cv);
+    const dpr=Math.min(devicePixelRatio||1,2); cv.width=cv.clientWidth*dpr; cv.height=cv.clientHeight*dpr; ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+    ['255,181,71','155,107,255','92,200,255','255,107,107'].forEach(c=>{ const k=document.createElement('canvas'); k.width=k.height=48; const x=k.getContext('2d'); const g=x.createRadialGradient(24,24,0,24,24,24);
+      g.addColorStop(0,`rgba(${c},.9)`); g.addColorStop(.3,`rgba(${c},.35)`); g.addColorStop(1,`rgba(${c},0)`); x.fillStyle=g; x.fillRect(0,0,48,48); SPR[c]=k; }); }
   function explode(){
-    const r=box.getBoundingClientRect(), small=innerWidth<760, N=small?46:110, dpr=Math.min(devicePixelRatio||1,2);
-    const cv=document.createElement('canvas'); cv.className='boom-cv'; cv.width=innerWidth*dpr; cv.height=innerHeight*dpr; document.body.append(cv);
-    const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+    prep(); const VW=cv.clientWidth, VH=cv.clientHeight;
+    const r=box.getBoundingClientRect(), small=innerWidth<760, N=small?46:110;
     const COL=['255,181,71','155,107,255','92,200,255','255,107,107','255,181,71'];
     const ps=[]; for(let i=0;i<N;i++){ const x=r.left+Math.random()*r.width, y=r.top+Math.random()*r.height, cx=r.left+r.width/2, cy=r.top+r.height/2;
       const a=Math.atan2(y-cy,x-cx)+(Math.random()-.5)*.8, sp=4+Math.random()*(small?7:11), shard=Math.random()<.45;
       ps.push({x,y,vx:Math.cos(a)*sp*1.4,vy:Math.sin(a)*sp-3-Math.random()*4,rot:Math.random()*6,vr:(Math.random()-.5)*.5,s:shard?6+Math.random()*12:1.5+Math.random()*2.5,shard,c:COL[i%COL.length],life:1}); }
-    box.classList.remove('shake'); box.classList.add('blown');
-    const sec=box.closest('section')||document.body; sec.classList.remove('quake'); void sec.offsetWidth; sec.classList.add('quake');
-    let flash=1, t0=performance.now();
-    (function f(now){ const k=(now-t0)/1000; ctx.clearRect(0,0,innerWidth,innerHeight);
-      if(flash>0){ const g=ctx.createRadialGradient(r.left+r.width/2,r.top+r.height/2,0,r.left+r.width/2,r.top+r.height/2,r.width*.6); g.addColorStop(0,`rgba(255,220,160,${.55*flash})`); g.addColorStop(1,'rgba(255,181,71,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,innerWidth,innerHeight); flash-=.08; }
+    box.classList.remove('shake'); box.classList.add('blown'); cv.style.opacity='1';
+    let flash=1, t0=performance.now(), prev=t0;
+    (function f(now){ const k=(now-t0)/1000, st=Math.min(3,(now-prev)/16.7); prev=now; ctx.clearRect(0,0,VW,VH);
+      const q=k<.42?(1-k/.42)*6:0; cv.style.transform=q?`translate(${(Math.random()-.5)*q}px,${(Math.random()-.5)*q*.5}px)`:'';
+      if(flash>0){ const g=ctx.createRadialGradient(r.left+r.width/2,r.top+r.height/2,0,r.left+r.width/2,r.top+r.height/2,r.width*.6); g.addColorStop(0,`rgba(255,220,160,${.55*flash})`); g.addColorStop(1,'rgba(255,181,71,0)'); ctx.fillStyle=g; ctx.fillRect(r.left-r.width,r.top-r.width,r.width*3,r.width*3); flash-=.08*st; }
       ctx.globalCompositeOperation='lighter';
-      for(const p of ps){ p.vy+=.32; p.vx*=.985; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.life=Math.max(0,1-k/1.3);
-        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.shadowColor=`rgba(${p.c},1)`; ctx.shadowBlur=small?6:12; ctx.fillStyle=`rgba(${p.c},${p.life})`;
+      for(const p of ps){ p.vy+=.32*st; p.vx*=Math.pow(.985,st); p.x+=p.vx*st; p.y+=p.vy*st; p.rot+=p.vr*st; p.life=Math.max(0,1-k/1.3);
+        if(p.y>VH+40||p.life<=0) continue;
+        const G=(p.shard?p.s*2.2:p.s*5); ctx.globalAlpha=p.life*.8; ctx.drawImage(SPR[p.c],p.x-G,p.y-G,G*2,G*2);
+        ctx.globalAlpha=p.life; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=`rgb(${p.c})`;
         if(p.shard){ ctx.beginPath(); ctx.moveTo(-p.s/2,-p.s/3); ctx.lineTo(p.s/2,0); ctx.lineTo(-p.s/4,p.s/2); ctx.closePath(); ctx.fill(); } else { ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s); }
         ctx.restore(); }
-      ctx.globalCompositeOperation='source-over';
-      if(k<1.3) requestAnimationFrame(f); else cv.remove(); })(t0);
+      ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1;
+      if(k<1.3) requestAnimationFrame(f); else { ctx.clearRect(0,0,VW,VH); cv.remove(); cv=null; } })(t0);
     setTimeout(()=>{ box.classList.remove('blown'); finish(); },520);
-    setTimeout(()=>sec.classList.remove('quake'),500);
   }
   let t=299, started=false;
   const fmt=n=>'00:'+String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');
-  function go(){ started=true;
+  function go(){ started=true; prep();
     const tick=setInterval(()=>{ t-=7; clock.textContent=fmt(Math.max(t,0)); },60);
     setTimeout(()=>{ clearInterval(tick); clock.classList.add('glitch'); const sc=setInterval(()=>{ clock.textContent='00:'+Math.floor(Math.random()*99)+':'+'#%&?!'[Math.random()*5|0]+Math.floor(Math.random()*9); },70);
       setTimeout(()=>{ clearInterval(sc); clock.textContent='ERR:OR'; box.classList.add('broken','shake'); },900);

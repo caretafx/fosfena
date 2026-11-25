@@ -75,18 +75,21 @@
     const SPR={a:sprite('255,186,92'), w:sprite('236,234,228'), v:sprite('155,107,255')};
     const smooth=u=>u<=0?0:u>=1?1:u*u*(3-2*u);
     /* flares ao rolar para cima: poucos, curtos e fracos, mais fortes quanto mais rápida a rolagem */
-    const flares=[]; let lastY=scrollY, lastS=performance.now();
+    const flares=[]; let lastY=scrollY, lastS=performance.now(), lastF=0;
     const flaresOn=()=>!reduce && C.flares!==false && window.FOS_FLARES!==false;
     addEventListener('scroll',()=>{ const now=performance.now(), y=scrollY, dt=Math.max(16,now-lastS), v=(lastY-y)/dt; lastY=y; lastS=now;
-      if(!flaresOn() || v<.8 || flares.length>=3) return;
-      const k=Math.min(1,(v-.8)/3); flares.push({x:rnd(W*.12,W*.88), y:rnd(H*.08,H*.55), age:0, life:rnd(.55,.9), k:.35+.65*k, w:rnd(260,520), amber:Math.random()<.65});
+      if(!flaresOn() || v<.45 || flares.length>=4 || now-lastF<140) return; lastF=now;
+      const k=Math.min(1,(v-.45)/2.5); flares.push({x:rnd(W*.12,W*.88), y:rnd(H*.08,H*.6), age:0, life:rnd(.7,1.1), k:.6+.4*k, w:rnd(380,720), amber:Math.random()<.65});
       if(!running){ last=0; requestAnimationFrame(tick); } },{passive:true});
     function drawFlares(dt){
       for(let i=flares.length-1;i>=0;i--){ const f=flares[i]; f.age+=dt; const u=f.age/f.life; if(u>=1){ flares.splice(i,1); continue; }
-        const a=f.k*smooth(u/.18)*(1-smooth((u-.25)/.75))*.55, spr=f.amber?SPR.a:SPR.v;
-        ctx.globalAlpha=a; ctx.drawImage(spr, f.x-f.w/2, f.y-7, f.w, 14);            /* risco anamórfico */
-        ctx.globalAlpha=a*.8; ctx.drawImage(spr, f.x-46, f.y-46, 92, 92);             /* núcleo */
-        ctx.globalAlpha=a*.35; ctx.drawImage(SPR.v, f.x+f.w*.22-18, f.y-18, 36, 36); /* fantasma */
+        const a=f.k*smooth(u/.15)*(1-smooth((u-.3)/.7)), spr=f.amber?SPR.a:SPR.v, cx=W/2, cy=H/2;
+        ctx.globalAlpha=a; ctx.drawImage(spr, f.x-f.w/2, f.y-11, f.w, 22);           /* risco anamórfico */
+        ctx.globalAlpha=a*.7; ctx.drawImage(spr, f.x-f.w*.28, f.y-3, f.w*.56, 6);     /* fio central */
+        ctx.globalAlpha=a; ctx.drawImage(SPR.w, f.x-38, f.y-38, 76, 76);               /* núcleo */
+        ctx.globalAlpha=a*.6; ctx.drawImage(spr, f.x-110, f.y-110, 220, 220);          /* halo */
+        for(const [t,sz] of [[.45,34],[.8,18],[1.25,52]]){ const gx=f.x+(cx-f.x)*t*2, gy=f.y+(cy-f.y)*t*2;   /* fantasmas na linha do centro, como numa lente */
+          ctx.globalAlpha=a*.32; ctx.drawImage(SPR.v, gx-sz, gy-sz, sz*2, sz*2); }
       }
     }
     let last=0, running=false;
