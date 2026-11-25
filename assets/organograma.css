@@ -89,3 +89,14 @@ button.mb.lv2:hover{box-shadow:0 0 0 1px var(--c),0 0 26px -4px var(--c)}
 .m-car{transition:transform .3s cubic-bezier(.2,.7,.2,1)}
 @media (prefers-reduced-motion:reduce){button.mb,.m-car,.mk,.m-wires path{transition:none}.mb.m-in,.mb.lv2.sel{animation:none}}
 .rot-tc{font-family:"JetBrains Mono",monospace;font-size:11px;color:#5CC8FF;background:rgba(92,200,255,.1);border-radius:5px;padding:1px 6px;font-weight:400}
+/* Celular: a árvore vira uma lista em degraus, de cima para baixo, sem rolar para o lado. */
+@media (max-width:700px){
+  .m-scroll{overflow-x:visible;padding:12px 0 8px}
+  .m-map{display:block;min-width:0;padding:0}
+  .m-wires{display:none}
+  .mn{flex-direction:column;align-items:stretch}
+  .mk,.mk .mk{margin-left:14px;padding:10px 0 2px 14px;gap:10px;border-left:2px solid rgba(255,181,71,.45)}
+  .mk .mk{border-left-color:rgba(92,200,255,.4)}
+  .mb.lv0,.mb.lv1,.mb.lv2,.mb.lv3{width:auto;max-width:100%}
+  button.mb:hover{transform:none}
+}
