@@ -88,3 +88,4 @@ button.mb.lv2:hover{box-shadow:0 0 0 1px var(--c),0 0 26px -4px var(--c)}
 .m-wires .w-out{opacity:0}
 .m-car{transition:transform .3s cubic-bezier(.2,.7,.2,1)}
 @media (prefers-reduced-motion:reduce){button.mb,.m-car,.mk,.m-wires path{transition:none}.mb.m-in,.mb.lv2.sel{animation:none}}
+.rot-tc{font-family:"JetBrains Mono",monospace;font-size:11px;color:#5CC8FF;background:rgba(92,200,255,.1);border-radius:5px;padding:1px 6px;font-weight:400}

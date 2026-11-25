@@ -120,7 +120,7 @@
 
   /* HTML do roteiro de uma aula, para a gaveta de detalhes. */
   function roteiroHTML(n){
-    if (n.roteiro && n.roteiro.length) return `${n.objetivo?`<p class="rot-obj">${esc(n.objetivo)}</p>`:''}<ol class="rot">${n.roteiro.map(r=>`<li class="${r.tipo==='exercicio'?'ex':'tec'}"><b>${esc(r.t)}${(r.tipo==='exercicio'?'Exercício':'Técnica')===r.t?'':` <em>${r.tipo==='exercicio'?'Exercício':'Técnica'}</em>`}</b><span>${esc(r.txt)}</span></li>`).join('')}</ol>${n.roteiroFonte?`<p class="rot-src">${esc(n.roteiroFonte)}</p>`:''}`;
+    if (n.roteiro && n.roteiro.length) return `${n.objetivo?`<p class="rot-obj">${esc(n.objetivo)}</p>`:''}<ol class="rot">${n.roteiro.map(r=>`<li class="${r.tipo==='exercicio'?'ex':'tec'}"><b>${r.tc?`<code class="rot-tc">${esc(r.tc)}</code>`:''}${esc(r.t)}${(r.tipo==='exercicio'?'Exercício':'Técnica')===r.t?'':` <em>${r.tipo==='exercicio'?'Exercício':'Técnica'}</em>`}</b><span>${esc(r.txt)}</span></li>`).join('')}</ol>${n.roteiroFonte?`<p class="rot-src">${esc(n.roteiroFonte)}</p>`:''}`;
     if (n.pendente) return `<p class="rot-empty">O roteiro desta aula vai ser escrito a partir do Projeto_aulas_v02.nknc, assim que o arquivo for lido.</p>`;
     return `<p class="rot-empty">Aula gravada. Os tópicos abaixo resumem o que ela cobre.</p>`;
   }
