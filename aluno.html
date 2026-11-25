@@ -261,7 +261,8 @@ body.full .chat{height:100vh;height:100dvh;border:0;border-radius:0;background:r
 .vwho span.sp{color:var(--fg)}.vwho span.sp::before{background:#7be0a5;box-shadow:0 0 8px #7be0a5}
 .voice.incall{padding:0;gap:0;align-items:stretch;overflow:hidden}
 .voice.incall>.vstage{flex:1 1 auto;min-height:0}.voice.incall>.vbar{flex:none}
-.vstage{display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:12px;padding:16px;overflow:auto}
+.vstage{display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:12px;padding:16px;overflow:hidden}
+.vmedia{position:absolute;inset:0;display:grid;place-items:center}
 .vstage.focus .vtile:not(.scr){width:var(--sw,180px)}
 .vstage.focus .vtile.scr{width:var(--tw)}
 .vtile{position:relative;width:var(--tw,320px);aspect-ratio:16/9;flex:none;border-radius:14px;background:rgba(20,18,30,.75);border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;transition:box-shadow .2s,border-color .2s}
@@ -378,9 +379,9 @@ a.mcard:hover{background:var(--raise)}
 </div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/nk101-pratica.js?v=20261125d"></script>
-<script src="assets/pratica.js?v=20261125d"></script>
-<script src="assets/voz.js?v=20261125d"></script>
+<script src="assets/nk101-pratica.js?v=20261125e"></script>
+<script src="assets/pratica.js?v=20261125e"></script>
+<script src="assets/voz.js?v=20261125e"></script>
 <script>
 const COURSE = [
   { id:'NK101', course:'nuke', code:'NK101', tool:'Nuke', title:'Fundamentos do Nuke', desc:'Tudo o que você precisa para começar a trabalhar no Nuke, da instalação aos primeiros trabalhos de comp.', lessons:[

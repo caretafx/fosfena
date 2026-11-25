@@ -58,17 +58,26 @@
       return {p, name:p.name||p.identity, me:p===room.localParticipant, speaking:p.isSpeaking, mic:p.isMicrophoneEnabled, vid, scr:isScr};
     });
   }
+  /* quadros reaproveitados por participante: falar só troca o contorno, nada é recriado nem reordenado */
+  const tiles=new Map();
   function tile(x){
-    const t=document.createElement('div'); t.className='vtile'+(x.speaking?' speaking':'')+(x.vid?' hasvid':'')+(x.scr?' scr':'')+(x.me&&!x.scr?' mirror':'');
-    if(x.vid){ let el=els.get(x.vid.sid); if(!el){ el=x.vid.attach(); el.muted=true; el.playsInline=true; els.set(x.vid.sid,el); } t.append(el); }
-    else t.insertAdjacentHTML('beforeend',`<span class="vav" style="background:${color(x.name)}">${esc(x.name.charAt(0).toUpperCase())}</span>`);
-    t.insertAdjacentHTML('beforeend',`<span class="vname">${x.mic?'':IC.micOff}${esc(x.name)}${x.me?' (você)':''}</span>`);
+    const key=x.p.identity; let t=tiles.get(key);
+    if(!t){ t=document.createElement('div'); t.dataset.k=key; t.innerHTML='<div class="vmedia"></div><span class="vname"></span>'; tiles.set(key,t); }
+    t.className='vtile'+(x.speaking?' speaking':'')+(x.vid?' hasvid':'')+(x.scr?' scr':'')+(x.me&&!x.scr?' mirror':'');
+    const media=t.firstChild, want=x.vid?x.vid.sid:'av:'+x.name;
+    if(media.dataset.w!==want){ media.dataset.w=want; media.replaceChildren();
+      if(x.vid){ let el=els.get(x.vid.sid); if(!el){ el=x.vid.attach(); el.muted=true; el.playsInline=true; els.set(x.vid.sid,el); } media.append(el); }
+      else media.innerHTML=`<span class="vav" style="background:${color(x.name)}">${esc(x.name.charAt(0).toUpperCase())}</span>`; }
+    const nm=`${x.mic?'':IC.micOff}${esc(x.name)}${x.me?' (você)':''}`; const lab=t.lastChild; if(lab.innerHTML!==nm) lab.innerHTML=nm;
     return t;
   }
 
   /* grade estilo Discord: quadros 16:9 do maior tamanho que caiba, centralizados */
-  function fit(stage){
+  let lastFit='', lastCols=0;
+  function fit(stage, force){
     const n=stage.querySelectorAll('.vtile').length; if(!n) return;
+    const sig=[n, stage.clientWidth, stage.clientHeight, !!stage.querySelector('.vtile.scr'), !!stage.querySelector('.vwait')].join();
+    if(sig===lastFit && !force) return; lastFit=sig;
     const cs=getComputedStyle(stage), gap=12;
     const W=stage.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-1;
     const H=stage.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-(stage.querySelector('.vwait')?40:0)-1;
@@ -77,9 +86,11 @@
       stage.classList.add('focus'); stage.style.setProperty('--sw', sw+'px');
       stage.style.setProperty('--tw', Math.floor(Math.min(W, (H-(others?strip+gap:0))*16/9))+'px'); return; }
     stage.classList.remove('focus');
-    let best=160;
-    for(let c=1;c<=n;c++){ const r=Math.ceil(n/c); const w=Math.min((W-gap*(c-1))/c, ((H-gap*(r-1))/r)*16/9); if(w>best) best=w; }
-    stage.style.setProperty('--tw', Math.floor(best)+'px');
+    const size=c=>{ const r=Math.ceil(n/c); return Math.min((W-gap*(c-1))/c, ((H-gap*(r-1))/r)*16/9); };
+    let bc=1; for(let c=2;c<=n;c++) if(size(c)>size(bc)) bc=c;
+    if(lastCols&&lastCols<=n&&bc!==lastCols&&size(bc)<size(lastCols)*1.08) bc=lastCols; // histerese: só muda a grade se ganhar 8%
+    lastCols=bc;
+    stage.style.setProperty('--tw', Math.max(120,Math.floor(size(bc)))+'px');
   }
   /* desenha a tela do canal de voz dentro de vbox */
   function show(v, vbox, who){
@@ -103,7 +114,7 @@
     }
     vbox.classList.add('incall');
     vbox.innerHTML=`<div class="vstage" id="vstage"></div><div class="vbar" id="vbar"></div>`;
-    const st=vbox.querySelector('#vstage'); if(window.ResizeObserver) new ResizeObserver(()=>fit(st)).observe(st);
+    const st=vbox.querySelector('#vstage'); if(window.ResizeObserver) new ResizeObserver(()=>fit(st)).observe(st); lastFit=''; lastCols=0; tiles.clear();
     paint();
   }
   function paint(){
@@ -111,9 +122,13 @@
     const stage=host.querySelector('#vstage'), bar=host.querySelector('#vbar'); if(!stage||!bar||!room) return;
     const ps=people(), live=cur&&cur.kind==='live', lp=room.localParticipant, canPub=lp.permissions?lp.permissions.canPublish!==false:true;
     const withVid=ps.filter(x=>x.vid);
-    stage.className='vstage';
-    stage.replaceChildren(...[...ps.filter(x=>x.scr), ...ps.filter(x=>x.vid&&!x.scr), ...ps.filter(x=>!x.vid)].map(tile));
-    if(live && !withVid.length){ stage.insertAdjacentHTML('afterbegin',`<p class="vwait">${canPub?'Ligue a câmera ou compartilhe a tela para começar a live.':'A live ainda não começou. Fique por aqui.'}</p>`); }
+    const order=[...ps.filter(x=>x.scr), ...ps.filter(x=>!x.scr)].map(tile);
+    const ids=new Set(ps.map(x=>x.p.identity)); for(const k of [...tiles.keys()]) if(!ids.has(k)) tiles.delete(k);
+    const waitTxt= live && !withVid.length ? (canPub?'Ligue a câmera ou compartilhe a tela para começar a live.':'A live ainda não começou. Fique por aqui.') : '';
+    let w=stage.querySelector('.vwait');
+    if(waitTxt&&!w){ w=document.createElement('p'); w.className='vwait'; } if(w) w.textContent=waitTxt;
+    const want=waitTxt?[w,...order]:order, have=[...stage.children];
+    if(want.length!==have.length||want.some((e,i)=>e!==have[i])) stage.replaceChildren(...want);
     fit(stage);
     const btn=(id,ic,lbl,on,cls='')=>`<button class="vbtn ${on?'on':''} ${cls}" id="${id}" title="${lbl}" aria-label="${lbl}" aria-pressed="${!!on}">${ic}<span>${lbl}</span></button>`;
     bar.innerHTML=(canPub?btn('vmic',lp.isMicrophoneEnabled?IC.mic:IC.micOff,lp.isMicrophoneEnabled?'Microfone':'Mudo',lp.isMicrophoneEnabled)
