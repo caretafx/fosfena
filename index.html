@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
+<script>/* F5 sempre volta ao topo, para as animações de entrada tocarem de novo */
+try{ if('scrollRestoration' in history) history.scrollRestoration='manual';
+  const nav=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
+  if(nav&&nav.type==='reload'&&location.hash) history.replaceState(null,'',location.pathname+location.search);
+}catch(e){}
+addEventListener('load',()=>{ if(!location.hash) scrollTo(0,0); });</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fosfena · Escola de VFX</title>
@@ -102,6 +108,21 @@ section.blk{padding:88px 0;border-top:1px solid var(--line)}
 .plan li{display:flex;gap:10px}
 .plan li::before{content:"";flex:none;width:7px;height:7px;margin-top:9px;border-radius:2px;background:var(--accent)}
 .plan .btn{margin-top:auto}
+.prank{max-width:860px;margin:0 0 22px;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;border:1px solid rgba(255,90,90,.55);background:rgba(255,60,60,.08);position:relative;overflow:hidden;min-height:64px}
+.prank .lbl{font-weight:600;color:#ff8a8a;text-transform:uppercase;letter-spacing:.08em;font-size:12.5px;font-family:var(--f-mono)}
+.prank .clock{font-family:var(--f-mono);font-size:28px;font-weight:600;color:#ff6b6b;text-shadow:0 0 14px rgba(255,80,80,.7);letter-spacing:.04em}
+.prank .clock.glitch{animation:glitch .09s steps(2) infinite}
+.prank.shake{animation:shake .35s cubic-bezier(.36,.07,.19,.97) 2}
+@keyframes glitch{0%{transform:translate(1px,-1px) skewX(6deg);filter:hue-rotate(40deg)}100%{transform:translate(-2px,1px) skewX(-8deg);clip-path:inset(20% 0 35% 0)}}
+@keyframes shake{20%,80%{transform:translateX(-3px)}40%,60%{transform:translateX(4px)}}
+.prank svg.crack{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0}
+.prank.broken svg.crack{opacity:1;transition:opacity .1s}
+.prank.done{border-color:rgba(255,181,71,.6);background:rgba(255,181,71,.08);box-shadow:0 0 26px -10px rgba(255,181,71,.7)}
+.prank .pfinal{display:none;gap:4px;flex-direction:column}
+.prank.done .pfinal{display:flex}.prank.done .run{display:none}
+.prank .pfinal b{font-size:17px}.prank .pfinal span{color:var(--soft);font-size:14.5px}
+.prank .run{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){.prank .clock.glitch,.prank.shake{animation:none}}
 .compare{margin-top:34px;max-width:860px;border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:20px;background:rgba(20,16,34,.5)}
 .compare h3{font-size:22px;letter-spacing:-.02em}
 .compare .lead{color:var(--soft);margin:-8px 0 0}
@@ -295,6 +316,11 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
   <section class="blk" id="precos">
     <div class="container">
       <div class="head"><span class="eyebrow" style="color:var(--soft)">Assinatura</span><h2>Um curso que prepara você <em>para o mercado</em></h2><p>Já nas primeiras aulas você aprende técnicas usadas em cinema e em grandes estúdios: tracking, clean plate, keying e integração. A assinatura dá acesso aos dois cursos, Nuke e Flame, e no anual você paga menos por mês.</p></div>
+      <div class="prank" id="prank" role="status" aria-live="polite">
+        <div class="run" aria-hidden="true"><span class="lbl">⏱ Desconto relâmpago acaba em</span><span class="clock" id="pclock">00:04:59</span></div>
+        <div class="pfinal"><b>Brincadeira 😄 Aqui não tem contador nem desconto de mentira.</b><span>R$ 70 por mês, ou R$ 50 no anual, já é o preço final para construir uma carreira de sucesso.</span></div>
+        <svg class="crack" viewBox="0 0 860 64" preserveAspectRatio="none" aria-hidden="true"><path d="M300 0 L318 18 L304 30 L330 44 L316 64 M318 18 L352 14 M330 44 L372 50" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.6"/></svg>
+      </div>
       <div class="plans">
         <div class="plan">
           <div class="plan-top"><h3>Mensal</h3></div>
@@ -390,5 +416,20 @@ document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',(
 <script>window.FX={glass:'.step,.mod,.plan,dialog,.fx-st',glow:'.btn-ghost,.frame',tilt:'.step,.mod,.plan,.fx-st',reveal:'.pmarquee,.fx-st,.head,.step,.mod,.who>div,.plan,.faq details,.frame,.reel h2,.final .container>*,.guarantee',words:'.hero h1'};</script>
 <script src="assets/fx.js" defer></script>
 <script src="assets/fluid.js" defer></script>
+<script>/* brincadeira do contador: corre rápido, trava, quebra e revela que o preço já é o final */
+(function(){
+  const box=document.getElementById('prank'), clock=document.getElementById('pclock'); if(!box) return;
+  const finish=()=>{ box.classList.remove('broken','shake'); box.classList.add('done'); };
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)){ finish(); return; }
+  let t=299, started=false;
+  const fmt=n=>'00:'+String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');
+  function go(){ started=true;
+    const tick=setInterval(()=>{ t-=7; clock.textContent=fmt(Math.max(t,0)); },60);
+    setTimeout(()=>{ clearInterval(tick); clock.classList.add('glitch'); const sc=setInterval(()=>{ clock.textContent='00:'+Math.floor(Math.random()*99)+':'+'#%&?!'[Math.random()*5|0]+Math.floor(Math.random()*9); },70);
+      setTimeout(()=>{ clearInterval(sc); clock.textContent='ERR:OR'; box.classList.add('broken','shake'); },900);
+      setTimeout(finish,1900); },1700);
+  }
+  new IntersectionObserver((es,o)=>es.forEach(e=>{ if(e.isIntersecting&&!started){ o.disconnect(); setTimeout(go,300); } }),{threshold:.6}).observe(box);
+})();</script>
 </body>
 </html>
