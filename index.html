@@ -111,6 +111,21 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
 }
 @media (max-width:420px){ .top .btn-ghost{display:none} .brand img{height:28px} }
 </style>
+<link rel="stylesheet" href="assets/fx.css">
+<style>
+.top{background:rgba(20,21,24,.5)!important;-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%)}
+.preview-bar{background:rgba(59,42,82,.75)}
+#precos{background:rgba(59,42,82,.32)!important;-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px)}
+.plan.best{box-shadow:0 0 0 1.5px var(--accent),0 30px 80px -30px rgba(224,168,78,.45)!important}
+.frame{box-shadow:0 40px 120px -40px rgba(59,42,82,.9),0 0 0 1px rgba(236,234,228,.08)}
+.who>div{padding:22px;border-radius:14px;background:rgba(38,40,46,.3);border-top:2px solid var(--accent)}
+.mod.soon{background:rgba(38,40,46,.22)!important;border-style:dashed!important}
+.hero h1 em .w{color:var(--accent)}
+.hero .world{animation:wordIn 1s 1.1s both cubic-bezier(.2,.8,.2,1)}
+.hero .eyebrow,.hero .lead,.hero .ctas{animation:wordIn .9s both cubic-bezier(.2,.8,.2,1)}
+.hero .lead{animation-delay:.6s}.hero .ctas{animation-delay:.75s}
+@media (prefers-reduced-motion:reduce){.hero .world,.hero .eyebrow,.hero .lead,.hero .ctas{animation:none}}
+</style>
 </head>
 <body>
 <div class="preview-bar">Prévia do site. As assinaturas ainda não estão abertas.</div>
@@ -290,5 +305,7 @@ document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',(
   if(dlg.showModal) dlg.showModal();
 }));
 </script>
+<script>window.FX={glass:'.step,.mod,.plan,dialog',glow:'.btn-ghost,.frame',tilt:'.step,.mod,.plan',reveal:'.head,.step,.mod,.who>div,.plan,.faq details,.frame,.reel h2,.final .container>*,.guarantee',words:'.hero h1'};</script>
+<script src="assets/fx.js" defer></script>
 </body>
 </html>

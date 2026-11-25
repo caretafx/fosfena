@@ -10,6 +10,17 @@
 <meta name="theme-color" content="#18191C">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>body{margin:0}</style>
+<link rel="stylesheet" href="assets/fx.css">
+<style>
+body{background:#141518!important}
+.side{border-right:1px solid rgba(236,234,228,.08)!important;border-top:0!important;border-left:0!important;border-bottom:0!important;box-shadow:none!important}
+.mcard.later{background:rgba(38,40,46,.2)}
+.continue{background:rgba(59,42,82,.7)!important;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 30px 80px -30px rgba(59,42,82,.9),inset 0 1px 0 rgba(255,255,255,.08)}
+.poster{background:repeating-linear-gradient(180deg,transparent 0 35px,rgba(127,156,192,.08) 35px 36px),rgba(29,31,35,.85)!important}
+.lrow,.litem{transition:background .2s}
+textarea{background:rgba(20,21,24,.5)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+@media (max-width:760px){.side{border-right:0!important;border-bottom:1px solid rgba(236,234,228,.08)!important}}
+</style>
 </head>
 <body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +50,7 @@ h1,h2,h3{font-family:var(--f-display);font-weight:600;letter-spacing:-.025em;lin
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .app{display:grid;grid-template-columns:232px 1fr;min-height:100%}
 /* sidebar */
-.side{background:var(--panel);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:26px;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;height:100dvh;overflow-y:auto}
+.side{background:var(--panel);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:26px;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;height:100dvh;overflow-y:auto;box-sizing:border-box}
 .brand{display:flex;align-items:center;gap:10px;padding:0 8px}
 .brand svg{width:32px;height:32px;flex:none;color:var(--fg);overflow:visible}
 .brand b{font-family:var(--f-display);font-size:22px;font-weight:600;letter-spacing:-.035em}
@@ -489,5 +500,7 @@ try{ const ss=JSON.parse(localStorage.getItem('fosfena-sessao')||'{}'); document
 document.getElementById('sair').onclick=()=>{ try{localStorage.removeItem('fosfena-sessao')}catch(e){} location.href='index.html'; };
 route();
 </script>
+<script>window.FX={glass:'.side,.stats,.lessons,.list,.mcard:not(.later),.ex,.controls,.files,.step',glow:'.btn-ghost,.lrow,.litem',tilt:'.mcard,.ex,.continue',reveal:'.mcard,.lessons,.ex,.stats,.continue,.module-head,.mhead,.demo-note',words:''};</script>
+<script src="assets/fx.js" defer></script>
 </body>
 </html>

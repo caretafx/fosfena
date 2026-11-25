@@ -1,0 +1,53 @@
+/* Fosfena · acabamento: luz de fundo, vidro, brilho que segue o mouse e entradas ao rolar. */
+body{background:#141518}
+.aura{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:#141518}
+.aura i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.75;will-change:transform}
+.aura .b1{width:62vmax;height:62vmax;left:-18vmax;top:-22vmax;background:#3B2A52;animation:drift1 26s ease-in-out infinite alternate}
+.aura .b2{width:46vmax;height:46vmax;right:-16vmax;top:18vh;background:#4a3468;opacity:.55;animation:drift2 32s ease-in-out infinite alternate}
+.aura .b3{width:30vmax;height:30vmax;left:30vw;bottom:-14vmax;background:#E0A84E;opacity:.13;animation:drift3 28s ease-in-out infinite alternate}
+.aura::after{content:"";position:absolute;inset:0;background:radial-gradient(520px circle at var(--mx,50%) var(--my,-40%),rgba(224,168,78,.09),transparent 60%);transition:background .1s}
+.aura::before{content:"";position:absolute;inset:0;z-index:1;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+@keyframes drift1{to{transform:translate(14vmax,10vmax) scale(1.08)}}
+@keyframes drift2{to{transform:translate(-12vmax,-8vmax) scale(.92)}}
+@keyframes drift3{to{transform:translate(-16vmax,-6vmax) scale(1.15)}}
+
+/* vidro */
+.glass,.fx-glass{background:rgba(38,40,46,.42)!important;-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);border:1px solid rgba(236,234,228,.09)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 20px 50px -24px rgba(0,0,0,.6)}
+
+/* brilho que segue o mouse dentro do card */
+.fx-glow{position:relative;isolation:isolate}
+.fx-glow::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;opacity:0;transition:opacity .3s;background:radial-gradient(360px circle at var(--x,50%) var(--y,50%),rgba(224,168,78,.13),transparent 65%)}
+.fx-glow::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;padding:1px;opacity:0;transition:opacity .3s;background:radial-gradient(240px circle at var(--x,50%) var(--y,50%),rgba(224,168,78,.75),transparent 70%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.fx-glow:hover::before,.fx-glow:hover::after{opacity:1}
+.fx-tilt{transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .3s;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px))}
+.fx-tilt:hover{--ty:-4px}
+
+/* botões */
+.btn-primary{position:relative;overflow:hidden;box-shadow:0 8px 28px -10px rgba(224,168,78,.65)}
+.btn-primary::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transition:left .6s}
+.btn-primary:hover::after{left:120%}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-ghost{background:rgba(236,234,228,.04);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.btn{transition:transform .2s,filter .2s,background .2s}
+
+/* entrada ao rolar */
+.fx-reveal{opacity:0;transform:translateY(26px) scale(.985);filter:blur(6px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1),filter .8s;transition-delay:var(--d,0ms)}
+.fx-reveal.in{opacity:1;transform:none;filter:none}
+.fx-reveal.in.fx-tilt{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px))}
+
+/* palavras do título */
+.fx-words .w{display:inline-block;opacity:0;transform:translateY(.45em);filter:blur(8px);animation:wordIn .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*70ms + 120ms)}
+@keyframes wordIn{to{opacity:1;transform:none;filter:none}}
+
+@media (hover:none),(pointer:coarse){
+  .aura i{animation:none;filter:blur(70px)}
+  .aura::after{display:none}
+  .fx-tilt{transform:none!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .aura i{animation:none}
+  .fx-reveal{opacity:1;transform:none;filter:none;transition:none}
+  .fx-words .w{animation:none;opacity:1;transform:none;filter:none}
+  .fx-tilt{transform:none!important}
+  .btn-primary::after{display:none}
+}
