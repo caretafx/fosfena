@@ -265,6 +265,9 @@ textarea{width:100%;min-height:160px;background:var(--panel);border:1px solid va
 .toast.show{opacity:1;transform:translateX(-50%)}
 /* módulos */
 .code{font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.06em;color:var(--accent);border:1px solid rgba(224,168,78,.45);border-radius:6px;padding:2px 7px}
+.course-h{display:flex;align-items:center;gap:12px;margin:6px 0 -4px}
+.course-h h2{font-size:22px;letter-spacing:-.02em}
+.code-pill{font-family:var(--f-mono);font-size:12px;font-weight:600;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,181,71,.6);color:var(--neon-ambar,#E0A84E)}
 .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .mcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px;min-height:200px}
 a.mcard:hover{background:var(--raise)}
@@ -314,7 +317,7 @@ a.mcard:hover{background:var(--raise)}
     </a>
     <nav class="nav" id="nav">
       <a href="#inicio" data-r="inicio"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a>
-      <a href="#modulos" data-r="modulos"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/></svg><span>Módulos</span></a>
+      <a href="#modulos" data-r="modulos"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/></svg><span>Cursos</span></a>
       <a href="#exercicios" data-r="exercicios"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M7.5 9l3.3 6M16.5 9l-3.3 6"/></svg><span>Exercícios</span></a>
       <a href="#comunidade" data-r="comunidade"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-4 3v-3H6a2 2 0 0 1-2-2z"/><circle cx="9" cy="10.5" r="1" fill="currentColor"/><circle cx="15" cy="10.5" r="1" fill="currentColor"/></svg><span>Comunidade</span></a>
       <a href="admin.html" id="navAdmin" hidden><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2h12v2"/></svg><span>Painel do professor</span></a>
@@ -332,7 +335,7 @@ a.mcard:hover{background:var(--raise)}
 
 <script>
 const COURSE = [
-  { id:'NK101', code:'NK101', tool:'Nuke', title:'Fundamentos do Nuke', desc:'Tudo o que você precisa para começar a trabalhar no Nuke, da instalação aos primeiros trabalhos de comp.', lessons:[
+  { id:'NK101', course:'nuke', code:'NK101', tool:'Nuke', title:'Fundamentos do Nuke', desc:'Tudo o que você precisa para começar a trabalhar no Nuke, da instalação aos primeiros trabalhos de comp.', lessons:[
     { id:'aula-1', n:1, title:'Como instalar o Nuke', dur:599.37,
       summary:'Do download à primeira abertura. Você escolhe a licença certa para estudar, instala o Nuke no Windows e confere se está tudo pronto para a próxima aula.',
       topics:['Onde baixar o Nuke e quais licenças existem para estudo','Instalação passo a passo no Windows','Ativação da licença e primeira abertura','Ajustes iniciais antes de começar'],
@@ -356,9 +359,10 @@ const COURSE = [
       exercise:['Leia o ftg.mov e extraia a tela com Keyer','Limpe a matte com FilterErode e Blur','Trackeie os cantos da tela','Encaixe uma imagem nova no lugar (use o CheckerBoard para testar)','Ajuste cor com Grade e HueCorrect para integrar','Renderize em 1920 × 1080, frames 1 a 65'],
       files:[['mov','ftg.mov','Footage da aula','363 MB'],['nk','aula04_v01.nk','Script do Nuke','27 KB'],['mov','aula04_v01.mov','Resultado de referência','56 MB']] },
   ]},
-  { id:'NK102', code:'NK102', tool:'Nuke', title:'Projeto Básico Nuke', soon:true, note:'Exercícios de um projeto completo, cada um com footage, script inicial e resultado esperado.' },
-  { id:'FL101', code:'FL101', tool:'Flame', title:'Fundamentos do Flame', soon:true, note:'Primeiros passos no Flame. Aulas em gravação.' },
+  { id:'NK102', course:'nuke', code:'NK102', tool:'Nuke', title:'Projeto Básico Nuke', soon:true, note:'Exercícios de um projeto completo, cada um com footage, script inicial e resultado esperado.' },
+  { id:'FL101', course:'flame', code:'FL101', tool:'Flame', title:'Fundamentos do Flame', soon:true, note:'Primeiros passos no Flame. Aulas em gravação.' },
 ];
+const COURSES = [ {id:'nuke', title:'Curso de Nuke', pill:'NK', status:'No ar'}, {id:'flame', title:'Curso de Flame', pill:'FL', status:'Em breve', soon:true} ];
 const LESSONS = COURSE.flatMap(m => (m.lessons||[]).map(l => ({...l, module:m})));
 const TOTAL = LESSONS.reduce((s,l)=>s+l.dur,0);
 
@@ -469,14 +473,14 @@ function home(){
     </div>
     <p class="demo-note">Prévia com progresso de exemplo. O que você assistir ou marcar aqui fica salvo só neste navegador. <button class="mono" style="text-decoration:underline;color:var(--fg)" id="reset">Recomeçar a prévia</button></p>
     ${commCta()}
-    <section class="module"><div class="module-head"><h2>Seus módulos</h2><a class="meta" href="#modulos" style="color:var(--link)">Ver todos</a></div>${modCards()}</section>`;
+    <section class="module"><div class="module-head"><h2>Seus cursos</h2><a class="meta" href="#modulos" style="color:var(--link)">Ver todos</a></div>${modCards()}</section>`;
 }
 
 let timer=null, speedIdx=0; const SPEEDS=[1,1.25,1.5,2];
 function lessonView(l){
   const i=LESSONS.indexOf(l), prev=LESSONS[i-1], next=LESSONS[i+1], p=P(l.id);
   const tabs = [['sobre','Sobre a aula'],['materiais','Materiais'],['exercicio','Exercício'],['prova','Prova'],['notas','Anotações']].filter(t=> t[0]!=='materiais'||l.files.length).filter(t=>t[0]!=='exercicio'||l.exercise).filter(t=>t[0]!=='prova'||QUIZ[l.id]);
-  const list = COURSE.map(m=>`<div class="grp">${m.code} · ${esc(m.title)}</div>` + (m.soon? `<div class="litem lock"><span class="state">·</span><span class="t">${esc(m.note)}</span><span class="tag">Em breve</span></div>` :
+  const list = COURSE.filter(m=>m.course===l.module.course).map(m=>`<div class="grp">${m.code} · ${esc(m.title)}</div>` + (m.soon? `<div class="litem lock"><span class="state">·</span><span class="t">${esc(m.note)}</span><span class="tag">Em breve</span></div>` :
     m.lessons.map(x=>`<a class="litem ${x.id===l.id?'cur':''}" href="#${x.id}">${stateIcon(x)}<span class="t">${esc(x.title)}</span><span class="d">${fmt(x.dur)}</span></a>`).join(''))).join('');
   const s=stats();
   return `
@@ -684,12 +688,15 @@ function refreshList(l){ document.querySelectorAll('.list .litem[href]').forEach
 
 function modStats(m){ const ls=m.lessons||[]; const done=ls.filter(l=>P(l.id).done).length; const tot=ls.reduce((a,l)=>a+l.dur,0)||1; const w=ls.reduce((a,l)=>a+(P(l.id).done?l.dur:Math.min(P(l.id).pos,l.dur)),0); return {done, n:ls.length, pct:w/tot}; }
 function modCards(){
-  return `<div class="mgrid">${COURSE.map(m=>{ if(m.soon) return `<div class="mcard later"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="code">${m.code}</span><span class="tag">Em breve</span></div><h3>${esc(m.title)}</h3><p>${esc(m.note)}</p></div>`;
+  return COURSES.map(c=>`<div class="course-h"><span class="code-pill">${c.pill}</span><h2>${c.title}</h2><span class="tag ${c.soon?'':'acc'}">${c.status}</span></div>`+modGrid(COURSE.filter(m=>m.course===c.id))).join('');
+}
+function modGrid(list){
+  return `<div class="mgrid">${list.map(m=>{ if(m.soon) return `<div class="mcard later"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="code">${m.code}</span><span class="tag">Em breve</span></div><h3>${esc(m.title)}</h3><p>${esc(m.note)}</p></div>`;
     const ms=modStats(m); return `<a class="mcard" href="#${m.id}"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="code">${m.code}</span><span class="eyebrow">${esc(m.tool)}</span></div><h3>${esc(m.title)}</h3><p>${esc(m.desc||'')}</p>
       <div class="mfoot"><div class="bar"><i style="width:${(ms.pct*100).toFixed(1)}%"></i></div><span class="mono" style="font-size:12.5px;color:var(--muted)">${ms.done} de ${ms.n} aulas · ${Math.round(ms.pct*100)}%</span></div></a>`; }).join('')}</div>`;
 }
 function modulesView(){
-  return `<div style="display:flex;flex-direction:column;gap:6px"><span class="eyebrow">Curso</span><h1 style="font-size:34px">Módulos</h1><p style="margin:0;color:var(--muted);max-width:60ch">Cada módulo tem um código. Os que começam com NK são de Nuke e os com FL são de Flame. Novos módulos aparecem aqui assim que são publicados.</p></div>${modCards()}`;
+  return `<div style="display:flex;flex-direction:column;gap:6px"><span class="eyebrow">Fosfena</span><h1 style="font-size:34px">Cursos</h1><p style="margin:0;color:var(--muted);max-width:60ch">Nuke e Flame são cursos separados, cada um com os seus módulos. Os códigos NK são do curso de Nuke e os FL, do curso de Flame. Novos módulos aparecem aqui assim que são publicados.</p></div>${modCards()}`;
 }
 function moduleView(m){
   const ms=modStats(m);
