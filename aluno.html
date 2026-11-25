@@ -87,6 +87,7 @@ main{min-width:0;padding-block:28px 56px;padding-left:max(28px,env(safe-area-ins
 .ring svg{width:84px;height:84px;flex:none}
 .ring b{font-family:var(--f-display);font-weight:600;letter-spacing:-.03em;font-size:28px;display:block;line-height:1}
 .kv{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.kv>div:nth-child(5){grid-column:1/-1}
 .kv div{display:flex;flex-direction:column;gap:2px}
 .kv span{font-size:12px;color:var(--faint)}
 .kv strong{font-family:var(--f-mono);font-weight:500;font-size:15px}
@@ -166,6 +167,34 @@ main{min-width:0;padding-block:28px 56px;padding-left:max(28px,env(safe-area-ins
 .step{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
 .step input{margin-top:4px;accent-color:var(--accent);width:16px;height:16px}
 .step.ok span{color:var(--muted);text-decoration:line-through}
+.quiz{display:flex;flex-direction:column;gap:16px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.q{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.q legend{font-weight:600;padding:0;margin-bottom:4px;float:left;width:100%}
+.q .n{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:block;margin-bottom:4px;font-weight:400}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:border-color .2s,background .2s}
+.opt:hover{border-color:rgba(155,107,255,.6)}
+.opt input{margin-top:3px;accent-color:var(--accent)}
+.opt.right{border-color:#5fd38d;background:rgba(95,211,141,.1)}
+.opt.wrong{border-color:#e8746a;background:rgba(232,116,106,.1)}
+.q .why{font-size:13.5px;color:var(--muted);border-left:2px solid var(--accent);padding-left:10px;display:none}
+.quiz.checked .why{display:block}
+.quiz.checked .opt{cursor:default}
+.score{display:flex;gap:16px;align-items:center;padding:16px;border-radius:12px;background:rgba(155,107,255,.12);border:1px solid rgba(155,107,255,.45)}
+.score b{font-family:var(--f-display);font-size:40px;letter-spacing:-.03em;line-height:1}
+.score.pass b{color:var(--accent)}
+.qbadge{font-family:var(--f-mono);font-size:11.5px;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.qbadge.ok{border-color:rgba(255,181,71,.6);color:var(--accent)}
+.community{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+.ccard{border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.ccard h2{font-size:24px}
+.chans{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.chans li{display:flex;gap:10px;align-items:baseline}
+.chans b{font-family:var(--f-mono);font-size:13.5px;color:var(--neon-ciano,#7F9CC0);white-space:nowrap}
+.chans span{color:var(--muted);font-size:14px}
+.discord-cta{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;padding:16px 18px;border-radius:14px;background:linear-gradient(120deg,rgba(88,101,242,.28),rgba(155,107,255,.18));border:1px solid rgba(124,134,255,.55);box-shadow:0 0 24px -8px rgba(124,134,255,.7)}
+.discord-cta .dl-ic{width:34px;height:34px;flex:none;color:#c9cdff}
+@media (max-width:900px){.community{grid-template-columns:1fr}}
 .deliver{background:var(--fos-roxo);border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 textarea{width:100%;min-height:160px;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--fg);font:inherit;padding:12px;resize:vertical;box-sizing:border-box}
 .list{background:var(--panel);border:1px solid var(--line);border-radius:12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);overflow:hidden}
@@ -244,6 +273,7 @@ a.mcard:hover{background:var(--raise)}
       <a href="#inicio" data-r="inicio"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a>
       <a href="#modulos" data-r="modulos"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/></svg><span>Módulos</span></a>
       <a href="#exercicios" data-r="exercicios"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M7.5 9l3.3 6M16.5 9l-3.3 6"/></svg><span>Exercícios</span></a>
+      <a href="#comunidade" data-r="comunidade"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-4 3v-3H6a2 2 0 0 1-2-2z"/><circle cx="9" cy="10.5" r="1" fill="currentColor"/><circle cx="15" cy="10.5" r="1" fill="currentColor"/></svg><span>Comunidade</span></a>
     </nav>
     <div class="side-foot">
       <span class="lbl">Seu progresso</span>
@@ -288,11 +318,42 @@ const COURSE = [
 const LESSONS = COURSE.flatMap(m => (m.lessons||[]).map(l => ({...l, module:m})));
 const TOTAL = LESSONS.reduce((s,l)=>s+l.dur,0);
 
+// Provas: perguntas de múltipla escolha no fim de cada aula. a = índice da resposta certa.
+const QUIZ = {
+  'aula-1':[
+    {q:'Qual licença da Foundry é gratuita para estudar, sem uso comercial?', o:['Nuke Indie','Nuke Non-commercial','NukeX','Nuke Studio'], a:1, why:'A Non-commercial é gratuita para aprender. A Indie é paga, mas barata, para quem fatura pouco.'},
+    {q:'Qual é a principal limitação de render da licença Non-commercial?', o:['Só renderiza 10 frames','Não abre arquivos .mov','O render fica limitado a resolução HD','Não tem o node Write'], a:2, why:'Você pode trabalhar normalmente, mas o render sai limitado a 1920 × 1080.'},
+    {q:'De onde você deve baixar o Nuke?', o:['De qualquer site de downloads','Do site oficial da Foundry','De um torrent','Ele já vem no Windows'], a:1, why:'Baixe sempre do site da Foundry: é seguro e a licença funciona sem dor de cabeça.'},
+  ],
+  'aula-2':[
+    {q:'Qual node traz um footage para dentro do script?', o:['Write','Viewer','Read','Merge'], a:2, why:'O Read lê o arquivo do disco. O atalho é a tecla R no Node Graph.'},
+    {q:'Onde você vê o resultado da imagem?', o:['No Viewer','No Properties','No Dope Sheet','No Script Editor'], a:0, why:'O Viewer mostra a imagem do node que está conectado a ele.'},
+    {q:'Onde se ajusta formato, fps e frame range do projeto?', o:['No node Read','Em Project Settings','No Viewer','No Write'], a:1, why:'Project Settings abre com a tecla S sobre o Node Graph.'},
+    {q:'Qual node grava o resultado final no disco?', o:['Read','Write','Shuffle','Backdrop'], a:1, why:'O Write define o caminho e o formato do arquivo e faz o render.'},
+  ],
+  'aula-3':[
+    {q:'Para que serve o FrameHold nesse apagamento?', o:['Acelerar o render','Congelar um frame para pintar o clean plate','Estabilizar a câmera','Trocar o fps do plano'], a:1, why:'Você pinta uma vez em um frame congelado e depois reaplica o movimento.'},
+    {q:'Qual node usamos para pintar o clean plate?', o:['RotoPaint','Grade','Blur','Keyer'], a:0, why:'O RotoPaint tem clone e paint para cobrir o que precisa sumir.'},
+    {q:'O que o Tracker entrega para reaplicar o patch?', o:['Uma matte pronta','O movimento da área ao longo dos frames','A cor média do plano','Um arquivo .mov'], a:1, why:'Os dados de track alimentam o CornerPin ou o Transform para o patch seguir a cena.'},
+    {q:'Qual node coloca o patch por cima da imagem original?', o:['Copy','Merge','Reformat','Read'], a:1, why:'O Merge, na operação over, junta o patch (A) sobre o plano (B).'},
+  ],
+  'aula-4':[
+    {q:'Para que serve o Keyer nesta aula?', o:['Gerar uma matte (alpha) da tela','Trackear os cantos','Mudar o formato do render','Corrigir a cor da imagem nova'], a:0, why:'O Keyer cria o alpha a partir da imagem, isolando a tela.'},
+    {q:'O que o FilterErode faz com a matte?', o:['Muda a cor dela','Encolhe ou expande as bordas','Inverte preto e branco','Apaga a matte'], a:1, why:'Valores positivos encolhem e negativos expandem a matte.'},
+    {q:'O que o Premult faz?', o:['Multiplica o RGB pelo alpha','Duplica o alpha','Aumenta o contraste','Converte para HD'], a:0, why:'Premultiplicar recorta a imagem pelo alpha antes do Merge.'},
+    {q:'Qual node muda a resolução para 1920 × 1080 antes do render?', o:['Transform','Crop','Reformat','Grade'], a:2, why:'O Reformat adapta a imagem a um novo formato.'},
+  ],
+};
+const PASS = 0.7;
+// Link provisório: troque pelo convite do servidor quando ele existir.
+const DISCORD_URL = '';
+
+
 // Progresso de exemplo para o preview; salvo só neste navegador.
 const DEFAULT = { 'aula-1':{pos:599.37,done:true}, 'aula-2':{pos:512,done:false} };
 const KEY = 'fosfena-preview-v1';
 let S = load();
-function load(){ try{ const v = JSON.parse(localStorage.getItem(KEY)); if(v && v.prog) return v; }catch(e){} return {prog:JSON.parse(JSON.stringify(DEFAULT)), notes:{}, steps:{}}; }
+function load(){ try{ const v = JSON.parse(localStorage.getItem(KEY)); if(v && v.prog){ v.quiz=v.quiz||{}; return v; } }catch(e){} return {prog:JSON.parse(JSON.stringify(DEFAULT)), notes:{}, steps:{}, quiz:{}}; }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 const P = id => S.prog[id] || (S.prog[id] = {pos:0,done:false});
 
@@ -306,6 +367,8 @@ function stats(){
   const watched = LESSONS.reduce((s,l)=>s+(P(l.id).done? l.dur : Math.min(P(l.id).pos,l.dur)),0);
   return {done, watched, pct: watched/TOTAL};
 }
+function quizAvg(){ const r=Object.values(S.quiz||{}); if(!r.length) return null; return r.reduce((a,x)=>a+x.best/x.total,0)/r.length; }
+function qBadge(l){ const r=(S.quiz||{})[l.id]; if(!QUIZ[l.id]) return ''; return r? `<span class="qbadge ${r.best/r.total>=PASS?'ok':''}" title="Melhor nota na prova">Prova ${r.best}/${r.total}</span>` : `<span class="qbadge" title="Prova ainda não feita">Prova</span>`; }
 function nextLesson(){ return LESSONS.find(l=>!P(l.id).done) || LESSONS[LESSONS.length-1]; }
 
 // Pôster: mini node graph da aula (ou o título, se a aula não tem nodes)
@@ -358,17 +421,19 @@ function home(){
           <div><span>Tempo assistido</span><strong>${fmtMin(s.watched)}</strong></div>
           <div><span>Conteúdo total</span><strong>${fmtMin(TOTAL)}</strong></div>
           <div><span>Exercícios</span><strong>${LESSONS.filter(l=>l.exercise).length} abertos</strong></div>
+          <div><span>Média nas provas</span><strong>${quizAvg()===null?'—':Math.round(quizAvg()*100)+'%'}</strong></div>
         </div>
       </div>
     </div>
     <p class="demo-note">Prévia com progresso de exemplo. O que você assistir ou marcar aqui fica salvo só neste navegador. <button class="mono" style="text-decoration:underline;color:var(--fg)" id="reset">Recomeçar a prévia</button></p>
+    ${discordCta()}
     <section class="module"><div class="module-head"><h2>Seus módulos</h2><a class="meta" href="#modulos" style="color:var(--link)">Ver todos</a></div>${modCards()}</section>`;
 }
 
 let timer=null, speedIdx=0; const SPEEDS=[1,1.25,1.5,2];
 function lessonView(l){
   const i=LESSONS.indexOf(l), prev=LESSONS[i-1], next=LESSONS[i+1], p=P(l.id);
-  const tabs = [['sobre','Sobre a aula'],['materiais','Materiais'],['exercicio','Exercício'],['notas','Anotações']].filter(t=> t[0]!=='materiais'||l.files.length).filter(t=>t[0]!=='exercicio'||l.exercise);
+  const tabs = [['sobre','Sobre a aula'],['materiais','Materiais'],['exercicio','Exercício'],['prova','Prova'],['notas','Anotações']].filter(t=> t[0]!=='materiais'||l.files.length).filter(t=>t[0]!=='exercicio'||l.exercise).filter(t=>t[0]!=='prova'||QUIZ[l.id]);
   const list = COURSE.map(m=>`<div class="grp">${m.code} · ${esc(m.title)}</div>` + (m.soon? `<div class="litem lock"><span class="state">·</span><span class="t">${esc(m.note)}</span><span class="tag">Em breve</span></div>` :
     m.lessons.map(x=>`<a class="litem ${x.id===l.id?'cur':''}" href="#${x.id}">${stateIcon(x)}<span class="t">${esc(x.title)}</span><span class="d">${fmt(x.dur)}</span></a>`).join(''))).join('');
   const s=stats();
@@ -395,7 +460,7 @@ function lessonView(l){
           <div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span class="eyebrow">${l.module.code} · Aula ${String(l.n).padStart(2,'0')}</span><h1>${esc(l.title)}</h1></div>
           <button class="btn btn-ghost done-btn ${p.done?'is-done':''}" id="done">${p.done?'✓ Concluída':'Marcar como concluída'}</button>
         </div>
-        <div class="tabs" role="tablist">${tabs.map((t,k)=>`<button role="tab" data-t="${t[0]}" aria-selected="${k===0}">${t[1]}</button>`).join('')}</div>
+        <div class="tabs" role="tablist">${tabs.map((t,k)=>`<button role="tab" data-t="${t[0]}" aria-selected="${k===0}">${t[0]==='prova'&&S.quiz[l.id]?`Prova · ${S.quiz[l.id].best}/${S.quiz[l.id].total}`:t[1]}</button>`).join('')}</div>
         <div id="panel" class="tabpanel"></div>
         <div class="pager">
           ${prev?`<a class="btn btn-ghost" href="#${prev.id}">← ${esc(prev.title)}</a>`:'<span></span>'}
@@ -422,10 +487,51 @@ function panel(l, t){
       <div class="steps">${l.exercise.map((x,k)=>`<label class="step ${st[k]?'ok':''}"><input type="checkbox" id="st-${l.id}-${k}" data-k="${k}" ${st[k]?'checked':''}><span>${esc(x)}</span></label>`).join('')}</div>
       <div class="deliver"><div><strong>Entrega</strong><div style="color:var(--muted);font-size:13.5px">Arquivo .mov ou .mp4 com o seu resultado. O professor comenta em até 3 dias.</div></div><button class="btn btn-primary dl" id="send">Enviar meu render</button></div>`;
   }
+  if(t==='prova'){ quizPanel(l, el); return; }
   if(t==='notas') el.innerHTML = `<p style="color:var(--muted)">Suas anotações desta aula. Ficam salvas neste navegador.</p><textarea id="notes-${l.id}" placeholder="Ex.: 12:40, por que o FrameHold vem antes do RotoPaint?">${esc(S.notes[l.id]||'')}</textarea>`;
   el.querySelectorAll('.dl').forEach(b=>b.onclick=()=>toast('Na plataforma real, esse botão baixa ou envia o arquivo.'));
   el.querySelectorAll('.step input').forEach(c=>c.onchange=()=>{ S.steps[l.id][c.dataset.k]=c.checked; c.closest('.step').classList.toggle('ok',c.checked); save(); });
   const ta=el.querySelector('textarea'); if(ta) ta.oninput=()=>{ S.notes[l.id]=ta.value; save(); };
+}
+function quizPanel(l, el){
+  const qs=QUIZ[l.id], r=S.quiz[l.id];
+  el.innerHTML = `<div class="quiz" id="quiz">
+    <div class="qhead"><p style="margin:0">Responda para conferir o que ficou da aula. A correção sai na hora e a sua melhor nota fica no progresso.</p>${r?`<span class="qbadge ${r.best/r.total>=PASS?'ok':''}">Melhor nota: ${r.best}/${r.total}</span>`:''}</div>
+    ${qs.map((x,i)=>`<fieldset class="q" data-i="${i}"><legend><span class="n">Pergunta ${i+1} de ${qs.length}</span>${esc(x.q)}</legend>
+      ${x.o.map((o,k)=>`<label class="opt"><input type="radio" name="q${i}" value="${k}"><span>${esc(o)}</span></label>`).join('')}
+      <p class="why">${esc(x.why)}</p></fieldset>`).join('')}
+    <p class="err" id="qerr" role="alert" style="color:#e8a39a;margin:0;min-height:1.2em"></p>
+    <div id="qres"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary" id="qsend">Corrigir prova</button><button class="btn btn-ghost" id="qagain" hidden>Refazer</button></div>
+  </div>`;
+  const box=el.querySelector('#quiz');
+  el.querySelector('#qsend').onclick=()=>{
+    const ans=qs.map((x,i)=>{ const c=box.querySelector(`input[name="q${i}"]:checked`); return c? +c.value : null; });
+    if(ans.includes(null)){ el.querySelector('#qerr').textContent=`Falta responder ${ans.filter(a=>a===null).length} pergunta(s).`; return; }
+    el.querySelector('#qerr').textContent='';
+    let ok=0; qs.forEach((x,i)=>{ const opts=box.querySelectorAll(`fieldset[data-i="${i}"] .opt`); opts[x.a].classList.add('right'); if(ans[i]===x.a) ok++; else opts[ans[i]].classList.add('wrong'); });
+    box.querySelectorAll('input').forEach(i=>i.disabled=true); box.classList.add('checked');
+    const prev=S.quiz[l.id]; S.quiz[l.id]={best:Math.max(ok, prev?prev.best:0), total:qs.length, last:ok, at:Date.now()}; save(); refreshList(l);
+    const pass=ok/qs.length>=PASS;
+    el.querySelector('#qres').innerHTML=`<div class="score ${pass?'pass':''}"><b>${ok}/${qs.length}</b><div><strong>${pass?'Mandou bem!':'Quase lá.'}</strong><div style="color:var(--muted);font-size:14px">${pass?'Você pode seguir para a próxima aula.':'Revise os pontos marcados e tente de novo. Para passar são '+Math.ceil(PASS*qs.length)+' acertos.'}</div></div></div>`;
+    el.querySelector('#qsend').hidden=true; el.querySelector('#qagain').hidden=false;
+    toast(`Prova corrigida: ${ok} de ${qs.length}.`);
+  };
+  el.querySelector('#qagain').onclick=()=>quizPanel(l, el);
+}
+function discordCta(){
+  return `<a class="discord-cta" href="#comunidade"><div style="display:flex;gap:14px;align-items:center"><svg class="dl-ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.6 5.3A17 17 0 0 0 15.4 4l-.5 1a15.6 15.6 0 0 0-5.8 0l-.5-1a17 17 0 0 0-4.2 1.3C1.7 9.3 1 13.2 1.3 17a17 17 0 0 0 5.2 2.6l1.1-1.8c-.6-.2-1.2-.5-1.7-.8l.4-.3a12.2 12.2 0 0 0 10.4 0l.4.3c-.5.3-1.1.6-1.7.8l1.1 1.8a17 17 0 0 0 5.2-2.6c.4-4.4-.7-8.3-3.1-11.7zM8.5 14.7c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1zm7 0c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1z"/></svg>
+    <div><strong>Comunidade Fosfena no Discord</strong><div style="color:var(--muted);font-size:14px">Tire dúvidas, mostre seus renders e converse com outros alunos.</div></div></div><span class="btn btn-ghost">Entrar na comunidade</span></a>`;
+}
+function community(){
+  const chans=[['#boas-vindas','Apresente-se e conheça a turma'],['#duvidas-nuke','Perguntas sobre as aulas de Nuke'],['#duvidas-flame','Perguntas sobre o Flame'],['#wip','Mostre o seu render e peça comentário'],['#vagas','Oportunidades e freelas'],['#off-topic','Filmes, séries e conversa solta']];
+  return `<div style="display:flex;flex-direction:column;gap:6px"><span class="eyebrow">Comunidade</span><h1 style="font-size:34px">Discord dos alunos</h1><p style="margin:0;color:var(--muted);max-width:60ch">Um servidor só para assinantes. É onde você tira dúvida entre as aulas, mostra seu progresso e troca ideia com quem está no mesmo caminho.</p></div>
+    <div class="community">
+      <div class="ccard"><h2>O que tem lá</h2><ul class="chans">${chans.map(c=>`<li><b>${c[0]}</b><span>${c[1]}</span></li>`).join('')}</ul></div>
+      <div class="ccard" style="justify-content:space-between"><div style="display:flex;flex-direction:column;gap:10px"><h2>Como entrar</h2><p style="margin:0;color:var(--muted)">Clique no botão, aceite o convite e use o mesmo e-mail da assinatura para liberar os canais de aluno.</p></div>
+        <button class="btn btn-primary" id="joinDiscord">Entrar no Discord</button>
+        <p class="demo-note" style="margin:0">Prévia: o servidor ainda está sendo montado. O convite entra aqui assim que ele existir.</p></div>
+    </div>`;
 }
 function bindLesson(l){
   const p=P(l.id);
@@ -435,7 +541,7 @@ function bindLesson(l){
     document.getElementById('pp').setAttribute('aria-label', on?'Pausar':'Reproduzir');
     if(on) timer=setInterval(()=>{ p.pos=Math.min(p.pos+0.25*SPEEDS[speedIdx]*8, l.dur); upd(); if(p.pos/l.dur>0.95 && !p.done) markDone(true); if(p.pos>=l.dur) setPlay(false); save(); },250); };
   const toggle=()=>setPlay(!timer);
-  const markDone=v=>{ p.done=v; const b=document.getElementById('done'); b.classList.toggle('is-done',v); b.textContent=v?'✓ Concluída':'Marcar como concluída'; save(); sidebar(); refreshList(l); if(v) toast('Aula concluída. Bom trabalho!'); };
+  const markDone=v=>{ p.done=v; const b=document.getElementById('done'); b.classList.toggle('is-done',v); b.textContent=v?'✓ Concluída':'Marcar como concluída'; save(); sidebar(); refreshList(l); if(v) toast(QUIZ[l.id]&&!S.quiz[l.id]?'Aula concluída! Agora faça a prova da aula.':'Aula concluída. Bom trabalho!'); };
   document.getElementById('screen').onclick=toggle;
   document.getElementById('screen').onkeydown=e=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle();} };
   document.getElementById('pp').onclick=toggle;
@@ -449,7 +555,7 @@ function bindLesson(l){
   document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b)); panel(l,b.dataset.t); });
   panel(l,'sobre'); upd();
 }
-function refreshList(l){ document.querySelectorAll('.list .litem[href]').forEach(a=>{ const x=LESSONS.find(y=>'#'+y.id===a.getAttribute('href')); a.querySelector('.state').outerHTML=stateIcon(x); }); const s=stats(); const h=document.querySelector('.list header'); if(h){ h.querySelector('.bar i').style.width=(s.pct*100).toFixed(1)+'%'; h.querySelector('span').textContent=`${s.done} de ${LESSONS.length} aulas concluídas`; } }
+function refreshList(l){ document.querySelectorAll('.list .litem[href]').forEach(a=>{ const x=LESSONS.find(y=>'#'+y.id===a.getAttribute('href')); a.querySelector('.state').outerHTML=stateIcon(x); }); const tb=document.querySelector('.tabs button[data-t="prova"]'); const rq=S.quiz[l.id]; if(tb&&rq) tb.textContent=`Prova · ${rq.best}/${rq.total}`; const s=stats(); const h=document.querySelector('.list header'); if(h){ h.querySelector('.bar i').style.width=(s.pct*100).toFixed(1)+'%'; h.querySelector('span').textContent=`${s.done} de ${LESSONS.length} aulas concluídas`; } }
 
 function modStats(m){ const ls=m.lessons||[]; const done=ls.filter(l=>P(l.id).done).length; const tot=ls.reduce((a,l)=>a+l.dur,0)||1; const w=ls.reduce((a,l)=>a+(P(l.id).done?l.dur:Math.min(P(l.id).pos,l.dur)),0); return {done, n:ls.length, pct:w/tot}; }
 function modCards(){
@@ -468,7 +574,7 @@ function moduleView(m){
     <div class="lessons">${m.lessons.map(l=>{ const pp=P(l.id), pc=pp.done?100:Math.round(pp.pos/l.dur*100); return `
       <a class="lrow" href="#${l.id}">${stateIcon(l)}
         <div style="min-width:0"><div class="t">${esc(l.title)}</div><div class="s">${esc(l.summary)}</div></div>
-        <span class="d">${fmt(l.dur)}</span>
+        <span class="d">${qBadge(l)} ${fmt(l.dur)}</span>
         <div class="pc bar" title="${pc}% assistido"><i style="width:${pc}%"></i></div></a>`}).join('')}</div>`;
 }
 function exercises(){
@@ -490,9 +596,10 @@ function route(){
   let r='inicio';
   if(l){ v.innerHTML=lessonView(l); bindLesson(l); r='modulos'; }
   else if(h==='exercicios'){ v.innerHTML=exercises(); r='exercicios'; }
+  else if(h==='comunidade'){ v.innerHTML=community(); r='comunidade'; document.getElementById('joinDiscord').onclick=()=>{ if(DISCORD_URL) window.open(DISCORD_URL,'_blank','noopener'); else toast('O servidor do Discord ainda está sendo criado. O convite entra aqui em breve.'); }; }
   else if(h==='modulos'){ v.innerHTML=modulesView(); r='modulos'; }
   else if(COURSE.some(m=>m.id===h&&!m.soon)){ v.innerHTML=moduleView(COURSE.find(m=>m.id===h)); r='modulos'; }
-  else { v.innerHTML=home(); const rs=document.getElementById('reset'); if(rs) rs.onclick=()=>{ S={prog:JSON.parse(JSON.stringify(DEFAULT)),notes:{},steps:{}}; save(); route(); sidebar(); toast('Prévia recomeçada.'); }; }
+  else { v.innerHTML=home(); const rs=document.getElementById('reset'); if(rs) rs.onclick=()=>{ S={prog:JSON.parse(JSON.stringify(DEFAULT)),notes:{},steps:{},quiz:{}}; save(); route(); sidebar(); toast('Prévia recomeçada.'); }; }
   document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===r));
   sidebar(); window.scrollTo(0,0);
 }
@@ -501,7 +608,7 @@ try{ const ss=JSON.parse(localStorage.getItem('fosfena-sessao')||'{}'); document
 document.getElementById('sair').onclick=()=>{ try{localStorage.removeItem('fosfena-sessao')}catch(e){} location.href='index.html'; };
 route();
 </script>
-<script>window.FX={glass:'.side,.stats,.lessons,.list,.mcard:not(.later),.ex,.controls,.files,.step',glow:'.btn-ghost,.lrow,.litem',tilt:'.mcard,.ex,.continue',reveal:'.mcard,.lessons,.ex,.stats,.continue,.module-head,.mhead,.demo-note',words:''};</script>
+<script>window.FX={glass:'.side,.stats,.lessons,.list,.mcard:not(.later),.ex,.controls,.files,.step,.ccard',glow:'.btn-ghost,.lrow,.litem',tilt:'.mcard,.ex,.continue',reveal:'.mcard,.lessons,.ex,.stats,.continue,.module-head,.mhead,.demo-note',words:''};</script>
 <script src="assets/fx.js" defer></script>
 <script src="assets/fluid.js" defer></script>
 </body>
