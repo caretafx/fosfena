@@ -24,6 +24,16 @@
 
   function loadLib(){ return window.LivekitClient ? Promise.resolve() : new Promise((ok,err)=>{ const s=document.createElement('script'); s.src=LK.lib; s.onload=ok; s.onerror=()=>err(new Error('lib')); document.head.append(s); }); }
 
+  /* somzinho de entrada e saída (sintetizado na hora, sem arquivo): duas notas suaves subindo = entrou, descendo = saiu */
+  let actx=null;
+  function chime(up){
+    try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==='suspended') actx.resume();
+      const t0=actx.currentTime+0.02, notes=up?[587.33,880]:[783.99,523.25];
+      notes.forEach((f,i)=>{ const o=actx.createOscillator(), g=actx.createGain(); o.type='sine'; o.frequency.value=f;
+        const t=t0+i*0.11; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.12,t+0.015); g.gain.exponentialRampToValueAtTime(0.0001,t+0.45);
+        o.connect(g).connect(actx.destination); o.start(t); o.stop(t+0.5); });
+    }catch(e){}
+  }
   async function join(v, who){
     if(room && cur && cur.id===v.id) return;
     if(room) await leave(true);
@@ -37,15 +47,16 @@
       ['ParticipantConnected','ParticipantDisconnected','TrackSubscribed','TrackUnsubscribed','TrackMuted','TrackUnmuted','LocalTrackPublished','LocalTrackUnpublished','ActiveSpeakersChanged','ConnectionStateChanged'].forEach(k=>room.on(E[k],()=>{ paint(); onChange(); }));
       room.on(E.TrackSubscribed,(track)=>{ if(track.kind==='audio'){ const a=track.attach(); a.dataset.sid=track.sid; document.getElementById('lkAudio').append(a); } });
       room.on(E.TrackUnsubscribed,(track)=>{ track.detach().forEach(x=>x.remove()); els.delete(track.sid); });
+      room.on(E.ParticipantConnected,()=>chime(true)); room.on(E.ParticipantDisconnected,()=>chime(false));
       room.on(E.DataReceived,(payload, participant, kind, topic)=>{ if(topic!=='chat') return; try{ const m=JSON.parse(new TextDecoder().decode(payload)); addMsg({name:(participant&&(participant.name||participant.identity))||'?', text:String(m.text||'').slice(0,500), t:Date.now()}); }catch(e){} });
       room.on(E.Disconnected,()=>{ window.FosFluid&&FosFluid.pause(false); room=null; cur=null; els.clear(); paint(); onChange(); });
       await room.connect(LK.url, j.token);
       await room.startAudio().catch(()=>{});
       if(v.kind!=='live'){ await room.localParticipant.setMicrophoneEnabled(true).catch(()=>toast('Não consegui acessar o microfone. Libere a permissão no navegador.')); }
-      paint(); onChange(); window.FosFluid&&FosFluid.pause(true);
+      paint(); onChange(); window.FosFluid&&FosFluid.pause(true); chime(true);
     }catch(e){ room=null; cur=null; status(e.message==='lib'?'Não consegui carregar a voz. Recarregue a página.':'Não consegui entrar na sala agora. Tente de novo em instantes.', true); onChange(); }
   }
-  async function leave(silent){ window.FosFluid&&FosFluid.pause(false); const r=room; room=null; cur=null; els.clear(); chatLog=[]; unread=0; if(r) await r.disconnect(); document.getElementById('lkAudio')?.replaceChildren(); if(!silent){ paint(); onChange(); } }
+  async function leave(silent){ window.FosFluid&&FosFluid.pause(false); const r=room; if(r) chime(false); room=null; cur=null; els.clear(); chatLog=[]; unread=0; if(r) await r.disconnect(); document.getElementById('lkAudio')?.replaceChildren(); if(!silent){ paint(); onChange(); } }
 
   function toast(m){ (window.toast||alert)(m); }
   function status(m, err){ if(!host) return; const s=host.querySelector('.vstatus'); if(s){ s.textContent=m; s.classList.toggle('err',!!err); } }

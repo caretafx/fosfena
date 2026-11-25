@@ -529,11 +529,12 @@ const displayShaderSource = `
     #endif
 
         // Fosfena: limita o brilho mantendo a cor, para não estourar em branco.
+        c *= 1.1; // 10% mais de brilho (pedido do Mauricio)
         float m = max(c.r, max(c.g, c.b));
-        c *= min(1.0, 0.78 / max(m, 0.0001));
+        c *= min(1.0, 0.86 / max(m, 0.0001));
         float lum = dot(c, vec3(0.299, 0.587, 0.114));
         c = mix(vec3(lum), c, 1.15);
-        c = clamp(c, 0.0, 0.78);
+        c = clamp(c, 0.0, 0.86);
         float a = max(c.r, max(c.g, c.b));
         gl_FragColor = vec4(c, a);
     }
@@ -1105,7 +1106,6 @@ update();
 window.FosFluid = { pause (v) { fluidPaused = !!v; canvas.style.transition = 'opacity .6s'; canvas.style.opacity = v ? '.35' : ''; if (!v) { lastUpdateTime = Date.now(); requestAnimationFrame(update); } } };
 function update (now) {
     if (fluidPaused || document.hidden) return;
-    if (now && now - lastFrame < 31) { requestAnimationFrame(update); return; }
     lastFrame = now || performance.now();
     const dt = calcDeltaTime();
     if (resizeCanvas())
