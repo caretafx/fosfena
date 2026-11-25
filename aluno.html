@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
+<script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
+window.FOS_BUILD='202611252221';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Área do aluno · Fosfena</title>
@@ -259,11 +261,16 @@ body.full .chat{height:100vh;height:100dvh;border:0;border-radius:0;background:r
 .vhero h2{font-size:26px}
 .vlist{margin:0;padding-left:18px;color:var(--muted);display:flex;flex-direction:column;gap:6px;font-size:14.5px}
 .chans button.lv i{font-size:11px}
-.vwho{display:flex;flex-direction:column;gap:2px;padding:0 0 4px 34px}
+.vwho{display:flex;flex-direction:column;gap:2px;padding:2px 0 6px 30px}
 .vwho:empty{display:none}
-.vwho span{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.vwho span::before{content:'';width:7px;height:7px;border-radius:50%;background:rgba(123,224,165,.35)}
-.vwho span.sp{color:var(--fg)}.vwho span.sp::before{background:#7be0a5;box-shadow:0 0 8px #7be0a5}
+.vwho>span{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;padding:3px 6px;border-radius:6px;min-width:0}
+.vwho>span:hover{background:rgba(255,255,255,.04)}
+.vwho .av{width:22px;height:22px;font-size:11px;flex:none;box-shadow:0 0 0 2px transparent;transition:box-shadow .15s}
+.vwho em{font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.vwho em small{color:var(--faint);font-size:11px}
+.vwho>span.me{color:var(--fg)}
+.vwho>span.sp{color:var(--fg)}.vwho>span.sp .av{box-shadow:0 0 0 2px #23a55a,0 0 10px rgba(35,165,90,.6)}
+.vwho .moff{width:14px;height:14px;color:#e8746a;flex:none}
 .voice.incall{padding:0;gap:0;align-items:stretch;overflow:hidden}
 .vstage{--pad:16px;display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:12px;padding:var(--pad) calc(var(--pad) + var(--px,0px));overflow:hidden}
 .vstage.focus{--px:0px}
@@ -453,10 +460,11 @@ a.mcard:hover{background:var(--raise)}
 </div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/nk101-pratica.js?v=20261125q"></script>
-<script src="assets/pratica.js?v=20261125q"></script>
+<script src="assets/nk101-pratica.js?v=20261125r"></script>
+<script src="assets/pratica.js?v=20261125r"></script>
 <script src="assets/nk101-interativo.js?v=2"></script>
-<script src="assets/voz.js?v=20261125o"></script>
+<script src="assets/gamifica.js?v=2"></script>
+<script src="assets/voz.js?v=20261125r"></script>
 <script src="assets/junto.js?v=2"></script>
 <script>
 const COURSE = [
@@ -543,6 +551,10 @@ function stateIcon(l){ const p=P(l.id); if(locked(l)) return `<span class="state
 
 function sidebar(){
   const s=stats();
+  if(window.FosGame){ const L=[]; let px={}; try{ px=JSON.parse(localStorage.getItem('fosfena-pratica-v1'))||{}; }catch(e){}
+    LESSONS.forEach(l=>{ if(P(l.id).done) L.push(['aula:'+l.id,25]); const r=(S.quiz||{})[l.id]; if(r){ for(let i=0;i<r.best;i++) L.push([`q:${l.id}:${i}`,10]); if(r.best===r.total) L.push([`qall:${l.id}`,30]); }
+      Object.keys(px[l.id]||{}).forEach(k=>L.push([`ex:${l.id}:${k}`,20])); });
+    FosGame.sync(L); }
   document.getElementById('sideBar').style.width = (s.pct*100).toFixed(1)+'%';
   document.getElementById('sideTxt').textContent = `${s.done} de ${LESSONS.length} aulas · ${Math.round(s.pct*100)}%`;
 }
@@ -678,6 +690,9 @@ function quizPanel(l, el){
     const pass=ok/qs.length>=PASS;
     el.querySelector('#qres').innerHTML=`<div class="score ${pass?'pass':''}"><b>${ok}/${qs.length}</b><div><strong>${pass?'Mandou bem!':'Quase lá.'}</strong><div style="color:var(--muted);font-size:14px">${pass?'Você pode seguir para a próxima aula.':'Revise os pontos marcados e tente de novo. Para passar são '+Math.ceil(PASS*qs.length)+' acertos.'}</div></div></div>`;
     el.querySelector('#qsend').hidden=true; el.querySelector('#qagain').hidden=false;
+    if(window.FosGame){ const sc=el.querySelector('#qres .score'); if(pass) FosGame.ok(sc); else FosGame.no(sc);
+      let xp=0; for(let i=0;i<ok;i++) xp+=FosGame.award(`q:${l.id}:${i}`,10); /* conta por acertos, igual ao sync */ if(ok===qs.length) xp+=FosGame.award(`qall:${l.id}`,30);
+      if(xp){ const d=document.createElement('div'); d.className='fx-xp'; const r=sc.getBoundingClientRect(); d.style.left=(r.left+60)+'px'; d.style.top=(r.top-10)+'px'; d.textContent=`+${xp} XP`; document.body.appendChild(d); setTimeout(()=>d.remove(),1400); } }
     toast(`Prova corrigida: ${ok} de ${qs.length}.`);
   };
   el.querySelector('#qagain').onclick=()=>quizPanel(l, el);
@@ -721,6 +736,7 @@ function loadChat(){ try{ const v=JSON.parse(localStorage.getItem(CKEY)); if(v&&
 function saveChat(){ try{ localStorage.setItem(CKEY, JSON.stringify(CH)); return true; }catch(e){ toast('Sem espaço para salvar no navegador. Tente uma imagem menor.'); return false; } }
 function me(){ const ss=FosfenaSessao.get()||{}; return {name: ss.nome||'aluno', role: ss.papel==='admin'?'Professor':null}; }
 const AVC=['#FFB547','#9B6BFF','#5CC8FF','#ff7fb0','#7be0a5','#f6d36b'];
+const MIC_OFF='<svg class="moff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="microfone desligado"><path d="M9 9v2a3 3 0 0 0 5.1 2.1M15 9.3V5a3 3 0 0 0-5.7-1.3M19 11a7 7 0 0 1-1.2 3.9M5 11a7 7 0 0 0 10.4 6.1M12 18v3M3 3l18 18"/></svg>';
 function avatar(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))|0; const col=AVC[Math.abs(h)%AVC.length]; return `<span class="av" style="background:${col}" aria-hidden="true">${esc(n.trim().charAt(0).toUpperCase()||'?')}</span>`; }
 function when(t){ const d=new Date(t), now=new Date(); const hm=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); if(d.toDateString()===now.toDateString()) return 'Hoje às '+hm; const y=new Date(now-86400e3); if(d.toDateString()===y.toDateString()) return 'Ontem às '+hm; return d.toLocaleDateString('pt-BR')+' '+hm; }
 function msgHTML(m, list){
@@ -756,9 +772,9 @@ function bindCommunity(){
   const drawWho=()=>{ const c=FosfenaVoz.current();
     document.querySelectorAll('.vwho').forEach(d=>{ const v=VOICE.find(x=>x.id===d.dataset.vw); if(!v) return;
       const list= c&&c.id===v.id ? FosfenaVoz.people() : FosfenaVoz.roster(v.room).map(n=>({name:n}));
-      d.innerHTML=list.map(p=>`<span class="${p.speaking?'sp':''}">${esc(p.name)}</span>`).join('');
+      d.innerHTML=list.map(p=>`<span class="${p.speaking?'sp':''} ${p.me?'me':''}" title="${esc(p.name)}${p.speaking?' · falando':''}${p.mic===false?' · microfone desligado':''}">${avatar(p.name)}<em>${esc(p.name)}${p.me?' <small>(você)</small>':''}</em>${p.mic===false?MIC_OFF:''}</span>`).join('');
       const k=document.querySelector(`.vc[data-vc="${v.id}"]`); if(k) k.textContent=list.length||''; }); };
-  FosfenaVoz.onChange(drawWho); FosfenaVoz.onRoster(drawWho); FosfenaVoz.watch();
+  FosfenaVoz.onChange(drawWho); FosfenaVoz.onRoster(drawWho); FosfenaVoz.watch(); drawWho();
   const draw=()=>{ msgs.hidden=false; comp.hidden=false; vbox.hidden=true; const c=CHANNELS.find(x=>x.id===curCh), list=CH.msgs[curCh]||(CH.msgs[curCh]=[]);
     document.getElementById('chName').textContent='# '+c.name; document.getElementById('chDesc').textContent=c.desc;
     document.querySelectorAll('.chans button').forEach(b=>{ b.classList.toggle('on',b.dataset.c===curCh); if(!b.dataset.c) return; b.querySelector('.cnt').textContent=(CH.msgs[b.dataset.c]||[]).length||''; });
@@ -817,7 +833,7 @@ function bindLesson(l){
   const ytv=window.FosPratica&&FosPratica.ytId(FosPratica.videoFor(l.id));
   if(ytv){ const goP=()=>{ const pr=document.getElementById('prat'); if(pr) pr.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); };
     bindYT(l, ytv, goP); const cb0=document.getElementById('cine'); if(cb0) cb0.onclick=()=>cinema(!document.body.classList.contains('cinema'));
-    document.getElementById('done').onclick=()=>{ p.done=!p.done; const b=document.getElementById('done'); b.classList.toggle('is-done',p.done); b.textContent=p.done?'✓ Concluída':'Marcar como concluída'; save(); sidebar(); refreshList(l); if(p.done) toast(QUIZ[l.id]&&!S.quiz[l.id]?'Aula concluída! Agora faça a prova da aula.':'Aula concluída. Bom trabalho!'); };
+    document.getElementById('done').onclick=()=>{ p.done=!p.done; const b=document.getElementById('done'); b.classList.toggle('is-done',p.done); b.textContent=p.done?'✓ Concluída':'Marcar como concluída'; save(); if(p.done&&window.FosGame) FosGame.award('aula:'+l.id,25,document.getElementById('done')); sidebar(); refreshList(l); if(p.done) toast(QUIZ[l.id]&&!S.quiz[l.id]?'Aula concluída! Agora faça a prova da aula.':'Aula concluída. Bom trabalho!'); };
     document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b)); panel(l,b.dataset.t); });
     panel(l,'sobre'); const pb=document.getElementById('pratBox'); if(pb) FosPratica.render(l, pb); return; }
   const upd=()=>{ const f=Math.min(p.pos/l.dur,1)*100; document.getElementById('fill').style.width=f+'%'; document.getElementById('knob').style.left=f+'%'; document.getElementById('cur').textContent=tc(p.pos); };
@@ -834,7 +850,7 @@ function bindLesson(l){
     document.getElementById('pp').setAttribute('aria-label', on?'Pausar':'Reproduzir');
     if(on&&!vid) timer=setInterval(()=>{ p.pos=Math.min(p.pos+0.25*SPEEDS[speedIdx]*8, l.dur); upd(); if(p.pos/l.dur>0.95 && !p.done) markDone(true); if(p.pos>=l.dur){ setPlay(false); goPrat(); } save(); },250); };
   const toggle=()=>setPlay(vid? vid.paused : !timer);
-  const markDone=v=>{ p.done=v; const b=document.getElementById('done'); b.classList.toggle('is-done',v); b.textContent=v?'✓ Concluída':'Marcar como concluída'; save(); sidebar(); refreshList(l); if(v) toast(QUIZ[l.id]&&!S.quiz[l.id]?'Aula concluída! Agora faça a prova da aula.':'Aula concluída. Bom trabalho!'); };
+  const markDone=v=>{ p.done=v; const b=document.getElementById('done'); b.classList.toggle('is-done',v); b.textContent=v?'✓ Concluída':'Marcar como concluída'; save(); if(v&&window.FosGame) FosGame.award('aula:'+l.id,25,document.getElementById('done')); sidebar(); refreshList(l); if(v) toast(QUIZ[l.id]&&!S.quiz[l.id]?'Aula concluída! Agora faça a prova da aula.':'Aula concluída. Bom trabalho!'); };
   document.getElementById('screen').onclick=toggle;
   document.getElementById('screen').onkeydown=e=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle();} };
   document.getElementById('pp').onclick=toggle;

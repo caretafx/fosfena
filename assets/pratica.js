@@ -218,7 +218,14 @@ function render(lesson, el, idx=0){
   const sk=el.querySelector('[data-skip]'); if(sk) sk.onclick=()=>{ const s=load(); (s._pulos=s._pulos||{})[ex.id]=true; save(s);
     if(idx<list.length-1) render(lesson,el,idx+1); else { const c=el.querySelector('.px-card'); c.innerHTML=`<span class="px-eb">Prática</span><h3>Exercício pulado</h3><p>Sem problema. Quando quiser, volte a qualquer etapa pela lista acima.</p>`; } };
   const body=el.querySelector('.px-body');
-  const done=()=>{ const s=load(); (s[lesson.id]=s[lesson.id]||{})[ex.id]=true; save(s); const b=el.querySelector(`.px-nav button[data-i="${idx}"]`); if(b) b.classList.add('ok'); const c=el.querySelector('.px-count'); if(c) c.textContent=feitos(); };
+  const G=window.FosGame, fbEl=()=>body.querySelector('.px-fb');
+  let won=false;
+  /* som baixinho a cada correção: erro balança o card; acerto parcial só toca (a comemoração fica no done) */
+  if(G){ const card=el.querySelector('.px-card'); const mo=new MutationObserver(()=>{ const f=fbEl(); if(!f||!f.textContent.trim()) return;
+      if(f.classList.contains('no')) G.no(card); else if(f.classList.contains('ok')&&!won) queueMicrotask(()=>{ if(!won) G.play('ok'); }); });
+    setTimeout(()=>{ const f=fbEl(); if(f) mo.observe(f,{attributes:true,childList:true,characterData:true,subtree:true}); }); }
+  const done=()=>{ if(G&&!won){ won=true; const b=body.querySelector('[data-chk]')||fbEl()||body; G.ok(b); G.award('ex:'+lesson.id+':'+ex.id, 20, b); }
+    const s=load(); (s[lesson.id]=s[lesson.id]||{})[ex.id]=true; save(s); const b=el.querySelector(`.px-nav button[data-i="${idx}"]`); if(b) b.classList.add('ok'); const c=el.querySelector('.px-count'); if(c) c.textContent=feitos(); };
   (TIPOS[ex.tipo]||choiceEx)(ex, body, done);
   body.querySelectorAll('[data-help]').forEach(b=>b.onclick=()=>openClip(lesson, ex.duvida));
 }

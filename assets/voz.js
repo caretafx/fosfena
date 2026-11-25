@@ -182,7 +182,6 @@
     bar.innerHTML=(canPub?btn('vmic',lp.isMicrophoneEnabled?IC.mic:IC.micOff,lp.isMicrophoneEnabled?'Microfone':'Mudo',lp.isMicrophoneEnabled)
       +btn('vcam',IC.cam,'Câmera',lp.isCameraEnabled)+btn('vscr',IC.screen,'Tela',lp.isScreenShareEnabled):'')
       +(document.fullscreenEnabled?btn('vfull',IC.full,'Tela cheia',!!document.fullscreenElement):'')
-      +(('documentPictureInPicture' in window)?btn('vpop',IC.pip,'Flutuante',false):'')
       +btn('vchatb',IC.chat+(unread?`<em class="vbadge">${unread>9?'9+':unread}</em>`:''),'Chat',chatOpen)
       +btn('vout',IC.leave,'Sair',false,'red');
     const g=id=>bar.querySelector('#'+id);
@@ -213,14 +212,14 @@
     const lp=room.localParticipant, live=cur.kind==='live', canPub=lp.permissions?lp.permissions.canPublish!==false:true, n=1+room.remoteParticipants.size, mic=lp.isMicrophoneEnabled;
     const b=(a,ic,lbl,on,cls='')=>`<button data-a="${a}" class="${on?'on':''} ${cls}" title="${lbl}" aria-label="${lbl}" aria-pressed="${!!on}">${ic}</button>`;
     const html=`<div class="vd-top"><span class="vd-dot ${live?'live':''}"></span><div class="vd-txt"><b>${live?'Na live':'Voz conectada'}</b><a href="#comunidade">${esc(cur.name)} · ${n} ${n>1?'pessoas':'pessoa'}</a></div></div>
-      <div class="vd-btns">${canPub?b('mic',mic?IC.mic:IC.micOff,mic?'Desligar microfone':'Ligar microfone',!mic,'warn'):''}${b('deaf',deaf?IC.headOff:IC.head,deaf?'Voltar a ouvir':'Parar de ouvir',deaf,'warn')}${b('pip',IC.pip,'Janela flutuante',false)}${b('out',IC.leave,'Sair da chamada',false,'red')}</div>`;
+      <div class="vd-btns">${canPub?b('mic',mic?IC.mic:IC.micOff,mic?'Desligar microfone':'Ligar microfone',!mic,'warn'):''}${b('deaf',deaf?IC.headOff:IC.head,deaf?'Voltar a ouvir':'Parar de ouvir',deaf,'warn')}${b('out',IC.leave,'Sair da chamada',false,'red')}</div>`;
     if(dock._h!==html){ dock._h=html; dock.innerHTML=html; } dock.classList.toggle('inview',!!inView);
   }
   let lastV=null;
 
   /* janelinha flutuante (PiP): dentro do site é arrastável; com "Flutuante" vira uma janela do sistema que fica por cima de outras abas e apps */
   let pip=null, pipWin=null, pipClosed=false;
-  const pipHTML=()=>`<header class="vpip-h"><b></b>${('documentPictureInPicture' in window)?`<button data-a="pop" title="Soltar em cima de outras abas" aria-label="Soltar em cima de outras abas">${IC.pip}</button>`:''}<button data-a="open" title="Voltar para a chamada" aria-label="Voltar para a chamada">${IC.back}</button><button data-a="x" title="Esconder" aria-label="Esconder">×</button></header><div class="vpip-stage" id="vpipStage"></div>`;
+  const pipHTML=()=>`<header class="vpip-h"><b></b><button data-a="open" title="Voltar para a chamada" aria-label="Voltar para a chamada">${IC.back}</button><button data-a="x" title="Esconder" aria-label="Esconder">×</button></header><div class="vpip-stage" id="vpipStage"></div>`;
   function pipClick(e){ const b=e.target.closest('button'); if(!b) return;
     if(b.dataset.a==='pop') popOut();
     if(b.dataset.a==='open'){ try{ window.focus(); }catch(_){} location.hash='#comunidade'; }
@@ -248,6 +247,9 @@
     paint();
   }
 
+  /* janelinha automática: ao trocar de aba durante a chamada, tenta abrir por cima de tudo (o Chrome também abre sozinho pelo mediaSession);
+     se o navegador não deixar sem clique, a janelinha dentro do site já aparece sozinha ao sair da tela do canal. Ao voltar, ela some se o canal estiver na tela. */
+  document.addEventListener('visibilitychange',()=>{ if(!room) return; if(document.hidden){ if(!pipWin) popOut().catch(()=>{}); } else { if(pipWin&&!pipWin.closed&&host&&document.body.contains(host)&&host.querySelector('#vstage')){ closePip(); } paint(); } });
   document.addEventListener('fullscreenchange',()=>paint()); addEventListener('resize',()=>{ if(dock) paintDock(dock.classList.contains('inview')); });
   addEventListener('beforeunload',()=>{ if(room) room.disconnect(); });
   if(!document.getElementById('lkAudio')){ const d=document.createElement('div'); d.id='lkAudio'; d.hidden=true; document.body.append(d); }
@@ -260,5 +262,5 @@
     if(!document.querySelector('.vwho')){ rosterT=null; return; }
     if(!document.hidden&&LK.tokenUrl){ try{ const r=await fetch(LK.tokenUrl.replace(/\/$/,'')+'/?list=1'); if(r.ok){ const j=await r.json(); if(j.rooms){ roster=j.rooms; onRoster(); } } }catch(e){} }
     rosterT=setTimeout(pollRoster,6000); }
-  window.FosfenaVoz={ watch:()=>{ if(!rosterT) pollRoster(); }, roster:room=>roster[room]||[], onRoster:f=>{onRoster=f;}, show, leave, refresh:()=>paint(), popOut, name:()=>(me&&me.name)||'', onData:(topic,f)=>{ dataFns[topic]=f; }, send:(topic,obj)=>room?room.localParticipant.publishData(new TextEncoder().encode(JSON.stringify(obj)),{reliable:true, topic}).catch(()=>{}):Promise.resolve(), ready:()=>!!LK.tokenUrl, current:()=>cur, people:()=>people().map(x=>({name:x.name,speaking:x.speaking,mic:x.mic})), onChange:f=>{onChange=f;} };
+  window.FosfenaVoz={ watch:()=>{ if(!rosterT) pollRoster(); }, roster:room=>roster[room]||[], onRoster:f=>{onRoster=f;}, show, leave, refresh:()=>paint(), popOut, name:()=>(me&&me.name)||'', onData:(topic,f)=>{ dataFns[topic]=f; }, send:(topic,obj)=>room?room.localParticipant.publishData(new TextEncoder().encode(JSON.stringify(obj)),{reliable:true, topic}).catch(()=>{}):Promise.resolve(), ready:()=>!!LK.tokenUrl, current:()=>cur, people:()=>people().map(x=>({name:x.name,speaking:x.speaking,mic:x.mic,me:x.me})), onChange:f=>{onChange=f;} };
 })();
