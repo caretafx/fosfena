@@ -120,13 +120,16 @@
   if(fine && !reduce){
     const dot=document.createElement('div'), ring=document.createElement('div');
     dot.className='fx-cur'; ring.className='fx-ring'; document.body.append(dot, ring);
-    let x=-100,y=-100,rx=-100,ry=-100,shown=true;
+    let x=-100,y=-100,rx=-100,ry=-100,shown=true,looping=false;
     const show=v=>{ if(v===shown) return; shown=v; dot.classList.toggle('off',!v); ring.classList.toggle('off',!v); };
     addEventListener('pointermove',e=>{
       if(e.pointerType && e.pointerType!=='mouse'){ show(false); return; }
       if(!shown){ rx=e.clientX; ry=e.clientY; } /* ao voltar, o anel nasce no mouse em vez de correr de longe */
       x=e.clientX; y=e.clientY; dot.style.transform=`translate3d(${x}px,${y}px,0)`; show(true);
       const t=e.target.closest&&e.target.closest('a,button,[role=button],summary,label,input,textarea,.lrow,.mcard'); ring.classList.toggle('big',!!t); },{passive:true});
+    /* ao arrastar um texto selecionado o navegador entra em modo de arrastar e para de mandar pointermove: segue pelo dragover */
+    const follow=e=>{ if(!e.clientX&&!e.clientY) return; x=e.clientX; y=e.clientY; dot.style.transform=`translate3d(${x}px,${y}px,0)`; show(true); if(!looping){ looping=true; requestAnimationFrame(loop); } };
+    document.addEventListener('dragover',follow,{passive:true}); document.addEventListener('dragend',e=>{ follow(e); ring.classList.remove('down'); });
     addEventListener('pointerdown',()=>ring.classList.add('down')); addEventListener('pointerup',()=>ring.classList.remove('down'));
     /* esconde quando o mouse sai da janela, entra num vídeo/iframe ou a aba perde o foco */
     document.addEventListener('mouseout',e=>{ if(!e.relatedTarget || e.relatedTarget.nodeName==='IFRAME') show(false); });
@@ -134,7 +137,6 @@
     addEventListener('blur',()=>show(false));
     document.addEventListener('visibilitychange',()=>{ if(document.hidden) show(false); });
     show(false);
-    let looping=false;
     const loop=()=>{ rx+=(x-rx)*.18; ry+=(y-ry)*.18; ring.style.transform=`translate3d(${rx}px,${ry}px,0)`; if(Math.abs(x-rx)+Math.abs(y-ry)>.3) requestAnimationFrame(loop); else looping=false; };
     addEventListener('pointermove',()=>{ if(!looping){ looping=true; requestAnimationFrame(loop); } },{passive:true});
   }

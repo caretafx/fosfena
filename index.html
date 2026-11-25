@@ -436,7 +436,7 @@ document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',(
   m.classList.add('js');
   new IntersectionObserver((es,o)=>es.forEach(e=>{ if(!e.isIntersecting) return; o.disconnect(); m.classList.add('intro'); setTimeout(()=>m.classList.add('go'),1700); }),{threshold:.35}).observe(m);
 })();</script>
-<script src="assets/fx.js?v=5" defer></script>
+<script src="assets/fx.js?v=6" defer></script>
 <script src="assets/fluid.js?v=3" defer></script>
 <script>/* brincadeira do contador: corre rápido, trava, quebra e revela que o preço já é o final */
 (function(){
