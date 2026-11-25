@@ -3,9 +3,6 @@
 /* Arquivo de vídeo de cada aula. Quando houver hospedagem, coloque a URL aqui (ex.: 'https://.../nk101-aula01.mp4').
    Com URL, o player da aula toca o vídeo real e o botão de dúvida abre o mesmo arquivo com #t=in,out. */
 window.FOS_VIDEOS = window.FOS_VIDEOS || { 'aula-1': 'https://youtu.be/fFZRUfEX49o', 'aula-2': null, 'aula-3': null, 'aula-4': null };
-// Segundos a pular no começo de cada vídeo do YouTube. A aula 01 foi enviada com a vinheta antiga embutida (1,733 s);
-// a vinheta agora roda no site. Quando ele reenviar a aula sem vinheta, tire a linha.
-window.FOS_VIDEO_INICIO = { 'aula-1': 1.75 };
 window.FOS_PROVAS = {
  "aula-1": [
   {

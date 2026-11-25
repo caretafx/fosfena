@@ -303,6 +303,12 @@ body.full .chat{height:100vh;height:100dvh;border:0;border-radius:0;background:r
 .vform .btn{padding:8px 14px}
 .vbtn{position:relative}.vbadge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#d6344c;color:#fff;font:600 11px/18px var(--f-mono);font-style:normal}
 @media (max-width:900px){.vchat{position:absolute;inset:0;width:auto;z-index:3;background:rgba(10,9,16,.96)}.voice.incall{position:relative}}
+.is-locked{opacity:.55}.is-locked .t{color:var(--muted)}
+.state.lockd{display:grid;place-items:center;color:var(--muted)}
+.nextlock{display:inline-flex;align-items:center;gap:8px;cursor:default;opacity:.8}
+.lockbox{margin:40px auto;max-width:560px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding:36px 24px;border:1px dashed var(--line);border-radius:16px;background:var(--panel)}
+.lockbox h1{font-size:26px;margin:0}.lockbox p{margin:0;color:var(--muted)}
+.lockic{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:rgba(255,181,71,.12);border:1px solid rgba(255,181,71,.5);color:var(--accent)}.lockic svg{width:24px;height:24px}
 .lightbox{position:fixed;inset:0;background:rgba(5,4,10,.88);display:grid;place-items:center;z-index:9000;cursor:zoom-out}
 .lightbox img{max-width:92vw;max-height:88vh;border-radius:10px}
 @media (max-width:820px), (max-height:500px) and (max-width:1000px){.chat{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);height:calc(100vh - 190px)}body.full .chat{height:calc(100dvh - 61px)}.cbrand,.cnote{display:none}.chans{flex-direction:row;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto;padding:8px}.chans .lbl,.chans button .cnt{display:none}.chans button{white-space:nowrap}.mact{display:flex;position:static;margin-top:4px;background:none;border:0;padding:0;grid-column:2}}
@@ -401,9 +407,9 @@ a.mcard:hover{background:var(--raise)}
 </div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/nk101-pratica.js?v=20261125g"></script>
-<script src="assets/pratica.js?v=20261125g"></script>
-<script src="assets/voz.js?v=20261125g"></script>
+<script src="assets/nk101-pratica.js?v=20261125h"></script>
+<script src="assets/pratica.js?v=20261125h"></script>
+<script src="assets/voz.js?v=20261125h"></script>
 <script>
 const COURSE = [
   { id:'NK101', course:'nuke', code:'NK101', tool:'Nuke', title:'Fundamentos do Nuke', desc:'Tudo o que você precisa para começar a trabalhar no Nuke, da instalação aos primeiros trabalhos de comp.', lessons:[
@@ -481,7 +487,11 @@ function poster(l, big){
   }
   return `<div class="poster ${big?'':'thumb'}">${g}${l.note&&big?`<span class="mao">${esc(l.note)}</span>`:''}<div class="cap"><span class="num">${l.module.code} · AULA ${String(l.n).padStart(2,'0')}</span><span class="ttl">${esc(l.title)}</span></div></div>`;
 }
-function stateIcon(l){ const p=P(l.id); if(p.done) return `<span class="state done" aria-label="Concluída">✓</span>`; if(p.pos>5) return `<span class="state prog" aria-label="Em andamento">${String(l.n).padStart(2,'0')}</span>`; return `<span class="state">${String(l.n).padStart(2,'0')}</span>`; }
+/* Aulas em sequência: o aluno só abre uma aula depois de concluir a anterior. As aulas 01 a 04 ficam sempre liberadas; o professor vê tudo. */
+const FREE_LESSONS=['aula-1','aula-2','aula-3','aula-4'];
+function locked(l){ if(window.FosfenaSessao&&FosfenaSessao.isAdmin()) return false; if(FREE_LESSONS.includes(l.id)) return false; const i=LESSONS.findIndex(x=>x.id===l.id), prev=LESSONS[i-1]; return i>0 && prev.module.course===LESSONS[i].module.course && !P(prev.id).done; }
+const LOCK_IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+function stateIcon(l){ const p=P(l.id); if(locked(l)) return `<span class="state lockd" aria-label="Bloqueada: conclua a aula anterior">${LOCK_IC}</span>`; if(p.done) return `<span class="state done" aria-label="Concluída">✓</span>`; if(p.pos>5) return `<span class="state prog" aria-label="Em andamento">${String(l.n).padStart(2,'0')}</span>`; return `<span class="state">${String(l.n).padStart(2,'0')}</span>`; }
 
 function sidebar(){
   const s=stats();
@@ -525,11 +535,17 @@ function home(){
 }
 
 let timer=null, speedIdx=0; const SPEEDS=[1,1.25,1.5,2];
+function nextBtn(l){ const next=LESSONS[LESSONS.findIndex(x=>x.id===l.id)+1]; if(!next) return '';
+  return locked(next)? `<span class="btn btn-ghost nextlock" aria-disabled="true">${LOCK_IC} Conclua esta aula para liberar a próxima</span>` : `<a class="btn btn-primary" href="#${next.id}">Próxima: ${esc(next.title)} →</a>`; }
+function lockView(l){ const prev=LESSONS[LESSONS.findIndex(x=>x.id===l.id)-1];
+  return `<div class="crumbs"><a href="#inicio">Início</a><span>›</span><a href="#${l.module.id}">${l.module.code} · ${esc(l.module.title)}</a><span>›</span><span style="color:var(--fg)">Aula ${l.n}</span></div>
+  <div class="lockbox"><span class="lockic">${LOCK_IC}</span><h1>Aula ${String(l.n).padStart(2,'0')} · ${esc(l.title)}</h1><p>Esta aula abre quando você concluir a anterior. Assim o curso segue na ordem certa, um passo de cada vez.</p>
+  <a class="btn btn-primary" href="#${prev.id}">Ir para a aula ${String(prev.n).padStart(2,'0')} · ${esc(prev.title)}</a></div>`; }
 function lessonView(l){
   const i=LESSONS.indexOf(l), prev=LESSONS[i-1], next=LESSONS[i+1], p=P(l.id);
   const tabs = [['sobre','Sobre a aula'],['materiais','Materiais'],['exercicio','Exercício'],['prova','Prova'],['notas','Anotações']].filter(t=> t[0]!=='materiais'||l.files.length).filter(t=>t[0]!=='exercicio'||l.exercise).filter(t=>t[0]!=='prova'||QUIZ[l.id]);
   const list = COURSE.filter(m=>m.course===l.module.course).map(m=>`<div class="grp">${m.code} · ${esc(m.title)}</div>` + (m.soon? `<div class="litem lock"><span class="state">·</span><span class="t">${esc(m.note)}</span><span class="tag">Em breve</span></div>` :
-    m.lessons.map(x=>`<a class="litem ${x.id===l.id?'cur':''}" href="#${x.id}">${stateIcon(x)}<span class="t">${esc(x.title)}</span><span class="d">${fmt(x.dur)}</span></a>`).join(''))).join('');
+    m.lessons.map(x=>`<a class="litem ${x.id===l.id?'cur':''} ${locked(x)?'is-locked':''}" href="#${x.id}">${stateIcon(x)}<span class="t">${esc(x.title)}</span><span class="d">${fmt(x.dur)}</span></a>`).join(''))).join('');
   const s=stats(), vsrc=window.FosPratica&&FosPratica.videoFor(l.id), hasPrat=!!(window.FosPratica&&FosPratica.has(l)), yt=vsrc&&FosPratica.ytId(vsrc);
   return `
     <div class="crumbs"><a href="#inicio">Início</a><span>›</span><a href="#${l.module.id}">${l.module.code} · ${esc(l.module.title)}</a><span>›</span><span style="color:var(--fg)">Aula ${l.n}</span></div>
@@ -561,7 +577,7 @@ function lessonView(l){
         ${hasPrat?`<section class="prat" id="prat"><div class="prat-h"><span class="eyebrow">Prática · final da aula</span><h2>Agora é com você</h2></div><div id="pratBox"></div></section>`:''}
         <div class="pager">
           ${prev?`<a class="btn btn-ghost" href="#${prev.id}">← ${esc(prev.title)}</a>`:'<span></span>'}
-          ${next?`<a class="btn btn-primary" href="#${next.id}">Próxima: ${esc(next.title)} →</a>`:''}
+          <span id="nextSlot">${nextBtn(l)}</span>
         </div>
       </div>
       <aside class="list">
@@ -721,7 +737,7 @@ function bindCommunity(){
 function bindYT(l, id, onEnd){
   const p=P(l.id); let tick=null, pl=null, ready=false, priming=false;
   // A vinheta roda ao vivo num iframe por cima do player; o vídeo do YouTube entra quando o círculo de luz abre.
-  const start=()=>{ const skip=(window.FOS_VIDEO_INICIO||{})[l.id]||0; return Math.max(skip, p.pos>5&&p.pos<l.dur-5?p.pos:0); };
+  const start=()=>0; // depois da vinheta a aula sempre começa do zero (pedido do Mauricio)
   const make=()=>{ if(!document.getElementById('ytp')) return;
     pl=new YT.Player('ytp',{videoId:id, width:'100%', height:'100%', host:'https://www.youtube-nocookie.com',
       playerVars:{rel:0, modestbranding:1, playsinline:1, start:Math.floor(start())},
@@ -777,7 +793,7 @@ function bindLesson(l){
   panel(l,'sobre'); upd();
   const pb=document.getElementById('pratBox'); if(pb) FosPratica.render(l, pb);
 }
-function refreshList(l){ document.querySelectorAll('.list .litem[href]').forEach(a=>{ const x=LESSONS.find(y=>'#'+y.id===a.getAttribute('href')); a.querySelector('.state').outerHTML=stateIcon(x); }); const tb=document.querySelector('.tabs button[data-t="prova"]'); const rq=S.quiz[l.id]; if(tb&&rq) tb.textContent=`Prova · ${rq.best}/${rq.total}`; const s=stats(); const h=document.querySelector('.list header'); if(h){ h.querySelector('.bar i').style.width=(s.pct*100).toFixed(1)+'%'; h.querySelector('span').textContent=`${s.done} de ${LESSONS.length} aulas concluídas`; } }
+function refreshList(l){ const ns=document.getElementById('nextSlot'); if(ns) ns.innerHTML=nextBtn(l); document.querySelectorAll('.list .litem[href]').forEach(a=>{ const x=LESSONS.find(y=>'#'+y.id===a.getAttribute('href')); a.querySelector('.state').outerHTML=stateIcon(x); a.classList.toggle('is-locked',locked(x)); }); const tb=document.querySelector('.tabs button[data-t="prova"]'); const rq=S.quiz[l.id]; if(tb&&rq) tb.textContent=`Prova · ${rq.best}/${rq.total}`; const s=stats(); const h=document.querySelector('.list header'); if(h){ h.querySelector('.bar i').style.width=(s.pct*100).toFixed(1)+'%'; h.querySelector('span').textContent=`${s.done} de ${LESSONS.length} aulas concluídas`; } }
 
 function modStats(m){ const ls=m.lessons||[]; const done=ls.filter(l=>P(l.id).done).length; const tot=ls.reduce((a,l)=>a+l.dur,0)||1; const w=ls.reduce((a,l)=>a+(P(l.id).done?l.dur:Math.min(P(l.id).pos,l.dur)),0); return {done, n:ls.length, pct:w/tot}; }
 function modCards(){
@@ -797,7 +813,7 @@ function moduleView(m){
     <div class="mhead"><div style="display:flex;gap:10px;align-items:center"><span class="code">${m.code}</span><span class="eyebrow">${esc(m.tool)}</span></div><h1>${esc(m.title)}</h1><p>${esc(m.desc||'')}</p>
       <div style="display:flex;flex-direction:column;gap:6px;max-width:420px"><div class="bar"><i style="width:${(ms.pct*100).toFixed(1)}%"></i></div><span class="mono" style="font-size:12.5px;color:var(--muted)">${ms.done} de ${ms.n} aulas concluídas · mais aulas em gravação</span></div></div>
     <div class="lessons">${m.lessons.map(l=>{ const pp=P(l.id), pc=pp.done?100:Math.round(pp.pos/l.dur*100); return `
-      <a class="lrow" href="#${l.id}">${stateIcon(l)}
+      <a class="lrow ${locked(l)?'is-locked':''}" href="#${l.id}">${stateIcon(l)}
         <div style="min-width:0"><div class="t">${esc(l.title)}</div><div class="s">${esc(l.summary)}</div></div>
         <span class="d">${qBadge(l)} ${fmt(l.dur)}</span>
         <div class="pc bar" title="${pc}% assistido"><i style="width:${pc}%"></i></div></a>`}).join('')}</div>`;
@@ -819,13 +835,14 @@ function route(){
   const h=(location.hash||'#inicio').slice(1), v=document.getElementById('view');
   const l=LESSONS.find(x=>x.id===h);
   let r='inicio';
-  if(l){ v.innerHTML=lessonView(l); bindLesson(l); r='modulos'; }
+  if(l&&locked(l)){ v.innerHTML=lockView(l); r='modulos'; }
+  else if(l){ v.innerHTML=lessonView(l); bindLesson(l); r='modulos'; }
   else if(h==='exercicios'){ location.replace('#modulos'); return; }
   else if(h==='comunidade'){ v.innerHTML=community(); r='comunidade'; bindCommunity(); }
   else if(h==='modulos'){ v.innerHTML=modulesView(); r='modulos'; }
   else if(COURSE.some(m=>m.id===h&&!m.soon)){ v.innerHTML=moduleView(COURSE.find(m=>m.id===h)); r='modulos'; }
   else { v.innerHTML=home(); const rs=document.getElementById('reset'); if(rs) rs.onclick=()=>{ S={prog:JSON.parse(JSON.stringify(DEFAULT)),notes:{},steps:{},quiz:{}}; save(); route(); sidebar(); toast('Prévia recomeçada.'); }; }
-  document.body.classList.toggle('full', r==='comunidade'); document.body.classList.toggle('wide', !!l);
+  document.body.classList.toggle('full', r==='comunidade'); document.body.classList.toggle('wide', !!l&&!locked(l));
   document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===r));
   sidebar(); window.scrollTo(0,0);
 }
