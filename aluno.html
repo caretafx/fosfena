@@ -189,6 +189,14 @@ main{min-width:0;padding-block:28px 56px;padding-left:max(28px,env(safe-area-ins
 .qbadge.ok{border-color:rgba(255,181,71,.6);color:var(--accent)}
 .comm-cta{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;padding:16px 18px;border-radius:14px;background:linear-gradient(120deg,rgba(155,107,255,.26),rgba(92,200,255,.12));border:1px solid rgba(155,107,255,.55);box-shadow:0 0 24px -8px rgba(155,107,255,.7)}
 .comm-cta .ic2{width:34px;height:34px;flex:none;color:var(--neon-ciano,#7F9CC0)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cbrand{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 10px 12px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+.cbrand b{font-size:15px}.cbrand span{font-family:var(--f-mono);font-size:10.5px;padding:2px 6px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+.cnote{margin-top:auto;padding:12px 10px 4px;font-size:11.5px;line-height:1.45;color:var(--faint)}
+.cnote button{display:inline!important;padding:0!important;text-decoration:underline;color:var(--muted)!important;font-size:11.5px!important}
+body.full main{padding:0}
+body.full .wrap{max-width:none;gap:0}
+body.full .chat{height:100vh;height:100dvh;border:0;border-radius:0;background:rgba(14,12,24,.62)}
 .chat{display:grid;grid-template-columns:230px 1fr;height:calc(100vh - 150px);min-height:520px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(20,16,34,.55)}
 .chans{border-right:1px solid var(--line);padding:16px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;background:rgba(12,11,18,.35)}
 .chans .lbl{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:6px 10px}
@@ -236,7 +244,7 @@ main{min-width:0;padding-block:28px 56px;padding-left:max(28px,env(safe-area-ins
 .vlist{margin:0;padding-left:18px;color:var(--muted);display:flex;flex-direction:column;gap:6px;font-size:14.5px}
 .lightbox{position:fixed;inset:0;background:rgba(5,4,10,.88);display:grid;place-items:center;z-index:9000;cursor:zoom-out}
 .lightbox img{max-width:92vw;max-height:88vh;border-radius:10px}
-@media (max-width:820px){.chat{grid-template-columns:1fr;height:calc(100vh - 190px)}.chans{flex-direction:row;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto;padding:8px}.chans .lbl,.chans button .cnt{display:none}.chans button{white-space:nowrap}.mact{display:flex;position:static;margin-top:4px;background:none;border:0;padding:0;grid-column:2}}
+@media (max-width:820px){.chat{grid-template-columns:1fr;height:calc(100vh - 190px)}body.full .chat{height:calc(100dvh - 61px)}.cbrand,.cnote{display:none}.chans{flex-direction:row;border-right:0;border-bottom:1px solid var(--line);overflow-x:auto;padding:8px}.chans .lbl,.chans button .cnt{display:none}.chans button{white-space:nowrap}.mact{display:flex;position:static;margin-top:4px;background:none;border:0;padding:0;grid-column:2}}
 .deliver{background:var(--fos-roxo);border-radius:10px;padding:16px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 textarea{width:100%;min-height:160px;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--fg);font:inherit;padding:12px;resize:vertical;box-sizing:border-box}
 .list{background:var(--panel);border:1px solid var(--line);border-radius:12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);overflow:hidden}
@@ -596,13 +604,13 @@ function msgHTML(m, list){
   </div><div class="mact"><button data-act="reply">Responder</button><button data-act="r" data-r="🔥">🔥</button><button data-act="r" data-r="👏">👏</button><button data-act="r" data-r="👀">👀</button></div></div>`;
 }
 function community(){
-  return `<div style="display:flex;flex-direction:column;gap:6px"><span class="eyebrow">Comunidade</span><h1 style="font-size:34px">Comunidade Fosfena</h1></div>
-    <div class="chat"><nav class="chans" aria-label="Canais"><span class="lbl">Canais</span>${CHANNELS.map(c=>`<button data-c="${c.id}"><i>#</i>${c.name}<span class="cnt">${(CH.msgs[c.id]||[]).length||''}</span></button>`).join('')}<span class="lbl" style="margin-top:10px">Voz</span>${VOICE.map(v=>`<button class="v" data-v="${v.id}"><i>🔊</i>${esc(v.name)}</button>`).join('')}</nav>
+  return `<h1 class="sr-only">Comunidade Fosfena</h1>
+    <div class="chat"><nav class="chans" aria-label="Canais"><div class="cbrand"><b>Comunidade Fosfena</b><span>Prévia</span></div><span class="lbl">Canais</span>${CHANNELS.map(c=>`<button data-c="${c.id}"><i>#</i>${c.name}<span class="cnt">${(CH.msgs[c.id]||[]).length||''}</span></button>`).join('')}<span class="lbl" style="margin-top:10px">Voz</span>${VOICE.map(v=>`<button class="v" data-v="${v.id}"><i>🔊</i>${esc(v.name)}</button>`).join('')}<p class="cnote">Prévia: as mensagens de exemplo são ilustrativas e o que você envia fica só neste navegador. <button class="mono" id="chatReset">Limpar</button></p></nav>
       <section class="croom" id="croom"><header class="chead"><b id="chName"></b><span id="chDesc"></span></header><div class="msgs" id="msgs" aria-live="polite"></div><div class="voice" id="voice" hidden></div>
         <form class="compose" id="compose"><div id="cxtra"></div><div class="crow2">
           <label class="iconbtn" title="Anexar imagem" aria-label="Anexar imagem"><input type="file" accept="image/*" id="cfile" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5l-8.5 8.5a5 5 0 0 1-7-7L14 5.5a3.4 3.4 0 0 1 4.8 4.8l-8.4 8.4a1.7 1.7 0 0 1-2.4-2.4l7.7-7.7"/></svg></label>
           <textarea id="ctext" rows="1" placeholder="Mensagem"></textarea><button class="btn btn-primary" style="height:44px" type="submit">Enviar</button></div></form></section></div>
-    <p class="demo-note" style="margin:0">Prévia: as mensagens de exemplo são ilustrativas e o que você enviar fica salvo só neste navegador. Na versão final, todos os alunos veem as mesmas conversas em tempo real. <button class="mono" style="text-decoration:underline;color:var(--fg)" id="chatReset">Limpar a prévia</button></p>`;
+`;
 }
 function bindCommunity(){
   const msgs=document.getElementById('msgs'), ta=document.getElementById('ctext'), extra=document.getElementById('cxtra');
@@ -621,7 +629,7 @@ function bindCommunity(){
     document.getElementById('vjoin').onclick=()=>window.open(voiceUrl(v),'_blank','noopener'); };
   const draw=()=>{ msgs.hidden=false; comp.hidden=false; vbox.hidden=true; const c=CHANNELS.find(x=>x.id===curCh), list=CH.msgs[curCh]||(CH.msgs[curCh]=[]);
     document.getElementById('chName').textContent='# '+c.name; document.getElementById('chDesc').textContent=c.desc;
-    document.querySelectorAll('.chans button').forEach(b=>{ b.classList.toggle('on',b.dataset.c===curCh); if(b.dataset.v) return; b.querySelector('.cnt').textContent=(CH.msgs[b.dataset.c]||[]).length||''; });
+    document.querySelectorAll('.chans button').forEach(b=>{ b.classList.toggle('on',b.dataset.c===curCh); if(!b.dataset.c) return; b.querySelector('.cnt').textContent=(CH.msgs[b.dataset.c]||[]).length||''; });
     msgs.innerHTML = list.length? list.map(m=>msgHTML(m,list)).join('') : `<p style="color:var(--muted);margin:auto;text-align:center">Nenhuma mensagem em #${c.name} ainda.<br>Comece a conversa!</p>`;
     msgs.scrollTop=msgs.scrollHeight;
     const ro=c.ro && me().role!=='Professor'; ta.disabled=ro; ta.placeholder= ro? 'Só o professor publica em #avisos' : 'Mensagem em #'+c.name;
@@ -717,6 +725,7 @@ function route(){
   else if(h==='modulos'){ v.innerHTML=modulesView(); r='modulos'; }
   else if(COURSE.some(m=>m.id===h&&!m.soon)){ v.innerHTML=moduleView(COURSE.find(m=>m.id===h)); r='modulos'; }
   else { v.innerHTML=home(); const rs=document.getElementById('reset'); if(rs) rs.onclick=()=>{ S={prog:JSON.parse(JSON.stringify(DEFAULT)),notes:{},steps:{},quiz:{}}; save(); route(); sidebar(); toast('Prévia recomeçada.'); }; }
+  document.body.classList.toggle('full', r==='comunidade');
   document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===r));
   sidebar(); window.scrollTo(0,0);
 }
