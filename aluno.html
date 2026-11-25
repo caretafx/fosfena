@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Área do aluno · Fosfena</title>
-<script>try{if(!localStorage.getItem("fosfena-sessao"))location.replace("login.html")}catch(e){}</script>
+<script src="assets/sessao.js"></script>
+<script>FosfenaSessao.exigir();</script>
 <meta name="description" content="Fosfena, escola de VFX. Prévia da área do aluno.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#18191C">
@@ -593,7 +594,7 @@ const SAMPLE = {
 let CH = loadChat(), curCh='duvidas-nuke', replyTo=null, pendingImg=null;
 function loadChat(){ try{ const v=JSON.parse(localStorage.getItem(CKEY)); if(v&&v.msgs) return v; }catch(e){} return {msgs:JSON.parse(JSON.stringify(SAMPLE))}; }
 function saveChat(){ try{ localStorage.setItem(CKEY, JSON.stringify(CH)); return true; }catch(e){ toast('Sem espaço para salvar no navegador. Tente uma imagem menor.'); return false; } }
-function me(){ try{ const ss=JSON.parse(localStorage.getItem('fosfena-sessao')||'{}'); const e=ss.email||'aluno'; return {name: e==='admin'?'admin':e.split('@')[0], role: e==='admin'?'Professor':null}; }catch(e){ return {name:'aluno'}; } }
+function me(){ const ss=FosfenaSessao.get()||{}; return {name: ss.nome||'aluno', role: ss.papel==='admin'?'Professor':null}; }
 const AVC=['#FFB547','#9B6BFF','#5CC8FF','#ff7fb0','#7be0a5','#f6d36b'];
 function avatar(n){ let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))|0; const col=AVC[Math.abs(h)%AVC.length]; return `<span class="av" style="background:${col}" aria-hidden="true">${esc(n.trim().charAt(0).toUpperCase()||'?')}</span>`; }
 function when(t){ const d=new Date(t), now=new Date(); const hm=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); if(d.toDateString()===now.toDateString()) return 'Hoje às '+hm; const y=new Date(now-86400e3); if(d.toDateString()===y.toDateString()) return 'Ontem às '+hm; return d.toLocaleDateString('pt-BR')+' '+hm; }
@@ -725,8 +726,8 @@ function route(){
   sidebar(); window.scrollTo(0,0);
 }
 addEventListener('hashchange',route);
-try{ const ss=JSON.parse(localStorage.getItem('fosfena-sessao')||'{}'); document.getElementById('who').textContent=ss.email||'aluno'; }catch(e){}
-document.getElementById('sair').onclick=()=>{ try{localStorage.removeItem('fosfena-sessao')}catch(e){} location.href='index.html'; };
+{ const ss=FosfenaSessao.get()||{}; document.getElementById('who').textContent=(ss.email||'aluno')+(ss.papel==='admin'?' · professor':''); }
+document.getElementById('sair').onclick=()=>{ FosfenaSessao.sair(); location.href='index.html'; };
 route();
 </script>
 <script>window.FX={glass:'.side,.stats,.lessons,.list,.mcard:not(.later),.ex,.controls,.files,.step,.ccard',glow:'.btn-ghost,.lrow,.litem',tilt:'.mcard,.ex,.continue',reveal:'.mcard,.lessons,.ex,.stats,.continue,.module-head,.mhead,.demo-note',words:''};</script>

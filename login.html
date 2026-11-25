@@ -64,23 +64,21 @@ input[type=text],input[type=password]{background:rgba(20,21,24,.55)!important}
         <p class="err" id="err" role="alert"></p>
         <button class="btn btn-primary btn-block" type="submit">Entrar</button>
       </form>
-      <p class="note">Prévia: o login ainda não confere senha. Qualquer e-mail, ou admin / admin, abre a área do aluno de exemplo.</p>
+      <p class="note">Prévia: o login ainda não confere senha. Qualquer e-mail abre a área do aluno de exemplo. Contas de teste: user1 / user1 (aluno) e admin / admin (professor).</p>
       <p class="alt">Ainda não é aluno? <a href="index.html#precos">Conheça os planos</a></p>
     </div>
   </main>
 </div>
 <div class="toast" id="toast" role="status"></div>
+<script src="assets/sessao.js"></script>
 <script>
 const f=document.getElementById('f'), err=document.getElementById('err');
 f.addEventListener('submit',e=>{
   e.preventDefault();
   const em=document.getElementById('email').value.trim(), pw=document.getElementById('pw').value;
-  const admin = em.toLowerCase()==='admin'; /* acesso da prévia: admin / admin. Não é segurança, o código é público. */
-  if(admin && pw!=='admin'){ err.textContent='Senha incorreta.'; return; }
-  if(!admin && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ err.textContent='Digite um e-mail válido.'; return; }
-  if(!pw){ err.textContent='Digite sua senha.'; return; }
+  const r=FosfenaSessao.entrar(em, pw);
+  if(r.erro){ err.textContent=r.erro; return; }
   err.textContent='';
-  try{ localStorage.setItem('fosfena-sessao', JSON.stringify({email:em})); }catch(x){}
   location.href='aluno.html';
 });
 let t; document.getElementById('forgot').addEventListener('click',e=>{ e.preventDefault(); const el=document.getElementById('toast'); el.textContent='Na versão final, enviamos um link para redefinir a senha.'; el.classList.add('show'); clearTimeout(t); t=setTimeout(()=>el.classList.remove('show'),2800); });
