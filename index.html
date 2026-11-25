@@ -21,20 +21,20 @@
 .top .acts{display:flex;gap:10px}
 .top .btn{padding:9px 16px;font-size:14px}
 /* hero */
-.hero{padding:88px 0 72px}
-.hero .container{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
-.hero h1{font-size:clamp(40px,5.6vw,68px)}
+.hero{padding:96px 0 56px;text-align:center}
+.hero-in{display:flex;flex-direction:column;align-items:center}
+.hero h1{font-size:clamp(40px,6.4vw,80px);max-width:13em;margin-top:18px}
 .hero h1 em{font-style:normal;color:var(--accent)}
-.hero .lead{font-size:19px;color:var(--soft);max-width:34em;margin-top:22px}
-.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
-.hero .fine{margin-top:14px;font-size:13.5px;color:var(--faint)}
-.board{position:relative;aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:repeating-linear-gradient(180deg,transparent 0 35px,rgba(127,156,192,.08) 35px 36px),#1d1f23;border:1px solid var(--line)}
-.board svg{position:absolute;inset:0;width:100%;height:100%}
-.board .note{position:absolute;font-family:var(--f-mao);font-weight:600;color:var(--accent);font-size:clamp(15px,1.7vw,20px);transform:rotate(-4deg)}
-.board .n1{left:7%;top:58%}
-.board .n2{right:7%;top:8%;transform:rotate(3deg)}
-.board .cap{position:absolute;left:0;right:0;bottom:0;padding:16px 20px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;background:rgba(24,25,28,.85);border-top:1px solid var(--line)}
-.board .cap b{font-family:var(--f-display);font-size:18px;font-weight:600;letter-spacing:-.02em}
+.hero .world{font-size:clamp(17px,2vw,22px);transform:rotate(-3deg);margin-top:10px;align-self:center;margin-left:min(28vw,340px)}
+.hero .lead{font-size:19px;color:var(--soft);max-width:36em;margin-top:22px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px}
+.reel{padding:24px 0 96px}
+.reel .container{display:flex;flex-direction:column;align-items:center;gap:28px;text-align:center}
+.reel h2{font-size:clamp(28px,3.6vw,44px);max-width:18em}
+.reel h2 em{font-style:normal;color:var(--accent);text-transform:uppercase}
+.frame{width:100%;max-width:1040px;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--panel);border:1px solid var(--line)}
+.frame iframe{width:100%;height:100%;border:0;display:block}
+.fine{font-size:14px;color:var(--faint)}
 /* seções */
 section.blk{padding:88px 0;border-top:1px solid var(--line)}
 .head{display:flex;flex-direction:column;gap:12px;max-width:44em;margin-bottom:44px}
@@ -102,8 +102,8 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
 .ck .warn{background:var(--fos-roxo);border-radius:10px;padding:14px;font-size:14.5px;color:var(--soft)}
 .ck .acts{display:flex;gap:10px;flex-wrap:wrap}
 @media (max-width:920px){
-  .hero .container{grid-template-columns:1fr}
-  .hero{padding:56px 0}
+  .hero{padding:56px 0 40px}
+  .hero .world{margin-left:0}
   .steps,.who{grid-template-columns:1fr}
   .mods,.plans{grid-template-columns:1fr}
   .top nav{display:none}
@@ -132,37 +132,25 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
 
 <main id="topo">
   <section class="hero">
+    <div class="container hero-in">
+      <span class="eyebrow">Escola de VFX · Nuke e Flame</span>
+      <h1>A melhor comunidade de VFX da <em>América Latina</em>.</h1>
+      <span class="mao world">jajá do mundo ↗</span>
+      <p class="lead">Aulas em vídeo, em português, com o footage, o script e o resultado de referência de cada exercício. Você assiste, refaz no seu Nuke e envia o seu render para correção.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#precos">Assinar a partir de R$ 50/mês</a>
+        <a class="btn btn-ghost" href="#modulos">Ver os módulos</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="reel" id="reel">
     <div class="container">
-      <div>
-        <span class="eyebrow">Escola de VFX · Nuke e Flame</span>
-        <h1 style="margin-top:16px">Aprenda composição <em>refazendo</em> plano por plano.</h1>
-        <p class="lead">Aulas em vídeo, em português, com o footage, o script e o resultado de referência de cada exercício. Você assiste, refaz no seu Nuke e envia o seu render para correção.</p>
-        <div class="ctas">
-          <a class="btn btn-primary" href="#precos">Assinar a partir de R$ 50/mês</a>
-          <a class="btn btn-ghost" href="#modulos">Ver os módulos</a>
-        </div>
-        <p class="fine">Começa do zero, na instalação do Nuke.</p>
+      <h2>Aprenda <em>do zero</em> a criar efeitos como estes.</h2>
+      <div class="frame">
+        <iframe src="https://www.youtube-nocookie.com/embed/FrW4hCxw1GY?rel=0" title="Demoreel Fosfena" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div>
-      <div class="board" aria-hidden="true">
-        <svg viewBox="0 0 640 480" preserveAspectRatio="xMidYMid slice">
-          <g fill="none" stroke="#8B8E96" stroke-opacity=".7" stroke-width="1.6">
-            <path d="M332 72 L392 72"/><path d="M484 72 L520 72 C560 72 560 150 520 150 L470 150"/>
-            <path d="M378 150 L330 150 C290 150 290 228 330 228 L370 228"/><path d="M462 228 L500 228"/>
-            <path d="M546 240 C546 280 470 290 450 306"/><path d="M404 318 L404 362"/>
-          </g>
-          <g font-family="JetBrains Mono,monospace" font-size="12" text-anchor="middle">
-            <rect x="240" y="58" width="92" height="28" rx="5" fill="#E0A84E"/><text x="286" y="76" fill="#18191C">Read</text>
-            <rect x="392" y="58" width="92" height="28" rx="5" fill="#2E3036"/><text x="438" y="76" fill="#ECEAE4">Tracker</text>
-            <rect x="378" y="136" width="92" height="28" rx="5" fill="#2E3036"/><text x="424" y="154" fill="#ECEAE4">FrameHold</text>
-            <rect x="370" y="214" width="92" height="28" rx="5" fill="#2E3036"/><text x="416" y="232" fill="#ECEAE4">RotoPaint</text>
-            <rect x="500" y="214" width="92" height="28" rx="5" fill="#2E3036"/><text x="546" y="232" fill="#ECEAE4">CornerPin</text>
-            <rect x="358" y="304" width="92" height="28" rx="5" fill="#2E3036"/><text x="404" y="322" fill="#ECEAE4">Merge</text>
-            <rect x="358" y="362" width="92" height="28" rx="5" fill="#2E3036" stroke="#E0A84E" stroke-width="1.4"/><text x="404" y="380" fill="#ECEAE4">Write</text>
-          </g>
-        </svg>
-        <span class="note n1">congela, pinta, reaplica ↗</span>
-        <div class="cap"><div style="display:flex;flex-direction:column;gap:2px"><span class="eyebrow" style="color:var(--accent)">Aula 03 · Nuke</span><b>Primeiro apagamento</b></div><span class="mono" style="font-size:13px;color:var(--muted)">40:13</span></div>
-      </div>
+      <p class="fine">Começa na instalação do Nuke e vai até os seus primeiros planos de comp.</p>
     </div>
   </section>
 
