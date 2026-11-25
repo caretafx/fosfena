@@ -78,7 +78,7 @@
     const flares=[]; let lastY=scrollY, lastS=performance.now(), lastF=0;
     const flaresOn=()=>!reduce && C.flares!==false && window.FOS_FLARES!==false;
     addEventListener('scroll',()=>{ const now=performance.now(), y=scrollY, dt=Math.max(16,now-lastS), v=(lastY-y)/dt; lastY=y; lastS=now;
-      if(!flaresOn() || v<.45 || flares.length>=4 || now-lastF<140) return; lastF=now;
+      if(fxOff || !flaresOn() || v<.45 || flares.length>=4 || now-lastF<140) return; lastF=now;
       const k=Math.min(1,(v-.45)/2.5); flares.push({x:rnd(W*.12,W*.88), y:rnd(H*.08,H*.6), age:0, life:rnd(.7,1.1), k:.6+.4*k, w:rnd(380,720), amber:Math.random()<.65});
       if(!running){ last=0; requestAnimationFrame(tick); } },{passive:true});
     function drawFlares(dt){
@@ -112,7 +112,9 @@
       ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1;
       if(mx>-900){ ctx.lineWidth=1; for(const p of pts){ const d=Math.hypot(p.x-mx,p.y-my); if(d<220){ const u=p.age/p.life, env=smooth(u/.25)*(1-smooth((u-.6)/.4)); ctx.strokeStyle=`rgba(224,168,78,${((1-d/220)*.35*env).toFixed(3)})`; ctx.beginPath(); ctx.moveTo(mx,my); ctx.lineTo(p.x,p.y); ctx.stroke(); } } }
     }
-    function tick(t){ if(!run){ running=false; return; } running=true; if(!last) last=t; if(t>last){ draw(Math.min(.05,(t-last)/1000)); last=t; } requestAnimationFrame(tick); }
+    let fxOff=false;
+    window.FosFXp={ set(v){ fxOff=v; if(v){ ctx.clearRect(0,0,W,H); flares.length=0; } else if(!running&&run&&!reduce){ last=0; running=true; requestAnimationFrame(tick); } } };
+    function tick(t){ if(!run||fxOff){ running=false; return; } running=true; if(!last) last=t; if(t>last){ draw(Math.min(.05,(t-last)/1000)); last=t; } requestAnimationFrame(tick); }
     if(reduce) draw(0); else { running=true; requestAnimationFrame(tick); }
   })();
 
@@ -137,7 +139,7 @@
     addEventListener('blur',()=>show(false));
     document.addEventListener('visibilitychange',()=>{ if(document.hidden) show(false); });
     show(false);
-    const loop=()=>{ rx+=(x-rx)*.18; ry+=(y-ry)*.18; ring.style.transform=`translate3d(${rx}px,${ry}px,0)`; if(Math.abs(x-rx)+Math.abs(y-ry)>.3) requestAnimationFrame(loop); else looping=false; };
+    const loop=()=>{ rx+=(x-rx)*.5; ry+=(y-ry)*.5; ring.style.transform=`translate3d(${rx}px,${ry}px,0)`; if(Math.abs(x-rx)+Math.abs(y-ry)>.3) requestAnimationFrame(loop); else looping=false; };
     addEventListener('pointermove',()=>{ if(!looping){ looping=true; requestAnimationFrame(loop); } },{passive:true});
   }
 
@@ -178,6 +180,8 @@
   }
   fillTracks(); addEventListener('resize', fillTracks);
 
+  /* desliga TODOS os efeitos de fundo (fluido, partículas, flares, manchas animadas) enquanto um vídeo toca, e religa depois */
+  window.FosFX = { off(v){ v=!!v; document.body.classList.toggle('fx-off',v); window.FosFXp&&FosFXp.set(v); window.FosFluid&&FosFluid.pause(v||!!(window.FosfenaVoz&&FosfenaVoz.current())); } };
   window.fxScan = scan;
   scan();
   new MutationObserver(ms=>{ if(ms.some(m=>[...m.addedNodes].some(n=>n.nodeType===1 && !(n.classList&&n.classList.contains('w'))))) scan(); }).observe(document.body, {childList:true, subtree:true});

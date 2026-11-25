@@ -38,7 +38,7 @@ input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:tran
 .note{font-size:13px;color:var(--faint);border:1px dashed var(--line);border-radius:8px;padding:10px 12px}
 @media (max-width:820px){ .split{grid-template-columns:1fr} .art{padding:24px 16px;min-height:0} .art blockquote{display:none} .art .big{display:none} }
 </style>
-<link rel="stylesheet" href="assets/fx.css">
+<link rel="stylesheet" href="assets/fx.css?v=2">
 <link rel="stylesheet" href="assets/neon.css">
 <style>
 .art{background:linear-gradient(160deg,rgba(59,42,82,.7),rgba(40,22,70,.55))!important;border-right:1px solid rgba(236,234,228,.08)}
@@ -84,7 +84,7 @@ f.addEventListener('submit',e=>{
 let t; document.getElementById('forgot').addEventListener('click',e=>{ e.preventDefault(); const el=document.getElementById('toast'); el.textContent='Na versão final, enviamos um link para redefinir a senha.'; el.classList.add('show'); clearTimeout(t); t=setTimeout(()=>el.classList.remove('show'),2800); });
 </script>
 <script>window.FX={glass:'.card',glow:'.btn-ghost',tilt:'',reveal:'.card>*',words:'.art blockquote p'};</script>
-<script src="assets/fx.js?v=6" defer></script>
+<script src="assets/fx.js?v=7" defer></script>
 <script src="assets/fluid.js?v=3" defer></script>
 </body>
 </html>

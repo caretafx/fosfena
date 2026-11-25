@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#18191C">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>body{margin:0}</style>
-<link rel="stylesheet" href="assets/fx.css">
+<link rel="stylesheet" href="assets/fx.css?v=2">
 <link rel="stylesheet" href="assets/neon.css">
 <style>
 body{background:#141518!important}
@@ -342,6 +342,13 @@ body.vpipdoc{margin:0;background:#0c0b12;color:#ECEAE4;overflow:hidden}
 .wt-inv{position:fixed;left:50%;transform:translateX(-50%);top:18px;z-index:70;display:flex;flex-direction:column;gap:4px;padding:14px 16px;min-width:min(340px,calc(100vw - 24px));border-radius:14px;background:rgba(12,11,18,.96);border:1px solid rgba(255,181,71,.5);box-shadow:0 18px 50px -12px rgba(0,0,0,.8),0 0 30px -12px rgba(255,181,71,.7);font-size:14px}
 .wt-inv span{color:var(--muted);font-size:13px}.wt-inv div{display:flex;gap:8px;margin-top:8px}.wt-inv .btn{padding:8px 14px}
 @media (max-width:600px){.lh-acts{width:100%;justify-content:flex-start}}
+/* modo cinema da aula */
+body.cinema .lesson{grid-template-columns:minmax(0,1fr)}
+body.cinema .lesson>.list{display:none}
+body.cinema .player.big{max-width:min(100%,calc((100vh - 36px) * 16 / 9))}
+body.cinema.wide .wrap{max-width:none;padding-top:14px}
+.cine-btn{white-space:nowrap}
+@media (max-width:1000px){.cine-btn{display:none}}
 .is-locked{opacity:.55}.is-locked .t{color:var(--muted)}
 .state.lockd{display:grid;place-items:center;color:var(--muted)}
 .nextlock{display:inline-flex;align-items:center;gap:8px;cursor:default;opacity:.8}
@@ -611,7 +618,7 @@ function lessonView(l){
         </div>
         <div class="lesson-head">
           <div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span class="eyebrow">${l.module.code} · Aula ${String(l.n).padStart(2,'0')}</span><h1>${esc(l.title)}</h1></div>
-          <div class="lh-acts">${yt?'<span id="wtSlot"></span>':''}<button class="btn btn-ghost done-btn ${p.done?'is-done':''}" id="done">${p.done?'✓ Concluída':'Marcar como concluída'}</button></div>
+          <div class="lh-acts"><button class="btn btn-ghost cine-btn" id="cine" title="Esconde a lista de aulas para o vídeo ocupar a tela">Modo cinema</button>${yt?'<span id="wtSlot"></span>':''}<button class="btn btn-ghost done-btn ${p.done?'is-done':''}" id="done">${p.done?'✓ Concluída':'Marcar como concluída'}</button></div>
         </div>
         <div class="tabs" role="tablist">${tabs.map((t,k)=>`<button role="tab" data-t="${t[0]}" aria-selected="${k===0}">${t[0]==='prova'&&S.quiz[l.id]?`Prova · ${S.quiz[l.id].best}/${S.quiz[l.id].total}`:t[1]}</button>`).join('')}</div>
         <div id="panel" class="tabpanel"></div>
@@ -775,6 +782,11 @@ function bindCommunity(){
   document.getElementById('chatReset').onclick=()=>{ CH={msgs:JSON.parse(JSON.stringify(SAMPLE))}; saveChat(); draw(); toast('Comunidade da prévia recomeçada.'); };
   const cc=FosfenaVoz.current(); if(cc&&VOICE.some(x=>x.id===cc.id)) drawVoice(cc.id); else draw(); /* voltando para a Comunidade durante a chamada, abre direto o canal */
 }
+/* modo cinema: some a lista de aulas e o vídeo ocupa quase a tela toda. Liga sozinho no play (se a pessoa não tiver desligado nesta aula). */
+let cineOff=false;
+function cinema(on, auto){ if(auto&&cineOff) return; if(!auto) cineOff=!on; const was=document.body.classList.contains('cinema'); document.body.classList.toggle('cinema',on);
+  const b=document.getElementById('cine'); if(b){ b.textContent=on?'Mostrar as aulas':'Modo cinema'; b.setAttribute('aria-pressed',on); }
+  if(on&&!was&&innerWidth>1000){ const pl=document.querySelector('.player.big'); if(pl) pl.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth', block:'start'}); } }
 function bindYT(l, id, onEnd){
   const p=P(l.id); let tick=null, pl=null, ready=false, priming=false;
   // A vinheta roda ao vivo num iframe por cima do player; o vídeo do YouTube entra quando o círculo de luz abre.
@@ -783,7 +795,7 @@ function bindYT(l, id, onEnd){
     pl=new YT.Player('ytp',{videoId:id, width:'100%', height:'100%', host:'https://www.youtube-nocookie.com',
       playerVars:{rel:0, modestbranding:1, playsinline:1, start:Math.floor(start())},
       events:{ onReady:()=>{ ready=true; },
-        onStateChange:e=>{ clearInterval(tick); window.FosFluid&&FosFluid.pause(e.data===YT.PlayerState.PLAYING||e.data===YT.PlayerState.BUFFERING);
+        onStateChange:e=>{ clearInterval(tick); const on=e.data===YT.PlayerState.PLAYING||e.data===YT.PlayerState.BUFFERING; window.FosFX?FosFX.off(on):(window.FosFluid&&FosFluid.pause(on)); if(e.data===YT.PlayerState.PLAYING) cinema(true,true); if(e.data===YT.PlayerState.ENDED) cinema(false);
           if(e.data===YT.PlayerState.PLAYING&&priming){ pl.pauseVideo(); return; }
           if(e.data===YT.PlayerState.PLAYING) tick=setInterval(()=>{ if(!document.body.contains(pl.getIframe())){ clearInterval(tick); return; } p.pos=pl.getCurrentTime(); const d=pl.getDuration()||l.dur; if(p.pos/d>0.95&&!p.done) document.getElementById('done')?.click(); save(); },1000);
           if(e.data===YT.PlayerState.ENDED) onEnd(); } } }); };
@@ -804,13 +816,14 @@ function bindLesson(l){
   const p=P(l.id);
   const ytv=window.FosPratica&&FosPratica.ytId(FosPratica.videoFor(l.id));
   if(ytv){ const goP=()=>{ const pr=document.getElementById('prat'); if(pr) pr.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); };
-    bindYT(l, ytv, goP);
+    bindYT(l, ytv, goP); const cb0=document.getElementById('cine'); if(cb0) cb0.onclick=()=>cinema(!document.body.classList.contains('cinema'));
     document.getElementById('done').onclick=()=>{ p.done=!p.done; const b=document.getElementById('done'); b.classList.toggle('is-done',p.done); b.textContent=p.done?'✓ Concluída':'Marcar como concluída'; save(); sidebar(); refreshList(l); if(p.done) toast(QUIZ[l.id]&&!S.quiz[l.id]?'Aula concluída! Agora faça a prova da aula.':'Aula concluída. Bom trabalho!'); };
     document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b)); panel(l,b.dataset.t); });
     panel(l,'sobre'); const pb=document.getElementById('pratBox'); if(pb) FosPratica.render(l, pb); return; }
   const upd=()=>{ const f=Math.min(p.pos/l.dur,1)*100; document.getElementById('fill').style.width=f+'%'; document.getElementById('knob').style.left=f+'%'; document.getElementById('cur').textContent=tc(p.pos); };
+  const cb=document.getElementById('cine'); if(cb) cb.onclick=()=>cinema(!document.body.classList.contains('cinema'));
   const vid=document.getElementById('vid'); /* vídeo real quando a aula tem arquivo em FOS_VIDEOS; senão, simulação */
-  if(vid){ vid.addEventListener('play',()=>window.FosFluid&&FosFluid.pause(true)); vid.addEventListener('pause',()=>window.FosFluid&&FosFluid.pause(false));
+  if(vid){ vid.addEventListener('play',()=>{ window.FosFX&&FosFX.off(true); cinema(true,true); }); vid.addEventListener('pause',()=>window.FosFX&&FosFX.off(false));
     vid.addEventListener('loadedmetadata',()=>{ if(p.pos>5&&p.pos<vid.duration-5) vid.currentTime=p.pos; },{once:true});
     vid.addEventListener('timeupdate',()=>{ p.pos=vid.currentTime; upd(); if(p.pos/l.dur>0.95&&!p.done) markDone(true); save(); });
     vid.addEventListener('ended',()=>{ setPlay(false); goPrat(); }); }
@@ -874,7 +887,7 @@ function exercises(){
 let toastT; function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2600); }
 
 function route(){
-  clearInterval(timer); timer=null; if(window.FosJunto) FosJunto.unbind();
+  clearInterval(timer); timer=null; cineOff=false; document.body.classList.remove('cinema'); if(window.FosFX) FosFX.off(false); if(window.FosJunto) FosJunto.unbind();
   const h=(location.hash||'#inicio').slice(1), v=document.getElementById('view');
   const l=LESSONS.find(x=>x.id===h);
   let r='inicio';
@@ -898,7 +911,7 @@ if(window.FosfenaSessao&&FosfenaSessao.isAdmin()) document.getElementById('navAd
 route();
 </script>
 <script>window.FX={glass:'.side,.stats,.lessons,.list,.mcard:not(.later),.ex,.controls,.files,.step,.ccard',glow:'.btn-ghost,.lrow,.litem',tilt:'.mcard,.ex,.continue',reveal:'.mcard,.lessons,.ex,.stats,.continue,.module-head,.mhead,.demo-note',words:''};</script>
-<script src="assets/fx.js?v=6" defer></script>
+<script src="assets/fx.js?v=7" defer></script>
 <script src="assets/fluid.js?v=3" defer></script>
 </body>
 </html>
