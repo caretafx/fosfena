@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260245';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611261821';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Painel do professor · vfxstudio</title>
@@ -17,10 +17,12 @@ window.FOS_BUILD='202611260245';(function(){try{fetch('version.txt?t='+Date.now(
 <link rel="stylesheet" href="assets/cursos.css?v=5">
 <link rel="stylesheet" href="assets/neon.css">
 <link rel="stylesheet" href="assets/marca.css?v=1">
+<link rel="stylesheet" href="assets/portfolio.css?v=1">
 <link rel="stylesheet" href="assets/organograma.css">
 <style>
 :root{--bg:#0c0b12;--fg:#ECEAE4;--muted:#aeb0b5;--line:rgba(236,234,228,.12);--ambar:#FFB547;--roxo:#9B6BFF;--ciano:#5CC8FF;--ok:#6FD3A0;--danger:#ff7b7b}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{margin:0;background:var(--bg);color:var(--fg);font-family:"Instrument Sans",system-ui,sans-serif}
 a{color:var(--ciano)}
 .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px max(16px,env(safe-area-inset-left));
@@ -137,7 +139,7 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
 <main>
   <div class="area" role="tablist" aria-label="Áreas do painel">
     <button type="button" role="tab" data-a="plan" aria-selected="true">Planejamento<small>organograma e aulas</small></button>
-    <button type="button" role="tab" data-a="rev" aria-selected="false"><span>Revisão<em id="revN" hidden></em></span><small>arquivos e dúvidas dos alunos</small></button>
+    <button type="button" role="tab" data-a="rev" aria-selected="false"><span>Revisão<em id="revN" hidden></em></span><small>arquivos, dúvidas e portfólio</small></button>
   </div>
   <section id="aPlan">
   <div class="intro">
@@ -156,8 +158,14 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
   <p class="store" id="store"></p>
   </section>
   <section id="aRev" hidden>
-    <div class="intro"><div><h1>Revisão</h1><p>Aqui chegam os arquivos que os alunos mandam para revisão e as dúvidas anônimas feitas nas aulas. Comente, marque como revisado e, quando uma dúvida ajudar a turma, publique no canal de dúvidas. A publicação não leva nada que identifique o aluno.</p></div></div>
-    <div class="rgrid">
+    <div class="intro"><div><h1>Revisão</h1><p>Aqui chegam os arquivos que os alunos mandam para revisão, as dúvidas anônimas feitas nas aulas e os trabalhos do projetão que eles sobem no portfólio. No portfólio você marca pontos no tempo, desenha no frame e grava um vídeo comentando.</p></div></div>
+    <div class="pf-wrap" style="margin:0 0 20px"><div class="pf-seg" id="revSub" role="group" aria-label="O que revisar"><button type="button" data-s="arq" aria-pressed="true">Arquivos e dúvidas</button><button type="button" data-s="port" aria-pressed="false">Portfólio dos alunos<em id="pfAdmN" hidden></em></button></div></div>
+    <div id="revPort" class="pf-wrap" hidden style="display:flex;flex-direction:column;gap:16px">
+      <div class="rh" style="margin:0"><div class="seg" id="fPortS"><button type="button" data-f="aguardando" aria-pressed="true">Esperando feedback</button><button type="button" data-f="com-feedback" aria-pressed="false">Com feedback</button><button type="button" data-f="vitrine" aria-pressed="false">Na vitrine</button><button type="button" data-f="" aria-pressed="false">Todos</button></div>
+        <div class="seg" id="fPortC"><button type="button" data-f="" aria-pressed="true">Os dois cursos</button><button type="button" data-f="nuke" aria-pressed="false" style="--c:#FFB547">Nuke</button><button type="button" data-f="flame" aria-pressed="false" style="--c:#9B6BFF">Flame</button></div></div>
+      <div id="lPort"></div>
+    </div>
+    <div class="rgrid" id="revArq">
       <div class="rcol"><div class="rh"><h2>Arquivos dos alunos</h2><div class="seg" id="fEnv"><button type="button" data-f="pendente" aria-pressed="true">Pendentes</button><button type="button" data-f="revisado" aria-pressed="false">Revisados</button><button type="button" data-f="" aria-pressed="false">Todos</button></div></div><div id="lEnv" class="rlist"></div></div>
       <div class="rcol"><div class="rh"><h2>Dúvidas anônimas</h2><div class="seg" id="fDuv"><button type="button" data-f="nova" aria-pressed="true">Novas</button><button type="button" data-f="respondida" aria-pressed="false">Respondidas</button><button type="button" data-f="publicada" aria-pressed="false">Publicadas</button><button type="button" data-f="" aria-pressed="false">Todas</button></div></div><div id="lDuv" class="rlist"></div></div>
     </div>
@@ -175,6 +183,9 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
 <script src="assets/emblemas.js?v=6"></script>
 <script>document.querySelectorAll('[data-emb]').forEach(e=>{ const t=document.createElement('template'); t.innerHTML=FosEmblema(e.dataset.emb,+e.dataset.s||40,e.className); e.replaceWith(t.content.firstChild); });</script>
 <script src="assets/revisao.js?v=1"></script>
+<script src="assets/portfolio.js?v=1"></script>
+<script src="assets/portfolio-ui.js?v=1"></script>
+<script src="assets/portfolio-admin.js?v=1"></script>
 <script src="assets/nk101-plano.js"></script>
 <script src="assets/fl101-plano.js"></script>
 <script src="assets/organograma.js"></script>
@@ -276,7 +287,7 @@ draw();
 /* ---------- Revisão: arquivos e dúvidas anônimas (assets/revisao.js) ---------- */
 const fData=d=>new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+' · '+new Date(d).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 let fEnv='pendente', fDuv='nova'; const rUrls=[];
-async function badge(){ const [e,d]=await Promise.all([FosRev.envios(),FosRev.duvidas()]); const n=e.filter(x=>x.status==='pendente').length+d.filter(x=>x.status==='nova').length; const b=document.getElementById('revN'); b.hidden=!n; b.textContent=n; }
+async function badge(){ const [e,d,p]=await Promise.all([FosRev.envios(),FosRev.duvidas(),FosPortAdmin.pendentes()]); const n=e.filter(x=>x.status==='pendente').length+d.filter(x=>x.status==='nova').length+p; const pe=document.getElementById('pfAdmN'); pe.hidden=!p; pe.textContent=p; const b=document.getElementById('revN'); b.hidden=!n; b.textContent=n; }
 async function drawRev(part){
   /* part: 'env' ou 'duv' redesenha só uma coluna, para não apagar o que você está digitando na outra */
   if(part!=='duv') rUrls.splice(0).forEach(u=>URL.revokeObjectURL(u));
@@ -310,9 +321,14 @@ async function drawRev(part){
 const segF=(id,set)=>document.querySelectorAll('#'+id+' button').forEach(b=>b.onclick=()=>{ document.querySelectorAll('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed',x===b)); set(b.dataset.f); drawRev(id==='fEnv'?'env':'duv'); });
 segF('fEnv',v=>fEnv=v); segF('fDuv',v=>fDuv=v);
 function area(a){ document.querySelectorAll('.area button').forEach(b=>b.setAttribute('aria-selected',b.dataset.a===a)); document.getElementById('aPlan').hidden=a!=='plan'; document.getElementById('aRev').hidden=a!=='rev';
-  try{ localStorage.setItem('fosfena-admin-area',a); }catch(e){} if(a==='rev') drawRev(); }
+  try{ localStorage.setItem('fosfena-admin-area',a); }catch(e){} if(a==='rev'){ drawRev(); if(REVSUB==='port') FosPortAdmin.render(); } }
+/* Revisão tem duas partes: arquivos e dúvidas | portfólio dos alunos (assets/portfolio-admin.js) */
+let REVSUB='arq'; try{ if(localStorage.getItem('fosfena-admin-revsub')==='port'||location.hash==='#portfolio') REVSUB='port'; }catch(e){}
+function revSub(x){ REVSUB=x; document.querySelectorAll('#revSub button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===x)); document.getElementById('revArq').hidden=x!=='arq'; document.getElementById('revPort').hidden=x!=='port';
+  try{ localStorage.setItem('fosfena-admin-revsub',x); }catch(e){} if(x==='port') FosPortAdmin.render(); else FosPortAdmin.fechar(); }
+document.querySelectorAll('#revSub button').forEach(b=>b.onclick=()=>revSub(b.dataset.s)); FosPortAdmin.init(); window.__revBadge=badge; revSub(REVSUB);
 document.querySelectorAll('.area button').forEach(b=>b.onclick=()=>area(b.dataset.a));
-try{ if(localStorage.getItem('fosfena-admin-area')==='rev'||location.hash==='#revisao') area('rev'); }catch(e){}
+try{ if(localStorage.getItem('fosfena-admin-area')==='rev'||location.hash==='#revisao'||location.hash==='#portfolio') area('rev'); }catch(e){}
 badge(); addEventListener('focus',()=>badge());
 </script>
 <script>window.FX={glass:'',glow:'',tilt:'',reveal:'',words:''};</script>

@@ -1,0 +1,111 @@
+/* vfxstudio · portfólio do aluno (aluno.html e admin.html). Cor do curso vem de .c-nk / .c-fl (assets/cursos.css): --cc, --cc2, --cc-rgb */
+.pf-wrap{--pf-line:var(--line,rgba(236,234,228,.12));--pf-mut:var(--muted,#aeb0b5);--pf-fg:var(--fg,#ECEAE4);--cc:#FFB547;--cc2:#FF8A3D;--cc-rgb:255,181,71}
+.pf-wrap .c-fl,.pf-modal .c-fl{--cc:#9B6BFF;--cc2:#5CC8FF;--cc-rgb:155,107,255}
+.pf-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.pf-seg{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--pf-line);border-radius:12px;background:rgba(10,9,16,.45)}
+.pf-seg button{font:inherit;font-size:14px;font-weight:600;color:var(--pf-mut);padding:8px 14px;border-radius:9px;border:0;background:none;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.pf-seg button[aria-pressed="true"]{color:var(--pf-fg);background:rgba(255,181,71,.14);box-shadow:inset 0 0 0 1px rgba(255,181,71,.55),0 0 22px -8px rgba(255,181,71,.8)}
+.pf-seg em{font-style:normal;font:600 11px "JetBrains Mono",monospace;background:#FFB547;color:#140c00;border-radius:99px;padding:1px 7px}
+.pf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.pf-card{position:relative;text-align:left;font:inherit;color:inherit;cursor:pointer;display:flex;flex-direction:column;border-radius:14px;overflow:hidden;border:1px solid var(--pf-line);border-top:2px solid rgba(var(--cc-rgb),.8);background:rgba(18,16,28,.72);padding:0;transition:box-shadow .3s,transform .3s,border-color .3s}
+.pf-card:hover,.pf-card:focus-visible{box-shadow:0 0 38px -12px rgba(var(--cc-rgb),.85);transform:translateY(-2px)}
+.pf-thumb{aspect-ratio:16/9;background:#0b0a10 center/cover no-repeat;position:relative;display:block}
+.pf-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(5,4,10,.75))}
+.pf-thumb .pf-v{position:absolute;left:10px;bottom:8px;z-index:1;font:500 11.5px "JetBrains Mono",monospace;color:#fff;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.2);padding:2px 7px;border-radius:6px}
+.pf-thumb .pf-star{position:absolute;right:10px;top:8px;z-index:1;font:600 11px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#140c00;background:linear-gradient(90deg,var(--cc),var(--cc2));padding:3px 8px;border-radius:99px;box-shadow:0 0 18px -2px rgba(var(--cc-rgb),.9)}
+.pf-b1{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px}
+.pf-b1 h3{margin:0;font-size:16.5px;line-height:1.25}
+.pf-eb{font:500 11px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--cc)}
+.pf-meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12.5px;color:var(--pf-mut)}
+.pf-pill{font:11.5px "JetBrains Mono",monospace;padding:2px 8px;border-radius:99px;border:1px solid var(--pf-line);white-space:nowrap}
+.pf-pill.aguardando{color:#f6d36b;border-color:rgba(246,211,107,.45)}
+.pf-pill.com-feedback{color:#7be0a5;border-color:rgba(123,224,165,.45)}
+.pf-pill.novo{color:#140c00;background:#FFB547;border-color:#FFB547}
+.pf-empty{border:1px dashed var(--pf-line);border-radius:14px;padding:26px;text-align:center;color:var(--pf-mut);font-size:14.5px;line-height:1.55}
+.pf-note{font-size:13px;color:var(--pf-mut);line-height:1.55;border-left:2px solid rgba(155,107,255,.6);padding-left:10px;margin:0}
+.pf-note b{color:var(--pf-fg)}
+
+/* formulário de envio */
+.pf-form{border:1px solid rgba(255,181,71,.35);border-radius:16px;padding:18px;background:rgba(255,181,71,.035);display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.pf-form .full{grid-column:1/-1}
+@media (max-width:720px){.pf-form{grid-template-columns:1fr}}
+.pf-form label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--pf-mut)}
+.pf-form input[type=text],.pf-form select,.pf-form textarea{font:inherit;font-size:14.5px;color:var(--pf-fg);background:rgba(10,9,16,.6);border:1px solid var(--pf-line);border-radius:10px;padding:10px 12px;width:100%;box-sizing:border-box}
+.pf-form textarea{min-height:84px;resize:vertical}
+.pf-form select option{background:#17151f}
+.pf-check{flex-direction:row!important;align-items:flex-start;gap:10px!important;color:var(--pf-fg)!important;font-size:14px!important;line-height:1.45}
+.pf-check input{margin-top:3px;accent-color:#FFB547;width:16px;height:16px}
+.pf-check small{display:block;color:var(--pf-mut);font-size:12.5px}
+.pf-drop{border:1.5px dashed rgba(255,181,71,.55);border-radius:12px;padding:20px;text-align:center;color:var(--pf-mut);cursor:pointer;background:rgba(255,181,71,.04);display:flex;flex-direction:column;gap:4px}
+.pf-drop b{color:#FFB547}.pf-drop small{font:12px "JetBrains Mono",monospace}
+.pf-drop.over{background:rgba(255,181,71,.14);color:var(--pf-fg)}
+.pf-drop.tem{border-style:solid;color:var(--pf-fg)}
+
+/* janela de detalhe / estúdio de revisão */
+.pf-modal{position:fixed;inset:0;z-index:60;background:rgba(5,4,10,.78);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 16px 60px;animation:pfIn .25s ease}
+@keyframes pfIn{from{opacity:0}to{opacity:1}}
+.pf-box{width:min(1360px,100%);background:rgba(16,14,24,.97);border:1px solid rgba(var(--cc-rgb),.45);border-radius:18px;box-shadow:0 40px 120px -40px rgba(var(--cc-rgb),.7);display:flex;flex-direction:column}
+.pf-bh{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:16px 18px;border-bottom:1px solid var(--pf-line,rgba(236,234,228,.12))}
+.pf-bh h2{margin:4px 0 0;font-size:22px}
+.pf-close{background:none;border:0;color:var(--muted,#aeb0b5);font-size:28px;line-height:1;cursor:pointer;padding:0 6px}
+.pf-bd{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:0}
+@media (max-width:1000px){.pf-bd{grid-template-columns:1fr}}
+.pf-main{padding:16px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.pf-side{padding:16px 18px;border-left:1px solid var(--line,rgba(236,234,228,.12));display:flex;flex-direction:column;gap:16px}
+@media (max-width:1000px){.pf-side{border-left:0;border-top:1px solid var(--line,rgba(236,234,228,.12))}}
+.pf-lbl{font:500 11px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted,#aeb0b5);display:block;margin-bottom:6px}
+.pf-vers{display:flex;gap:6px;flex-wrap:wrap}
+.pf-vers button{font:500 12.5px "JetBrains Mono",monospace;padding:5px 10px;border-radius:8px;border:1px solid var(--line,rgba(236,234,228,.12));background:transparent;color:var(--fg,#ECEAE4);cursor:pointer}
+.pf-vers button[aria-pressed="true"]{border-color:var(--cc);color:var(--cc);background:rgba(var(--cc-rgb),.1)}
+.pf-vers button i{font-style:normal;color:#7be0a5;margin-left:4px}
+.pf-txt{margin:0;font-size:14.5px;line-height:1.55;white-space:pre-wrap;color:var(--fg,#ECEAE4)}
+.pf-fb{border:1px solid rgba(123,224,165,.35);border-radius:14px;padding:14px;background:rgba(123,224,165,.04);display:flex;flex-direction:column;gap:10px}
+.pf-fb.novo{border-color:rgba(255,181,71,.6);box-shadow:0 0 30px -12px rgba(255,181,71,.8)}
+.pf-fb video{width:100%;border-radius:10px;background:#000;max-height:420px}
+.pf-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pf-btn{font:inherit;font-size:13.5px;font-weight:600;color:var(--fg,#ECEAE4);background:rgba(155,107,255,.08);border:1px solid rgba(155,107,255,.5);padding:8px 13px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;text-decoration:none}
+.pf-btn:hover{background:rgba(155,107,255,.18)}
+.pf-btn.pri{background:#FFB547;color:#140c00;border-color:#FFB547}
+.pf-btn.rec{background:#ff4d6d;border-color:#ff4d6d;color:#fff}
+.pf-btn.del{background:transparent;border-color:rgba(255,123,123,.5);color:#ff9b9b}
+.pf-btn:disabled{opacity:.45;cursor:not-allowed}
+.pf-dot{width:9px;height:9px;border-radius:50%;background:#fff;animation:pfPulse 1s infinite}
+@keyframes pfPulse{50%{opacity:.25}}
+.pf-recbar{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:80;display:flex;gap:12px;align-items:center;padding:8px 10px 8px 16px;border-radius:99px;background:rgba(20,8,14,.92);border:1px solid #ff4d6d;box-shadow:0 0 40px -8px rgba(255,77,109,.9);font:500 13.5px "JetBrains Mono",monospace;color:#fff}
+.pf-cam{position:fixed;right:22px;bottom:22px;z-index:79;width:190px;height:190px;border-radius:50%;object-fit:cover;border:3px solid #FFB547;box-shadow:0 0 40px -6px rgba(255,181,71,.9);transform:scaleX(-1);background:#000}
+.pf-wrap textarea,.pf-side textarea{font:inherit;font-size:14px;color:var(--fg,#ECEAE4);background:rgba(10,9,16,.6);border:1px solid var(--line,rgba(236,234,228,.12));border-radius:10px;padding:10px 12px;width:100%;box-sizing:border-box;min-height:90px;resize:vertical}
+.pf-toggle{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45;cursor:pointer}
+.pf-toggle input{accent-color:#FFB547;width:16px;height:16px;margin-top:3px}
+.pf-toggle small{display:block;color:var(--muted,#aeb0b5);font-size:12.5px}
+
+/* player com marcas */
+.pf-player{display:flex;flex-direction:column;gap:8px;outline:none}
+.pf-stage{position:relative;background:#000;border-radius:12px;overflow:hidden;aspect-ratio:16/9;max-height:68vh;width:100%}
+.pf-media{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+.pf-draw{position:absolute;pointer-events:none;touch-action:none}
+.pf-stage.pen .pf-draw{pointer-events:auto;cursor:crosshair}
+.pf-call{position:absolute;left:12px;top:12px;max-width:min(70%,520px);background:rgba(10,8,16,.86);border:1px solid rgba(255,181,71,.6);border-radius:10px;padding:8px 12px;font-size:14px;line-height:1.45;color:#fff;box-shadow:0 0 24px -8px rgba(255,181,71,.8)}
+.pf-call b{font:600 12px "JetBrains Mono",monospace;color:#FFB547;margin-right:8px}
+.pf-tl{position:relative;height:18px;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid var(--line,rgba(236,234,228,.12))}
+.pf-ph{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--cc,#FFB547);box-shadow:0 0 8px var(--cc,#FFB547);left:0;pointer-events:none}
+.pf-mk{position:absolute;top:2px;width:12px;height:12px;margin-left:-6px;border-radius:3px;transform:rotate(45deg);background:#FFB547;border:0;cursor:pointer;box-shadow:0 0 10px rgba(255,181,71,.9);padding:0}
+.pf-mk.d{background:#5CC8FF;box-shadow:0 0 10px rgba(92,200,255,.9)}
+.pf-mk.on{outline:2px solid #fff;outline-offset:1px}
+.pf-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px;border:1px solid var(--line,rgba(236,234,228,.12));border-radius:12px;background:rgba(10,9,16,.5)}
+.pf-b{font:inherit;font-size:13px;font-weight:600;color:var(--fg,#ECEAE4);background:transparent;border:1px solid var(--line,rgba(236,234,228,.18));padding:7px 11px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.pf-b[aria-pressed="true"]{border-color:#5CC8FF;color:#5CC8FF;background:rgba(92,200,255,.1)}
+.pf-b.pri{background:#FFB547;color:#140c00;border-color:#FFB547}
+.pf-cores{display:inline-flex;gap:5px}
+.pf-cores button{width:20px;height:20px;border-radius:50%;background:var(--k);border:2px solid transparent;cursor:pointer;padding:0}
+.pf-cores button[aria-pressed="true"]{border-color:#fff;box-shadow:0 0 10px var(--k)}
+.pf-sep{flex:0 0 1px;align-self:stretch;background:var(--line,rgba(236,234,228,.12))}
+.pf-in{flex:1 1 220px;min-width:0;font:inherit;font-size:14px;color:var(--fg,#ECEAE4);background:rgba(10,9,16,.6);border:1px solid var(--line,rgba(236,234,228,.12));border-radius:8px;padding:7px 10px}
+.pf-ml{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;max-height:240px;overflow:auto}
+.pf-ml li{display:flex;align-items:stretch;border:1px solid var(--line,rgba(236,234,228,.1));border-radius:9px}
+.pf-ml li.on{border-color:#FFB547;background:rgba(255,181,71,.08)}
+.pf-go{flex:1;display:flex;gap:10px;align-items:baseline;text-align:left;font:inherit;font-size:14px;color:var(--fg,#ECEAE4);background:none;border:0;padding:8px 10px;cursor:pointer;min-width:0}
+.pf-tc{font:500 12.5px "JetBrains Mono",monospace;color:#FFB547;flex:0 0 auto}
+.pf-ico{color:#5CC8FF;font-size:12px}
+.pf-tx{overflow-wrap:anywhere}
+.pf-x{background:none;border:0;color:var(--muted,#aeb0b5);font-size:18px;cursor:pointer;padding:0 10px}
+@media (prefers-reduced-motion:reduce){.pf-card,.pf-modal{transition:none;animation:none}.pf-dot{animation:none}}

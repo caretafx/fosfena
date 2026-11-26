@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260245';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611261821';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Área do aluno · vfxstudio</title>
@@ -17,6 +17,7 @@ window.FOS_BUILD='202611260245';(function(){try{fetch('version.txt?t='+Date.now(
 <link rel="stylesheet" href="assets/cursos.css?v=5">
 <link rel="stylesheet" href="assets/neon.css">
 <link rel="stylesheet" href="assets/marca.css?v=1">
+<link rel="stylesheet" href="assets/portfolio.css?v=1">
 <style>
 body{background:#141518!important}
 .side{border-right:1px solid rgba(236,234,228,.08)!important;border-top:0!important;border-left:0!important;border-bottom:0!important;box-shadow:none!important}
@@ -490,6 +491,7 @@ a.mcard:hover{background:var(--raise)}
     <nav class="nav" id="nav">
       <a href="#inicio" data-r="inicio"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a>
       <a href="#modulos" data-r="modulos"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/></svg><span>Cursos</span></a>
+      <a href="#portfolio" data-r="portfolio"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4.2-2.5z" fill="currentColor"/><path d="M3 9h3M18 9h3M3 15h3M18 15h3"/></svg><span>Portfólio</span></a>
       <a href="#comunidade" data-r="comunidade"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-4 3v-3H6a2 2 0 0 1-2-2z"/><circle cx="9" cy="10.5" r="1" fill="currentColor"/><circle cx="15" cy="10.5" r="1" fill="currentColor"/></svg><span>Comunidade</span></a>
       <a href="admin.html" id="navAdmin" hidden><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2h12v2"/></svg><span>Painel do professor</span></a>
     </nav>
@@ -509,6 +511,11 @@ a.mcard:hover{background:var(--raise)}
 <script src="assets/nk101-interativo.js?v=2"></script>
 <script src="assets/emblemas.js?v=6"></script>
 <script src="assets/revisao.js?v=1"></script>
+<script src="assets/nk101-plano.js"></script>
+<script src="assets/fl101-plano.js"></script>
+<script src="assets/portfolio.js?v=1"></script>
+<script src="assets/portfolio-ui.js?v=1"></script>
+<script src="assets/portfolio-aluno.js?v=1"></script>
 <script src="assets/gamifica.js?v=2"></script>
 <script src="assets/voz.js?v=20261125r"></script>
 <script src="assets/junto.js?v=2"></script>
@@ -1015,6 +1022,7 @@ function exercises(){
 let toastT; function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2600); }
 
 function route(){
+  if(window.FosPortAluno) FosPortAluno.fechar();
   clearInterval(timer); timer=null; cineOff=false; document.body.classList.remove('cinema'); if(window.FosFX) FosFX.off(false); if(window.FosJunto) FosJunto.unbind();
   const h=(location.hash||'#inicio').slice(1), v=document.getElementById('view');
   const l=LESSONS.find(x=>x.id===h);
@@ -1022,6 +1030,7 @@ function route(){
   if(l&&locked(l)){ v.innerHTML=lockView(l); r='modulos'; }
   else if(l){ v.innerHTML=lessonView(l); bindLesson(l); r='modulos'; }
   else if(h==='exercicios'){ location.replace('#modulos'); return; }
+  else if(h==='portfolio'){ v.innerHTML='<div id="pfView"></div>'; r='portfolio'; FosPortAluno.render(document.getElementById('pfView')); }
   else if(h==='comunidade'){ v.innerHTML=community(); r='comunidade'; bindCommunity(); }
   else if(h==='modulos'){ v.innerHTML=modulesView(); r='modulos'; }
   else if(COURSE.some(m=>m.id===h&&!m.soon)){ v.innerHTML=moduleView(COURSE.find(m=>m.id===h)); r='modulos'; }
@@ -1037,6 +1046,7 @@ addEventListener('hashchange',route);
 document.getElementById('sair').onclick=()=>{ FosfenaSessao.sair(); location.href='index.html'; };
 if(window.FosfenaSessao&&FosfenaSessao.isAdmin()) document.getElementById('navAdmin').hidden=false; /* só o admin vê o painel */
 route();
+if(window.FosPortAluno) FosPortAluno.badge();
 </script>
 <script>window.FX={glass:'.side,.stats,.lessons,.list,.mcard:not(.later),.ex,.controls,.files,.step,.ccard',glow:'.btn-ghost,.lrow,.litem',tilt:'.mcard,.ex,.continue',reveal:'.mcard,.lessons,.ex,.stats,.continue,.module-head,.mhead,.demo-note',words:''};</script>
 <script src="assets/fx.js?v=7" defer></script>
