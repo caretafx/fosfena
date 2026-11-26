@@ -1,6 +1,6 @@
 /* Fosfena · ícones dos cursos.
    Nuke: logo oficial da Foundry recolorido no amarelo/laranja da Fosfena.
-   Flame: ícone oficial do Autodesk Flame recolorido no roxo da Fosfena (assets/logos/flame-roxo.png; o original está em flame.png).
+   Flame: ícone oficial do Autodesk Flame recolorido no degradê azul→roxo da Fosfena (assets/logos/flame-fosfena.png; o original está em flame.png).
    Recolorir foi decisão do Mauricio; o aviso de marcas registradas fica no rodapé.
    Uso: FosEmblema('nk' | 'fl', tamanho_em_px, classe_extra) devolve o <svg> pronto. */
 (function(){
@@ -13,7 +13,7 @@
     <g transform="translate(14 14) scale(1.5)"><path d="${NUKE_PATH}" fill="url(#${id})"/></g>`;
   /* Flame: ícone oficial do Autodesk Flame ("FLM", enviado pelo Mauricio), sem alterar o desenho;
      só a moldura em volta usa a cor do curso. */
-  const FLAME_SRC=(document.currentScript&&document.currentScript.src||'').replace(/emblemas\.js.*$/,'logos/flame-roxo.png')||'assets/logos/flame-roxo.png';
+  const FLAME_SRC=(document.currentScript&&document.currentScript.src||'').replace(/emblemas\.js.*$/,'logos/flame-fosfena.png')||'assets/logos/flame-fosfena.png';
   const FL=id=>`<defs><linearGradient id="${id}" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#5CC8FF"/><stop offset="1" stop-color="#B48CFF"/></linearGradient></defs>
     <rect x="3" y="3" width="58" height="58" rx="16" fill="rgba(155,107,255,.12)" stroke="url(#${id})" stroke-width="2"/>
     <image href="${FLAME_SRC}" x="11" y="11" width="42" height="42" preserveAspectRatio="xMidYMid meet"/>`;
