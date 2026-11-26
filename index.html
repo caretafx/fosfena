@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260049';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611260106';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <script>/* F5 sempre volta ao topo, para as animações de entrada tocarem de novo */
 try{ if('scrollRestoration' in history) history.scrollRestoration='manual';
   const nav=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
@@ -151,6 +151,8 @@ section.blk{padding:88px 0;border-top:1px solid var(--line)}
 .cbar .track{height:14px;border-radius:999px;background:rgba(236,234,228,.06);overflow:hidden}
 .cbar .track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,rgba(155,107,255,.55),rgba(155,107,255,.9))}
 .cbar b{font-family:var(--f-mono);font-size:14px;white-space:nowrap;min-width:9ch;text-align:right}
+.seniors{margin-top:14px;display:inline-block;padding:10px 16px;border-radius:12px;border:1px solid rgba(224,168,78,.4);background:rgba(224,168,78,.07);color:var(--fg)}
+.seniors b{color:var(--accent,#E0A84E)}
 .cbar.us span{color:var(--fg);font-weight:600}
 .cbar.us .track i{background:linear-gradient(90deg,var(--neon-roxo,#9B6BFF),var(--neon-ambar,#E0A84E));box-shadow:0 0 12px rgba(255,181,71,.6)}
 .cbar.us b{color:var(--neon-ambar,#E0A84E)}
@@ -242,7 +244,7 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
       <span class="mao world">jajá do mundo ↗</span>
       <p class="lead">Aulas em vídeo, em português, com o footage, o script e o resultado de referência de cada exercício. Você assiste, refaz no seu Nuke e envia o seu render para correção.</p>
       <div class="ctas">
-        <a class="btn btn-primary" href="#precos">Assinar a partir de R$ 50/mês</a>
+        <a class="btn btn-primary" href="#precos">Assinar a partir de R$ 77/mês</a>
         <a class="btn btn-ghost" href="#modulos">Ver os módulos</a>
       </div>
     </div>
@@ -334,16 +336,16 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
   <div class="ticker rev" aria-hidden="true"><div class="track"><span>Assista</span><span>refaça</span><span>Envie</span><span>receba comentário</span><span>Assista</span><span>refaça</span><span>Envie</span><span>receba comentário</span><span>Assista</span><span>refaça</span><span>Envie</span><span>receba comentário</span><span>Assista</span><span>refaça</span><span>Envie</span><span>receba comentário</span></div></div>
   <section class="blk" id="precos">
     <div class="container">
-      <div class="head"><span class="eyebrow" style="color:var(--soft)">Assinatura</span><h2>Um curso que prepara você <em>para o mercado</em></h2><p>Já nas primeiras aulas você aprende técnicas usadas em cinema e em grandes estúdios: tracking, clean plate, keying e integração. A assinatura dá acesso aos dois cursos, Nuke e Flame, e no anual você paga menos por mês.</p></div>
+      <div class="head"><span class="eyebrow" style="color:var(--soft)">Assinatura</span><h2>Um curso que prepara você <em>para o mercado</em></h2><p>Já nas primeiras aulas você aprende técnicas usadas em cinema e em grandes estúdios: tracking, clean plate, keying e integração. A assinatura dá acesso aos dois cursos, Nuke e Flame, e no anual você paga menos por mês.</p><p class="seniors"><b>Quem ensina:</b> dois profissionais seniores de VFX, que trabalham em grandes empresas e levam para as aulas o fluxo de produção de verdade.</p></div>
       <div class="prank" id="prank" role="status" aria-live="polite">
         <div class="run" aria-hidden="true"><span class="lbl">⏱ Desconto relâmpago acaba em</span><span class="clock" id="pclock">00:04:59</span></div>
-        <div class="pfinal"><b>Brincadeira 😄 Aqui não tem contador nem desconto de mentira.</b><span>R$ 70 por mês, ou R$ 50 no anual, já é o preço final para construir uma carreira de sucesso.</span></div>
+        <div class="pfinal"><b>Brincadeira 😄 Aqui não tem contador nem desconto de mentira.</b><span>R$ 117 por mês, ou R$ 77 no anual, já é o preço final para construir uma carreira de sucesso.</span></div>
         <svg class="crack" viewBox="0 0 860 64" preserveAspectRatio="none" aria-hidden="true"><path d="M300 0 L318 18 L304 30 L330 44 L316 64 M318 18 L352 14 M330 44 L372 50" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.6"/></svg>
       </div>
       <div class="plans">
         <div class="plan">
           <div class="plan-top"><h3>Mensal</h3></div>
-          <div class="price"><b>R$ 70</b><span>/mês</span></div>
+          <div class="price"><b>R$ 117</b><span>/mês</span></div>
           <p class="sub">Cobrado todo mês.</p>
           <ul>
             <li>Curso de Nuke completo</li><li>Curso de Flame quando sair, sem pagar a mais</li>
@@ -354,9 +356,9 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
           <button class="btn btn-ghost btn-block" data-plan="mensal">Assinar o mensal</button>
         </div>
         <div class="plan best">
-          <div class="plan-top"><h3>Anual</h3><span class="tag acc">Economize R$ 240</span></div>
-          <div class="price"><b>R$ 50</b><span>/mês</span></div>
-          <p class="sub">R$ 600 cobrados uma vez por ano, em vez de R$ 840 no mensal.</p>
+          <div class="plan-top"><h3>Anual</h3><span class="tag acc">Economize R$ 480 · 34%</span></div>
+          <div class="price"><b>R$ 77</b><span>/mês</span></div>
+          <p class="sub">R$ 924 cobrados uma vez por ano, em vez de R$ 1.404 no mensal.</p>
           <ul>
             <li>Tudo do plano mensal</li>
             <li>Um ano inteiro de acesso</li>
@@ -368,8 +370,8 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
       <div class="compare">
         <h3>Quanto custa aprender Nuke lá fora</h3>
         <p class="lead">Cursos de Nuke para iniciantes em escolas renomadas dos EUA, pagos de uma vez, convertidos para reais.</p>
-        <div class="cbars"><div class="cbar "><span>Série online para iniciantes</span><div class="track"><i style="width:23.9%"></i></div><b>R$ 2.923</b></div><div class="cbar "><span>Curso online de 8 semanas</span><div class="track"><i style="width:38.3%"></i></div><b>R$ 4.674</b></div><div class="cbar "><span>Curso presencial de 10 semanas</span><div class="track"><i style="width:100.0%"></i></div><b>R$ 12.218</b></div><div class="cbar avg"><span>Média lá fora</span><div class="track"><i style="width:54.1%"></i></div><b>R$ 6.605</b></div><div class="cbar us"><span>Fosfena · um ano inteiro</span><div class="track"><i style="width:4.9%"></i></div><b>R$ 600</b></div></div>
-        <div class="cbig"><div><strong>R$ 6.605</strong><small>média de um curso de Nuke lá fora</small></div><div><strong>R$ 600</strong><small>um ano inteiro de Fosfena, no plano anual</small></div></div>
+        <div class="cbars"><div class="cbar "><span>Série online para iniciantes</span><div class="track"><i style="width:23.9%"></i></div><b>R$ 2.923</b></div><div class="cbar "><span>Curso online de 8 semanas</span><div class="track"><i style="width:38.3%"></i></div><b>R$ 4.674</b></div><div class="cbar "><span>Curso presencial de 10 semanas</span><div class="track"><i style="width:100.0%"></i></div><b>R$ 12.218</b></div><div class="cbar avg"><span>Média lá fora</span><div class="track"><i style="width:54.1%"></i></div><b>R$ 6.605</b></div><div class="cbar us"><span>Fosfena · um ano inteiro</span><div class="track"><i style="width:7.6%"></i></div><b>R$ 924</b></div></div>
+        <div class="cbig"><div><strong>R$ 6.605</strong><small>média de um curso de Nuke lá fora</small></div><div><strong>R$ 924</strong><small>um ano inteiro de Fosfena, no plano anual</small></div></div>
         <p class="cnote">Preços cheios (sem promoção) publicados nos sites das escolas, consultados em 25/11/2026: US$ 499, US$ 798 e US$ 2.086 (este com taxa de matrícula). Convertidos pelo dólar PTAX de 24/11/2026, R$ 5,8573, sem IOF. Cada escola inclui coisas diferentes, como mentoria ao vivo ou aulas presenciais, então a comparação é só de preço.</p>
       </div>
       <p class="guarantee">Garantia de 7 dias: se não for o que você esperava, peça o reembolso dentro desse prazo.</p>
@@ -385,7 +387,7 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
         <details><summary>Que computador eu preciso?</summary><p>Um computador que rode o Nuke. Os materiais das aulas incluem footage em alta resolução, então reserve espaço em disco para os arquivos dos exercícios.</p></details>
         <details><summary>Como funciona a correção dos exercícios?</summary><p>Na página de cada exercício você envia o seu render em .mov ou .mp4. O professor assiste e responde com comentários sobre o que ajustar.</p></details>
         <details><summary>Quando sai o curso de Flame?</summary><p>O curso de Flame é separado do de Nuke e está em gravação. Ele já está incluído na assinatura: quando for publicado, aparece na sua área do aluno sem pagar a mais.</p></details>
-        <details><summary>Qual a diferença entre o mensal e o anual?</summary><p>O conteúdo é o mesmo. No anual você paga R$ 600 de uma vez, o que dá R$ 50 por mês, contra R$ 70 por mês no mensal.</p></details>
+        <details><summary>Qual a diferença entre o mensal e o anual?</summary><p>O conteúdo é o mesmo. No anual você paga R$ 924 de uma vez, o que dá R$ 77 por mês, contra R$ 117 por mês no mensal (cerca de 34% a menos).</p></details>
       </div>
     </div>
   </section>
@@ -412,8 +414,8 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
     <h3 id="ckTitle">Plano anual</h3>
     <div class="sum">
       <div class="row"><span>Plano</span><strong id="ckPlan">Anual</strong></div>
-      <div class="row"><span>Valor</span><strong class="mono" id="ckPrice">R$ 600 por ano</strong></div>
-      <div class="row"><span>Equivale a</span><strong class="mono" id="ckMonth">R$ 50/mês</strong></div>
+      <div class="row"><span>Valor</span><strong class="mono" id="ckPrice">R$ 924 por ano</strong></div>
+      <div class="row"><span>Equivale a</span><strong class="mono" id="ckMonth">R$ 77/mês</strong></div>
     </div>
     <p class="warn">As vendas ainda não estão abertas. Nesta prévia o pagamento não é feito. Você pode conhecer a área do aluno de exemplo.</p>
     <div class="acts"><a class="btn btn-primary" href="login.html">Ver a área do aluno</a><button class="btn btn-ghost" value="close">Fechar</button></div>
@@ -421,7 +423,7 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
 </dialog>
 
 <script>
-const PLANS={mensal:{t:'Plano mensal',p:'R$ 70 por mês',m:'R$ 70/mês'},anual:{t:'Plano anual',p:'R$ 600 por ano',m:'R$ 50/mês'}};
+const PLANS={mensal:{t:'Plano mensal',p:'R$ 117 por mês',m:'R$ 117/mês'},anual:{t:'Plano anual',p:'R$ 924 por ano',m:'R$ 77/mês'}};
 const dlg=document.getElementById('checkout');
 document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{
   const p=PLANS[b.dataset.plan];
