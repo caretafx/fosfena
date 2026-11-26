@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260147';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611260150';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Área do aluno · vfxstudio</title>
@@ -11,11 +11,12 @@ window.FOS_BUILD='202611260147';(function(){try{fetch('version.txt?t='+Date.now(
 <meta name="description" content="vfxstudio, escola de VFX. Prévia da área do aluno.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#18191C">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <style>body{margin:0}</style>
 <link rel="stylesheet" href="assets/fx.css?v=3">
 <link rel="stylesheet" href="assets/cursos.css?v=4">
 <link rel="stylesheet" href="assets/neon.css">
+<link rel="stylesheet" href="assets/marca.css?v=1">
 <style>
 body{background:#141518!important}
 .side{border-right:1px solid rgba(236,234,228,.08)!important;border-top:0!important;border-left:0!important;border-bottom:0!important;box-shadow:none!important}
@@ -466,13 +467,21 @@ a.mcard:hover{background:var(--raise)}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-<symbol id="sim" viewBox="0 0 64 64"><g transform="translate(32 32) rotate(-45) scale(.92) translate(-32 -32)" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M20 26 H50 V38 H20 Z"/><path d="M50 26 H55 A4 6 0 0 1 55 38 H50"/><path d="M20 26 L8 32 L20 38"/><path d="M24 32 H46" stroke-width="1.6" opacity=".55"/><path d="M8 32 L13 29.6 L13 34.4 Z" fill="#E0A84E" stroke="#E0A84E" stroke-width="1.5"/><g stroke="#E0A84E" stroke-width="2.6"><path d="M4.2 32 H0.8"/><path d="M5.6 27.2 L3 24.4"/><path d="M5.6 36.8 L3 39.6"/></g></g></symbol>
+<symbol id="sim" viewBox="0 0 64 64"><g transform="translate(32 32) rotate(-40) scale(.95) translate(-32 -32)" fill="none" stroke="#ECEAE4" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round">
+<path d="M8 31.3 L18 28.1 Q26 27.5 34 28.1 L56 28.6 Q60.6 28.8 60.6 32 Q60.6 35.2 56 35.4 L34 35.9 Q26 36.5 18 35.9 L8 32.7 Z"/>
+<path d="M18 28.4 V35.6 M34 28.4 V35.6 M47 28.8 V35.2" stroke-width=".9" opacity=".55"/>
+<path d="M11 32 H58" stroke-width=".8" opacity=".45"/><path d="M18 30.1 H56" stroke-width=".7" opacity=".3"/><path d="M18 33.9 H56" stroke-width=".7" opacity=".3"/>
+<rect x="21.6" y="29.2" width="4" height="1.6" rx=".8" stroke-width="1"/><rect x="27" y="29.2" width="4" height="1.6" rx=".8" stroke-width="1"/>
+<path d="M3.2 32 L8 31.3 L8 32.7 Z" fill="#E0A84E" stroke="#E0A84E" stroke-width="1.6"/>
+</g><path d="M6.5 38.8 Q6.5 44 11.7 44 Q6.5 44 6.5 49.2 Q6.5 44 1.2999999999999998 44 Q6.5 44 6.5 38.8Z" fill="#E0A84E"/><path d="M16.5 54.1 Q16.5 57.5 19.9 57.5 Q16.5 57.5 16.5 60.9 Q16.5 57.5 13.1 57.5 Q16.5 57.5 16.5 54.1Z" fill="#E0A84E"/>
+<g fill="#E0A84E"><circle cx="55.5" cy="6.5" r="1.1" opacity=".9"/><circle cx="51.5" cy="3.5" r=".8" opacity=".7"/><circle cx="61.5" cy="14" r=".7" opacity=".6"/></g>
+<path d="M56.8 12.2 L62.5 6.5" stroke="#E0A84E" stroke-width="1.3" stroke-linecap="round" opacity=".55" fill="none"/></symbol>
 </defs></svg>
 <div class="app">
   <aside class="side">
     <a class="brand" href="#inicio" aria-label="vfxstudio, início da área do aluno">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#sim"/></svg>
-      <div><b>vfxstudio</b><small>Escola de VFX</small></div>
+      <div><b class="wm">VFX<span>STUDIO</span></b><small>Escola de VFX</small></div>
     </a>
     <nav class="nav" id="nav">
       <a href="#inicio" data-r="inicio"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a>
@@ -646,7 +655,7 @@ function lessonView(l){
       <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
         <div class="stagev">
         <div class="player big">
-          ${yt?`<div class="screen yt"><div id="ytp"></div><iframe class="vin" id="vin" src="vinheta/?v=2&code=${encodeURIComponent(l.module.code+' · AULA '+String(l.n).padStart(2,'0'))}&title=${encodeURIComponent(l.title)}" title="Vinheta Fosfena" aria-hidden="true" tabindex="-1"></iframe><button class="vinplay" id="vinplay" aria-label="Assistir à aula"><span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></button></div>`:`<div class="screen" id="screen" role="button" tabindex="0" aria-label="Reproduzir ou pausar">${vsrc?`<video id="vid" src="${esc(vsrc)}" preload="metadata" playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>`:poster(l,true)+'<span class="sample">Prévia · sem vídeo real</span>'}<span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>`}
+          ${yt?`<div class="screen yt"><div id="ytp"></div><iframe class="vin" id="vin" src="vinheta/?v=3&code=${encodeURIComponent(l.module.code+' · AULA '+String(l.n).padStart(2,'0'))}&title=${encodeURIComponent(l.title)}" title="Vinheta Fosfena" aria-hidden="true" tabindex="-1"></iframe><button class="vinplay" id="vinplay" aria-label="Assistir à aula"><span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></button></div>`:`<div class="screen" id="screen" role="button" tabindex="0" aria-label="Reproduzir ou pausar">${vsrc?`<video id="vid" src="${esc(vsrc)}" preload="metadata" playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>`:poster(l,true)+'<span class="sample">Prévia · sem vídeo real</span>'}<span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>`}
           <div class="controls" ${yt?'hidden':''}>
             <div class="scrub" id="scrub" role="slider" aria-label="Posição do vídeo" tabindex="0"><i id="fill"></i><b id="knob"></b></div>
             <div class="crow">

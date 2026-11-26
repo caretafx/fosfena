@@ -1,0 +1,5 @@
+/* vfxstudio · wordmark em texto (Montserrat: VFX 800, STUDIO 500). Fonte servida pelo próprio site (SIL OFL, assets/fonts/montserrat-LICENSE.txt). */
+@font-face{font-family:"Montserrat";font-weight:500;font-style:normal;font-display:swap;src:url(fonts/montserrat-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Montserrat";font-weight:800;font-style:normal;font-display:swap;src:url(fonts/montserrat-latin-800-normal.woff2) format("woff2")}
+b.wm,.wm{font-family:"Montserrat",var(--f-display,sans-serif)!important;font-weight:800!important;letter-spacing:0!important;text-transform:uppercase}
+.wm span{font-weight:500}

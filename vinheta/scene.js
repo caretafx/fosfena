@@ -9,10 +9,10 @@ const eio=t=>{t=clamp(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;};
 const back=t=>{t=clamp(t);const c=1.9;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2);};
 
 // ---------- layout ----------
-const S=3.6, LW=248*S, L=(1920-LW)/2, Y0=318;
-const TX=L+72*S, TB=Y0+45*S, TS=42*S/1000;
+const S=3.6, LW=286*S, L=(1920-LW)/2, Y0=318;
+const TX=L+74*S, TB=Y0+45*S, TS=34*S/1000;
 const fx=(x,y)=>[TX+x*TS, TB+y*TS];
-const FINAL={x:L+16.4*S,y:Y0+47.6*S,a:-45,k:.92*S};
+const FINAL={x:L+11.04*S,y:Y0+49.59*S,a:-40,k:.95*S}; /* ponta da stylus do logo novo (3.2,32) após rotate(-40) scale(.95) */
 
 // ---------- background grid ----------
 (function(){const g=$('grid');const defs=document.querySelector('defs');
@@ -25,19 +25,17 @@ const FINAL={x:L+16.4*S,y:Y0+47.6*S,a:-45,k:.92*S};
 const glyphG=$('glyphs');glyphG.setAttribute('transform',`translate(${TX} ${TB}) scale(${TS})`);
 GLYPHS.glyphs.forEach(g=>el('path',{d:g.d},glyphG));
 // centerline strokes (font units), in writing order
-const FX=500.3; /* vfxstudio: v f x s t u d i o (Instrument Sans 600, letter-spacing -1.5) */
-const fstem=o=>`M${370+o},-678 C${330+o},-686 ${300+o},-680 ${290+o},-680 C${210+o},-680 ${170+o},-630 ${170+o},-540 L${170+o},25`;
-const fbar=o=>`M${5+o},-461 L${350+o},-461`;
+/* VFXSTUDIO em Montserrat (VFX 800, STUDIO 500), como no logo horizontal; centerlines em unidades da fonte, na ordem da escrita */
 const STROKES=[
- 'M45,-520 L268,-5 L492,-520',
- fstem(FX), fbar(FX),
- 'M870,-515 L1390,5', 'M1385,-515 L870,5',
- 'M1795.3,-385 C1780.3,-450 1720.3,-475 1640.3,-475 C1550.3,-475 1490.3,-440 1490.3,-370 C1490.3,-300 1550.3,-270 1650.3,-250 C1750.3,-230 1802.3,-200 1802.3,-140 C1802.3,-70 1730.3,-35 1645.3,-35 C1550.3,-35 1480.3,-80 1468.3,-150',
- 'M2009,-665 L2009,-140 C2009,-50 2050,-28 2120,-28 L2225,-32', 'M1849,-461 L2219,-461',
- 'M2338,-520 L2338,-200 C2338,-80 2400,-35 2500,-35 C2620,-35 2688,-110 2688,-250', 'M2688,-520 L2688,10',
- 'M3270,-380 C3230,-450 3160,-475 3075,-475 C2950,-475 2875,-380 2875,-255 C2875,-120 2950,-35 3075,-35 C3170,-35 3240,-90 3270,-150', 'M3273,-725 L3273,10',
- 'M3498,-700 L3498,-640', 'M3498,-500 L3498,0',
- 'M4018.0,-430 C3978.0,-472 3938.0,-470 3891.0,-470 C3753.0,-470 3685.0,-370 3685.0,-255 C3685.0,-130 3758.0,-40 3891.0,-40 C4024.0,-40 4097.0,-130 4097.0,-255 C4097.0,-370 4048.0,-440 3958.0,-468',
+ 'M20,-700 L383,0 L746,-700',
+ 'M916,-700 L916,0', 'M916,-625 L1385,-625', 'M916,-335 L1340,-335',
+ 'M1430,-700 L2125,0', 'M2125,-700 L1430,0',
+ 'M2680,-600 C2630,-650 2560,-660 2460,-660 C2320,-660 2240,-600 2240,-520 C2240,-430 2320,-395 2460,-365 C2600,-335 2680,-290 2680,-195 C2680,-90 2590,-38 2450,-38 C2340,-38 2250,-75 2205,-120',
+ 'M2775,-655 L3345,-655', 'M3059,-655 L3059,0',
+ 'M3497,-700 L3497,-290 C3497,-110 3580,-38 3748,-38 C3916,-38 3999,-110 3999,-290 L3999,-700',
+ 'M4294,-700 L4294,0', 'M4294,-655 L4530,-655 C4760,-655 4877,-520 4877,-350 C4877,-180 4760,-45 4530,-45 L4294,-45',
+ 'M5125,-700 L5125,0',
+ 'M5700,-659 C5520,-659 5373,-520 5373,-350 C5373,-180 5520,-41 5700,-41 C5880,-41 6027,-180 6027,-350 C6027,-520 5880,-659 5700,-659',
 ];
 const mG=$('mstrokes');mG.setAttribute('transform',`translate(${TX} ${TB}) scale(${TS})`);
 const SEG=[];let tot=0;
@@ -59,17 +57,18 @@ function writeState(u){ // u 0..1 -> tip pos font units, sets mask
 // ---------- pen ----------
 const GIZ='#ECEAE4',AMB='#E0A84E',DARK='#15131c';
 const pen=$('pen');
-const penBody=el('g',{fill:DARK,stroke:GIZ,'stroke-width':3,'stroke-linejoin':'round','stroke-linecap':'round'},pen);
-el('path',{d:'M20 26 L8 32 L20 38 Z'},penBody);
-el('path',{d:'M50 26 H55 A4 6 0 0 1 55 38 H50 Z'},penBody);
-el('path',{d:'M20 26 H50 V38 H20 Z'},penBody);
-el('path',{d:'M24 32 H46',fill:'none','stroke-width':1.6,opacity:.55},penBody);
+/* stylus do logo vfxstudio (ponta em 3.2,32) */
+const penBody=el('g',{fill:DARK,stroke:GIZ,'stroke-width':2.2,'stroke-linejoin':'round','stroke-linecap':'round'},pen);
+el('path',{d:'M8 31.3 L18 28.1 Q26 27.5 34 28.1 L56 28.6 Q60.6 28.8 60.6 32 Q60.6 35.2 56 35.4 L34 35.9 Q26 36.5 18 35.9 L8 32.7 Z'},penBody);
+el('path',{d:'M18 28.4 V35.6 M34 28.4 V35.6 M47 28.8 V35.2',fill:'none','stroke-width':1,opacity:.55},penBody);
+el('path',{d:'M11 32 H58',fill:'none','stroke-width':.9,opacity:.45},penBody);
+el('rect',{x:21.6,y:29.2,width:4,height:1.6,rx:.8,'stroke-width':1},penBody);el('rect',{x:27,y:29.2,width:4,height:1.6,rx:.8,'stroke-width':1},penBody);
 const tipG=el('g',{},pen);
-const tip=el('path',{d:'M8 32 L13 29.6 L13 34.4 Z',fill:'#8B8E96',stroke:'#8B8E96','stroke-width':1.5,'stroke-linejoin':'round'},tipG);
+const tip=el('path',{d:'M3.2 32 L8 31.3 L8 32.7 Z',fill:'#8B8E96',stroke:'#8B8E96','stroke-width':1.5,'stroke-linejoin':'round'},tipG);
 const litG=el('g',{filter:'url(#glow)',opacity:0},pen);
-el('path',{d:'M8 32 L13 29.6 L13 34.4 Z',fill:AMB,stroke:AMB,'stroke-width':1.5,'stroke-linejoin':'round'},litG);
+el('path',{d:'M3.2 32 L8 31.3 L8 32.7 Z',fill:AMB,stroke:AMB,'stroke-width':1.5,'stroke-linejoin':'round'},litG);
 const rays=el('g',{stroke:AMB,'stroke-width':2.6,'stroke-linecap':'round',fill:'none'},litG);
-const rayEls=[['M4.2 32 H0.8'],['M5.6 27.2 L3 24.4'],['M5.6 36.8 L3 39.6']].map(r=>el('path',{d:r[0]},rays));
+const rayEls=[['M-0.6 32 H-4'],['M0.8 27.2 L-1.8 24.4'],['M0.8 36.8 L-1.8 39.6']].map(r=>el('path',{d:r[0]},rays));
 
 // ---------- hand (pen-local units; tip at 8,32, pen axis +x) ----------
 const HS={fill:DARK,stroke:GIZ,'stroke-width':3,'stroke-linejoin':'round','stroke-linecap':'round'};
@@ -81,7 +80,7 @@ el('path',{d:'M62 34 C58 42 52 48 44 52',fill:'none',stroke:GIZ,'stroke-width':2
 const indexF=el('path',Object.assign({d:'M52 27 C42 20 30 20 21 24 C16 26 16 31 21 31.5 C30 32 40 32 49 37 Z'},HS),hf);
 const thumbF=el('path',Object.assign({d:'M44 58 C37 51 29 44 22.5 39 C18.5 36 15.5 41 19.5 44 C26 49 31 56 36 64 Z'},HS),hf);
 
-function penTransform(p){return `translate(${p.x} ${p.y}) rotate(${p.a}) scale(${p.k}) translate(-8 -32)`;}
+function penTransform(p){return `translate(${p.x} ${p.y}) rotate(${p.a}) scale(${p.k}) translate(-3.2 -32)`;}
 
 // ---------- timeline ----------
 const T={appear:[0.0,.32],write:[.32,1.12],ret:[1.12,1.42],lit:1.45,iris:[1.72,2.25]};
@@ -93,7 +92,7 @@ window.setTransition=v=>{window.TRANSITION=!!v;};
 window.setBg=v=>{$('bg').style.display=v?'':'none';const b=document.getElementById('bgLayer');if(b)b.style.display=v?'':'none';const fh=document.getElementById('fluidHost');if(fh)fh.querySelector('canvas').style.mixBlendMode=v?'screen':'normal';};
 
 const start=(()=>{const p=SEG[0].p.getPointAtLength(0);const [x,y]=fx(p.x,p.y);return {x,y};})();
-const XH=510*TS, WX0=TX-30, WX1=TX+GLYPHS.adv*TS+40, WY=TB-XH*0.55;
+const XH=700*TS, WX0=TX-30, WX1=TX+GLYPHS.adv*TS+40, WY=TB-XH*0.55;
 function sweepPos(u){const x=lerp(WX0,WX1,u);const y=WY+Math.sin(u*Math.PI*2.5)*XH*0.28*(1-u*0.3);return {x,y};}
 let WIPE=0;
 function poseAt(t){
@@ -160,7 +159,7 @@ function render(t){
  const lt=t-T.lit;
  const on=lt>=0?1:0;
  litG.setAttribute('opacity',on);tip.setAttribute('opacity',1-on);
- rayEls.forEach((r,i)=>{const s=lt<0?0:back((lt-i*0.025)/0.16);r.setAttribute('transform',`translate(8 32) scale(${s}) translate(-8 -32)`);});
+ rayEls.forEach((r,i)=>{const s=lt<0?0:back((lt-i*0.025)/0.16);r.setAttribute('transform',`translate(3.2 32) scale(${s}) translate(-3.2 -32)`);});
  const tipPx={x:FINAL.x,y:FINAL.y};
  const fl=$('flareC');fl.setAttribute('cx',tipPx.x);fl.setAttribute('cy',tipPx.y);
  const fo=lt<0?0:(Math.min(1,lt/0.04)*(0.45+0.55*Math.exp(-lt*6)));

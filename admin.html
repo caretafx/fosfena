@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260147';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611260150';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Painel do professor · vfxstudio</title>
@@ -10,12 +10,13 @@ window.FOS_BUILD='202611260147';(function(){try{fetch('version.txt?t='+Date.now(
 <script>FosfenaSessao.exigir('admin');</script>
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#0c0b12">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/fx.css?v=3">
 <link rel="stylesheet" href="assets/cursos.css?v=4">
 <link rel="stylesheet" href="assets/neon.css">
+<link rel="stylesheet" href="assets/marca.css?v=1">
 <link rel="stylesheet" href="assets/organograma.css">
 <style>
 :root{--bg:#0c0b12;--fg:#ECEAE4;--muted:#aeb0b5;--line:rgba(236,234,228,.12);--ambar:#FFB547;--roxo:#9B6BFF;--ciano:#5CC8FF;--ok:#6FD3A0;--danger:#ff7b7b}
@@ -127,7 +128,7 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="aluno.html"><img src="favicon.svg" alt=""><b>vfxstudio</b><span class="tag">Admin</span></a>
+  <a class="brand" href="aluno.html"><img src="favicon.svg?v=2" alt=""><b class="wm">VFX<span>STUDIO</span></b><span class="tag">Admin</span></a>
   <nav>
     <a class="btn" href="aluno.html">← <span>Área do aluno</span></a>
     <button class="btn" id="sair" type="button">Sair</button>

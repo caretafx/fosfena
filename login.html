@@ -2,13 +2,13 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260147';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611260150';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Entrar · vfxstudio</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#18191C">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shantell+Sans:wght@400;600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -52,7 +52,7 @@ input[type=text],input[type=password]{background:rgba(20,21,24,.55)!important}
 <body>
 <div class="split">
   <aside class="art">
-    <a class="brand" href="index.html" aria-label="vfxstudio, página inicial"><img src="assets/logo.svg" alt="vfxstudio" width="165" height="34"></a>
+    <a class="brand" href="index.html" aria-label="vfxstudio, página inicial"><img src="assets/logo.svg?v=2" alt="vfxstudio" width="152" height="34"></a>
     <blockquote><p>Seu próximo plano está esperando no Node Graph.</p><span class="mao">continue de onde parou ↘</span></blockquote>
     <svg class="big" viewBox="0 0 64 64" aria-hidden="true"><g transform="translate(32 32) rotate(-45) scale(.92) translate(-32 -32)" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M20 26 H50 V38 H20 Z"/><path d="M50 26 H55 A4 6 0 0 1 55 38 H50"/><path d="M20 26 L8 32 L20 38"/><path d="M24 32 H46" stroke-width="1.2" opacity=".55"/></g></svg>
   </aside>
