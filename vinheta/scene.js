@@ -12,7 +12,7 @@ const back=t=>{t=clamp(t);const c=1.9;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(
 const S=3.6, LW=286*S, L=(1920-LW)/2, Y0=318;
 const TX=L+74*S, TB=Y0+45*S, TS=34*S/1000;
 const fx=(x,y)=>[TX+x*TS, TB+y*TS];
-const FINAL={x:L+11.04*S,y:Y0+49.59*S,a:-40,k:.95*S}; /* ponta da stylus do logo novo (3.2,32) após rotate(-40) scale(.95) */
+const FINAL={x:L+10.17*S,y:Y0+50.32*S,a:-40,k:.95*S}; /* ponta da stylus do logo novo (2,32) após rotate(-40) scale(.95) */
 
 // ---------- background grid ----------
 (function(){const g=$('grid');const defs=document.querySelector('defs');
@@ -57,18 +57,21 @@ function writeState(u){ // u 0..1 -> tip pos font units, sets mask
 // ---------- pen ----------
 const GIZ='#ECEAE4',AMB='#E0A84E',DARK='#15131c';
 const pen=$('pen');
-/* stylus do logo vfxstudio (ponta em 3.2,32) */
-const penBody=el('g',{fill:DARK,stroke:GIZ,'stroke-width':2.2,'stroke-linejoin':'round','stroke-linecap':'round'},pen);
-el('path',{d:'M8 31.3 L18 28.1 Q26 27.5 34 28.1 L56 28.6 Q60.6 28.8 60.6 32 Q60.6 35.2 56 35.4 L34 35.9 Q26 36.5 18 35.9 L8 32.7 Z'},penBody);
-el('path',{d:'M18 28.4 V35.6 M34 28.4 V35.6 M47 28.8 V35.2',fill:'none','stroke-width':1,opacity:.55},penBody);
-el('path',{d:'M11 32 H58',fill:'none','stroke-width':.9,opacity:.45},penBody);
-el('rect',{x:21.6,y:29.2,width:4,height:1.6,rx:.8,'stroke-width':1},penBody);el('rect',{x:27,y:29.2,width:4,height:1.6,rx:.8,'stroke-width':1},penBody);
+/* stylus do logo vfxstudio, copiada do símbolo (ponta em 2,32) */
+const penBody=el('g',{fill:'none',stroke:GIZ,'stroke-width':1.8,'stroke-linejoin':'round','stroke-linecap':'round'},pen);
+penBody.insertAdjacentHTML('beforeend','<path d="M17 27.8 L33 27.6 L33 36.4 L17 36.2 Z" fill="#ECEAE4" opacity=".14" stroke="none"/>');
+penBody.insertAdjacentHTML('beforeend','<path d="M2.6 32 L4 31.3 C8 30.2 13 28.2 17 27.8 L33 27.6 Q34.5 28.2 36 28 L56 27.4 Q61.5 27.6 61.5 32 Q61.5 36.4 56 36.6 L36 36 Q34.5 35.8 33 36.4 L17 36.2 C13 35.8 8 33.8 4 32.7 Z" fill="#15131c"/>');
+penBody.insertAdjacentHTML('beforeend','<path d="M10 29.3 A1 2.7 0 0 1 10 34.7 M17 27.8 A1.6 4.2 0 0 1 17 36.2 M33 27.6 A1.6 4.4 0 0 1 33 36.4 M36 28 A1.6 4 0 0 1 36 36 M45 27.7 A1.6 4.3 0 0 1 45 36.3 M53 27.5 A1.6 4.5 0 0 1 53 36.5" stroke-width=".8" opacity=".55"/>');
+penBody.insertAdjacentHTML('beforeend','<path d="M5.5 32 H60" stroke-width=".7" opacity=".45"/>');
+penBody.insertAdjacentHTML('beforeend','<path d="M7.5 30.6 Q12 29.6 17 29.5 H58.5 M7.5 33.4 Q12 34.4 17 34.5 H58.5" stroke-width=".6" opacity=".32"/>');
+penBody.insertAdjacentHTML('beforeend','<rect x="19.5" y="29.2" width="11" height="2.6" rx="1.3" stroke-width="1"/>');
+penBody.insertAdjacentHTML('beforeend','<path d="M23.2 29.3 V31.7 M26.8 29.3 V31.7" stroke-width=".7"/>');
 const tipG=el('g',{},pen);
-const tip=el('path',{d:'M3.2 32 L8 31.3 L8 32.7 Z',fill:'#8B8E96',stroke:'#8B8E96','stroke-width':1.5,'stroke-linejoin':'round'},tipG);
+const tip=el('path',{d:'M2 32 L4.2 31.2 L4.2 32.8 Z',fill:'#8B8E96',stroke:'#8B8E96','stroke-width':1.5,'stroke-linejoin':'round'},tipG);
 const litG=el('g',{filter:'url(#glow)',opacity:0},pen);
-el('path',{d:'M3.2 32 L8 31.3 L8 32.7 Z',fill:AMB,stroke:AMB,'stroke-width':1.5,'stroke-linejoin':'round'},litG);
+el('path',{d:'M2 32 L4.2 31.2 L4.2 32.8 Z',fill:AMB,stroke:AMB,'stroke-width':1.5,'stroke-linejoin':'round'},litG);
 const rays=el('g',{stroke:AMB,'stroke-width':2.6,'stroke-linecap':'round',fill:'none'},litG);
-const rayEls=[['M-0.6 32 H-4'],['M0.8 27.2 L-1.8 24.4'],['M0.8 36.8 L-1.8 39.6']].map(r=>el('path',{d:r[0]},rays));
+const rayEls=[['M-1.8 32 H-5.2'],['M-0.4 27.2 L-3 24.4'],['M-0.4 36.8 L-3 39.6']].map(r=>el('path',{d:r[0]},rays));
 
 // ---------- hand (pen-local units; tip at 8,32, pen axis +x) ----------
 const HS={fill:DARK,stroke:GIZ,'stroke-width':3,'stroke-linejoin':'round','stroke-linecap':'round'};
@@ -80,7 +83,7 @@ el('path',{d:'M62 34 C58 42 52 48 44 52',fill:'none',stroke:GIZ,'stroke-width':2
 const indexF=el('path',Object.assign({d:'M52 27 C42 20 30 20 21 24 C16 26 16 31 21 31.5 C30 32 40 32 49 37 Z'},HS),hf);
 const thumbF=el('path',Object.assign({d:'M44 58 C37 51 29 44 22.5 39 C18.5 36 15.5 41 19.5 44 C26 49 31 56 36 64 Z'},HS),hf);
 
-function penTransform(p){return `translate(${p.x} ${p.y}) rotate(${p.a}) scale(${p.k}) translate(-3.2 -32)`;}
+function penTransform(p){return `translate(${p.x} ${p.y}) rotate(${p.a}) scale(${p.k}) translate(-2 -32)`;}
 
 // ---------- timeline ----------
 const T={appear:[0.0,.32],write:[.32,1.12],ret:[1.12,1.42],lit:1.45,iris:[1.72,2.25]};
@@ -159,7 +162,7 @@ function render(t){
  const lt=t-T.lit;
  const on=lt>=0?1:0;
  litG.setAttribute('opacity',on);tip.setAttribute('opacity',1-on);
- rayEls.forEach((r,i)=>{const s=lt<0?0:back((lt-i*0.025)/0.16);r.setAttribute('transform',`translate(3.2 32) scale(${s}) translate(-3.2 -32)`);});
+ rayEls.forEach((r,i)=>{const s=lt<0?0:back((lt-i*0.025)/0.16);r.setAttribute('transform',`translate(2 32) scale(${s}) translate(-2 -32)`);});
  const tipPx={x:FINAL.x,y:FINAL.y};
  const fl=$('flareC');fl.setAttribute('cx',tipPx.x);fl.setAttribute('cy',tipPx.y);
  const fo=lt<0?0:(Math.min(1,lt/0.04)*(0.45+0.55*Math.exp(-lt*6)));

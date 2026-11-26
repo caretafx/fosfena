@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260150';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611260152';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <script>/* F5 sempre volta ao topo, para as animações de entrada tocarem de novo */
 try{ if('scrollRestoration' in history) history.scrollRestoration='manual';
   const nav=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
@@ -15,7 +15,7 @@ addEventListener('load',()=>{ if(!location.hash) scrollTo(0,0); });</script>
 <meta name="description" content="vfxstudio, escola de VFX em português. Curso de Nuke no ar e curso de Flame em breve. Aprenda refazendo cada plano com o footage e o script da aula.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#18191C">
-<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<link rel="icon" href="favicon.svg?v=3" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shantell+Sans:wght@400;600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -202,7 +202,7 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
 footer .tm{display:block;width:100%;font-size:12px;color:var(--muted);opacity:.75;margin-top:6px}
 </style>
 <link rel="stylesheet" href="assets/fx.css?v=3">
-<link rel="stylesheet" href="assets/cursos.css?v=4">
+<link rel="stylesheet" href="assets/cursos.css?v=5">
 <link rel="stylesheet" href="assets/neon.css">
 <style>
 .top{background:rgba(20,21,24,.5)!important;-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%)}
@@ -223,7 +223,7 @@ footer .tm{display:block;width:100%;font-size:12px;color:var(--muted);opacity:.7
 <div class="preview-bar">Prévia do site. As assinaturas ainda não estão abertas.</div>
 <header class="top">
   <div class="container">
-    <a class="brand" href="#topo" aria-label="vfxstudio, início"><img src="assets/logo.svg?v=2" alt="vfxstudio" width="152" height="34"></a>
+    <a class="brand" href="#topo" aria-label="vfxstudio, início"><img src="assets/logo.svg?v=3" alt="vfxstudio" width="152" height="34"></a>
     <nav aria-label="Seções">
       <a href="#como">Como funciona</a>
       <a href="#producoes">Produções</a>
@@ -241,7 +241,7 @@ footer .tm{display:block;width:100%;font-size:12px;color:var(--muted);opacity:.7
 <main id="topo">
   <section class="hero">
     <div class="container hero-in">
-      <span class="eyebrow hero-emb">Escola de VFX · <span data-emb="nk" data-s="20"></span>Nuke e <span data-emb="fl" data-s="20"></span>Flame</span>
+      <span class="eyebrow hero-emb">Escola de VFX · <span data-emb="nk" data-s="26"></span>Nuke e <span data-emb="fl" data-s="26"></span>Flame</span>
       <h1>A melhor comunidade de VFX da <em>América Latina</em>.</h1>
       <span class="mao world">jajá do mundo ↗</span>
       <p class="lead">Aulas em vídeo, em português, com o footage, o script e o resultado de referência de cada exercício. Você assiste, refaz no seu Nuke e envia o seu render para correção.</p>
@@ -411,7 +411,7 @@ footer .tm{display:block;width:100%;font-size:12px;color:var(--muted);opacity:.7
 
 <footer>
   <div class="container">
-    <img src="assets/logo.svg?v=2" alt="vfxstudio" width="116" height="26">
+    <img src="assets/logo.svg?v=3" alt="vfxstudio" width="116" height="26">
     <span>vfxstudio · Escola de VFX · Fundo baseado em <a href="assets/fluid-LICENSE.txt" style="text-decoration:underline">WebGL Fluid Simulation, de Pavel Dobryakov (MIT)</a></span>
     <span class="tm">Nuke é marca registrada da The Foundry Visionmongers Ltd. Flame é marca registrada da Autodesk, Inc. A vfxstudio é uma escola independente, sem vínculo com essas empresas.</span>
   </div>

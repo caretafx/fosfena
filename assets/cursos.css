@@ -31,3 +31,5 @@
 .hero-emb{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
 .hero-emb .emb{margin-left:2px}
 .mhead .emb{filter:drop-shadow(0 0 10px rgba(var(--cc-rgb),.4))}
+/* topo da home: "Escola de VFX · Nuke e Flame" maior (pedido do Mauricio) */
+.hero .eyebrow.hero-emb{font-size:clamp(15px,1.6vw,19px);gap:8px}
