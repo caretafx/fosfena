@@ -23,3 +23,11 @@
 .cside :is(.mods,.mgrid){display:grid!important;grid-template-columns:1fr!important;gap:16px!important;margin:0!important}
 .cside .mods>div{display:contents!important}
 @media (max-width:860px){.csplit{grid-template-columns:1fr}.csplit::after{display:none}.cside.c-fl{border-top:1px solid rgba(155,107,255,.35)}}
+/* emblemas dos cursos (assets/emblemas.js) */
+.emb{flex:none;display:inline-block;vertical-align:middle}
+.course-h .emb{filter:drop-shadow(0 0 12px rgba(var(--cc-rgb),.45))}
+.cside{position:relative;overflow:hidden;isolation:isolate}
+.cside .cwm{position:absolute;right:-50px;bottom:-50px;opacity:.11;z-index:-1;pointer-events:none;transform:rotate(-12deg);filter:blur(.5px)}
+.hero-emb{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hero-emb .emb{margin-left:2px}
+.mhead .emb{filter:drop-shadow(0 0 10px rgba(var(--cc-rgb),.4))}

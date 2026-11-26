@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260112';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611260116';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Área do aluno · Fosfena</title>
@@ -14,7 +14,7 @@ window.FOS_BUILD='202611260112';(function(){try{fetch('version.txt?t='+Date.now(
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>body{margin:0}</style>
 <link rel="stylesheet" href="assets/fx.css?v=3">
-<link rel="stylesheet" href="assets/cursos.css?v=2">
+<link rel="stylesheet" href="assets/cursos.css?v=4">
 <link rel="stylesheet" href="assets/neon.css">
 <style>
 body{background:#141518!important}
@@ -494,6 +494,7 @@ a.mcard:hover{background:var(--raise)}
 <script src="assets/nk101-pratica.js?v=20261125r"></script>
 <script src="assets/pratica.js?v=20261125r"></script>
 <script src="assets/nk101-interativo.js?v=2"></script>
+<script src="assets/emblemas.js?v=2"></script>
 <script src="assets/revisao.js?v=1"></script>
 <script src="assets/gamifica.js?v=2"></script>
 <script src="assets/voz.js?v=20261125r"></script>
@@ -661,7 +662,7 @@ function lessonView(l){
         </div>
         </div>
         <div class="lesson-head">
-          <div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span class="eyebrow">${l.module.code} · Aula ${String(l.n).padStart(2,'0')}</span><h1>${esc(l.title)}</h1></div>
+          <div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span class="eyebrow" style="display:inline-flex;align-items:center;gap:8px">${EMB(l.module.course,22)}${l.module.code} · Aula ${String(l.n).padStart(2,'0')}</span><h1>${esc(l.title)}</h1></div>
           <div class="lh-acts"><button class="btn btn-ghost cine-btn" id="cine" title="Esconde a lista de aulas para o vídeo ocupar a tela">Modo cinema</button>${yt?'<span id="wtSlot"></span>':''}<button class="btn btn-ghost done-btn ${p.done?'is-done':''}" id="done">${p.done?'✓ Concluída':'Marcar como concluída'}</button></div>
         </div>
         <div class="tabs" role="tablist">${tabs.map((t,k)=>`<button role="tab" data-t="${t[0]}" aria-selected="${k===0}">${t[0]==='prova'&&S.quiz[l.id]?`Prova · ${S.quiz[l.id].best}/${S.quiz[l.id].total}`:t[1]}</button>`).join('')}</div>
@@ -958,10 +959,11 @@ function refreshList(l){ const ns=document.getElementById('nextSlot'); if(ns) ns
 
 function modStats(m){ const ls=m.lessons||[]; const done=ls.filter(l=>P(l.id).done).length; const tot=ls.reduce((a,l)=>a+l.dur,0)||1; const w=ls.reduce((a,l)=>a+(P(l.id).done?l.dur:Math.min(P(l.id).pos,l.dur)),0); return {done, n:ls.length, pct:w/tot}; }
 function modCards(){
-  return '<div class="csplit">'+COURSES.map(c=>`<div class="cside ${CC(c.id)}"><div class="course-h ${CC(c.id)}"><span class="code-pill">${c.pill}</span><h2>${c.title}</h2><span class="tag ${c.soon?'':'acc'}">${c.status}</span></div>`+modGrid(COURSE.filter(m=>m.course===c.id), c.id)+'</div>').join('')+'</div>';
+  return '<div class="csplit">'+COURSES.map(c=>`<div class="cside ${CC(c.id)}">${EMB(c.id,300,'cwm')}<div class="course-h ${CC(c.id)}">${EMB(c.id,46)}<h2>${c.title}</h2><span class="tag ${c.soon?'':'acc'}">${c.status}</span></div>`+modGrid(COURSE.filter(m=>m.course===c.id), c.id)+'</div>').join('')+'</div>';
 }
 /* cor do curso: Nuke amarelo/laranja (c-nk), Flame azul/roxo (c-fl), ver assets/cursos.css */
 const CC=id=>id==='flame'?'c-fl':'c-nk';
+const EMB=(id,s,c)=>window.FosEmblema?FosEmblema(id==='flame'?'fl':'nk',s,c):'';
 function modGrid(list, cid){
   return `<div class="mgrid ${cid?CC(cid):''}">${list.map(m=>{ if(m.soon) return `<div class="mcard later"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="code">${m.code}</span><span class="tag">Em breve</span></div><h3>${esc(m.title)}</h3><p>${esc(m.note)}</p></div>`;
     const ms=modStats(m); return `<a class="mcard" href="#${m.id}"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="code">${m.code}</span><span class="eyebrow">${esc(m.tool)}</span></div><h3>${esc(m.title)}</h3><p>${esc(m.desc||'')}</p>
@@ -973,7 +975,7 @@ function modulesView(){
 function moduleView(m){
   const ms=modStats(m);
   return `<div class="crumbs"><a href="#inicio">Início</a><span>›</span><a href="#modulos">Módulos</a><span>›</span><span style="color:var(--fg)">${m.code}</span></div>
-    <div class="mhead ${CC(m.course)}"><div style="display:flex;gap:10px;align-items:center"><span class="code">${m.code}</span><span class="eyebrow">${esc(m.tool)}</span></div><h1>${esc(m.title)}</h1><p>${esc(m.desc||'')}</p>
+    <div class="mhead ${CC(m.course)}"><div style="display:flex;gap:10px;align-items:center">${EMB(m.course,34)}<span class="code">${m.code}</span><span class="eyebrow">${esc(m.tool)}</span></div><h1>${esc(m.title)}</h1><p>${esc(m.desc||'')}</p>
       <div style="display:flex;flex-direction:column;gap:6px;max-width:420px"><div class="bar"><i style="width:${(ms.pct*100).toFixed(1)}%"></i></div><span class="mono" style="font-size:12.5px;color:var(--muted)">${ms.done} de ${ms.n} aulas concluídas · mais aulas em gravação</span></div></div>
     <div class="lessons">${m.lessons.map(l=>{ const pp=P(l.id), pc=pp.done?100:Math.round(pp.pos/l.dur*100); return `
       <a class="lrow ${locked(l)?'is-locked':''}" href="#${l.id}">${stateIcon(l)}
@@ -983,7 +985,7 @@ function moduleView(m){
 }
 function exercises(){
   const ex = LESSONS.filter(l=>l.exercise).map(l=>{ const st=(S.steps[l.id]||[]).filter(Boolean).length; return `
-    <a class="ex" href="#${l.id}">${poster(l)}<div class="b"><span class="eyebrow">${l.module.code} · Aula ${String(l.n).padStart(2,'0')}</span><h3>${esc(l.title)}</h3><p>${esc(l.summary)}</p>
+    <a class="ex" href="#${l.id}">${poster(l)}<div class="b"><span class="eyebrow" style="display:inline-flex;align-items:center;gap:8px">${EMB(l.module.course,22)}${l.module.code} · Aula ${String(l.n).padStart(2,'0')}</span><h3>${esc(l.title)}</h3><p>${esc(l.summary)}</p>
       <div class="foot"><span class="mono" style="font-size:12.5px;color:var(--muted)">${st}/${l.exercise.length} etapas</span><span class="tag ${st===l.exercise.length?'':'acc'}">${st===l.exercise.length?'Pronto p/ enviar':'Em aberto'}</span></div></div></a>`; }).join('');
   const ph = ['Exercícios do Projeto Básico','Scripts de prática do Nuke'].map(t=>`
     <div class="ex ph"><div class="poster"></div><div class="b"><span class="eyebrow">NK102 · Projeto Básico</span><h3>${t}</h3><p>Os scripts da pasta do projeto entram aqui como exercícios, cada um com footage, script inicial e resultado esperado.</p><div class="foot"><span></span><span class="tag">Em breve</span></div></div></div>`).join('');
