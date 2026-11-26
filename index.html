@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260116';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611260120';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <script>/* F5 sempre volta ao topo, para as animações de entrada tocarem de novo */
 try{ if('scrollRestoration' in history) history.scrollRestoration='manual';
   const nav=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
@@ -199,6 +199,7 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
   .top .acts{margin-left:auto}
 }
 @media (max-width:420px){ .top .btn-ghost{display:none} .brand img{height:28px} }
+footer .tm{display:block;width:100%;font-size:12px;color:var(--muted);opacity:.75;margin-top:6px}
 </style>
 <link rel="stylesheet" href="assets/fx.css?v=3">
 <link rel="stylesheet" href="assets/cursos.css?v=4">
@@ -412,6 +413,7 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
   <div class="container">
     <img src="assets/logo.svg" alt="fosfena" width="113" height="26">
     <span>Fosfena · Escola de VFX · Fundo baseado em <a href="assets/fluid-LICENSE.txt" style="text-decoration:underline">WebGL Fluid Simulation, de Pavel Dobryakov (MIT)</a></span>
+    <span class="tm">Nuke é marca registrada da The Foundry Visionmongers Ltd. Flame é marca registrada da Autodesk, Inc. A Fosfena é uma escola independente, sem vínculo com essas empresas.</span>
   </div>
 </footer>
 
@@ -494,7 +496,7 @@ document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',(
   }
   new IntersectionObserver((es,o)=>es.forEach(e=>{ if(e.isIntersecting&&!started){ o.disconnect(); setTimeout(go,300); } }),{threshold:.6}).observe(box);
 })();</script>
-<script src="assets/emblemas.js?v=2"></script>
+<script src="assets/emblemas.js?v=3"></script>
 <script>document.querySelectorAll('[data-emb]').forEach(e=>{ const t=document.createElement('template'); t.innerHTML=FosEmblema(e.dataset.emb,+e.dataset.s||40,e.className); e.replaceWith(t.content.firstChild); });</script>
 </body>
 </html>
