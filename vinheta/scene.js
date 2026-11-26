@@ -9,7 +9,7 @@ const eio=t=>{t=clamp(t);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;};
 const back=t=>{t=clamp(t);const c=1.9;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2);};
 
 // ---------- layout ----------
-const S=3.6, LW=213*S, L=(1920-LW)/2, Y0=318;
+const S=3.6, LW=248*S, L=(1920-LW)/2, Y0=318;
 const TX=L+72*S, TB=Y0+45*S, TS=42*S/1000;
 const fx=(x,y)=>[TX+x*TS, TB+y*TS];
 const FINAL={x:L+16.4*S,y:Y0+47.6*S,a:-45,k:.92*S};
@@ -25,18 +25,19 @@ const FINAL={x:L+16.4*S,y:Y0+47.6*S,a:-45,k:.92*S};
 const glyphG=$('glyphs');glyphG.setAttribute('transform',`translate(${TX} ${TB}) scale(${TS})`);
 GLYPHS.glyphs.forEach(g=>el('path',{d:g.d},glyphG));
 // centerline strokes (font units), in writing order
-const F2=1353.9;
+const FX=500.3; /* vfxstudio: v f x s t u d i o (Instrument Sans 600, letter-spacing -1.5) */
 const fstem=o=>`M${370+o},-678 C${330+o},-686 ${300+o},-680 ${290+o},-680 C${210+o},-680 ${170+o},-630 ${170+o},-540 L${170+o},25`;
 const fbar=o=>`M${5+o},-461 L${350+o},-461`;
 const STROKES=[
- fstem(0), fbar(0),
- 'M760,-430 C720,-472 680,-470 633,-470 C495,-470 427,-370 427,-255 C427,-130 500,-40 633,-40 C766,-40 839,-130 839,-255 C839,-370 790,-440 700,-468',
- 'M1305,-385 C1290,-450 1230,-475 1150,-475 C1060,-475 1000,-440 1000,-370 C1000,-300 1060,-270 1160,-250 C1260,-230 1312,-200 1312,-140 C1312,-70 1240,-35 1155,-35 C1060,-35 990,-80 978,-150',
- fstem(F2), fbar(F2),
- 'M1790,-261 L2180,-261 C2180,-390 2100,-472 1975,-472 C1850,-472 1780,-380 1780,-255 C1780,-120 1860,-38 1980,-38 C2070,-38 2130,-90 2155,-150',
- 'M2353,-520 L2353,15 L2353,-300 C2353,-420 2430,-468 2550,-468 C2660,-468 2712,-410 2712,-320 L2712,15',
- 'M2915,-370 C2940,-440 3010,-472 3085,-472 C3180,-472 3233,-420 3233,-330 L3233,-150 C3233,-60 3245,-20 3255,15',
- 'M3233,-278 L3060,-252 C2950,-235 2903,-190 2903,-130 C2903,-70 2950,-38 3020,-38 C3130,-38 3233,-90 3233,-170',
+ 'M45,-520 L268,-5 L492,-520',
+ fstem(FX), fbar(FX),
+ 'M870,-515 L1390,5', 'M1385,-515 L870,5',
+ 'M1795.3,-385 C1780.3,-450 1720.3,-475 1640.3,-475 C1550.3,-475 1490.3,-440 1490.3,-370 C1490.3,-300 1550.3,-270 1650.3,-250 C1750.3,-230 1802.3,-200 1802.3,-140 C1802.3,-70 1730.3,-35 1645.3,-35 C1550.3,-35 1480.3,-80 1468.3,-150',
+ 'M2009,-665 L2009,-140 C2009,-50 2050,-28 2120,-28 L2225,-32', 'M1849,-461 L2219,-461',
+ 'M2338,-520 L2338,-200 C2338,-80 2400,-35 2500,-35 C2620,-35 2688,-110 2688,-250', 'M2688,-520 L2688,10',
+ 'M3270,-380 C3230,-450 3160,-475 3075,-475 C2950,-475 2875,-380 2875,-255 C2875,-120 2950,-35 3075,-35 C3170,-35 3240,-90 3270,-150', 'M3273,-725 L3273,10',
+ 'M3498,-700 L3498,-640', 'M3498,-500 L3498,0',
+ 'M4018.0,-430 C3978.0,-472 3938.0,-470 3891.0,-470 C3753.0,-470 3685.0,-370 3685.0,-255 C3685.0,-130 3758.0,-40 3891.0,-40 C4024.0,-40 4097.0,-130 4097.0,-255 C4097.0,-370 4048.0,-440 3958.0,-468',
 ];
 const mG=$('mstrokes');mG.setAttribute('transform',`translate(${TX} ${TB}) scale(${TS})`);
 const SEG=[];let tot=0;
@@ -92,7 +93,7 @@ window.setTransition=v=>{window.TRANSITION=!!v;};
 window.setBg=v=>{$('bg').style.display=v?'':'none';const b=document.getElementById('bgLayer');if(b)b.style.display=v?'':'none';const fh=document.getElementById('fluidHost');if(fh)fh.querySelector('canvas').style.mixBlendMode=v?'screen':'normal';};
 
 const start=(()=>{const p=SEG[0].p.getPointAtLength(0);const [x,y]=fx(p.x,p.y);return {x,y};})();
-const XH=510*TS, WX0=TX-30, WX1=TX+3358*TS+40, WY=TB-XH*0.55;
+const XH=510*TS, WX0=TX-30, WX1=TX+GLYPHS.adv*TS+40, WY=TB-XH*0.55;
 function sweepPos(u){const x=lerp(WX0,WX1,u);const y=WY+Math.sin(u*Math.PI*2.5)*XH*0.28*(1-u*0.3);return {x,y};}
 let WIPE=0;
 function poseAt(t){

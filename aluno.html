@@ -2,13 +2,13 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260140';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611260147';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Área do aluno · Fosfena</title>
+<title>Área do aluno · vfxstudio</title>
 <script src="assets/sessao.js"></script>
 <script>FosfenaSessao.exigir();</script>
-<meta name="description" content="Fosfena, escola de VFX. Prévia da área do aluno.">
+<meta name="description" content="vfxstudio, escola de VFX. Prévia da área do aluno.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#18191C">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -470,9 +470,9 @@ a.mcard:hover{background:var(--raise)}
 </defs></svg>
 <div class="app">
   <aside class="side">
-    <a class="brand" href="#inicio" aria-label="Fosfena, início da área do aluno">
+    <a class="brand" href="#inicio" aria-label="vfxstudio, início da área do aluno">
       <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#sim"/></svg>
-      <div><b>fosfena</b><small>Escola de VFX</small></div>
+      <div><b>vfxstudio</b><small>Escola de VFX</small></div>
     </a>
     <nav class="nav" id="nav">
       <a href="#inicio" data-r="inicio"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></a>
@@ -646,7 +646,7 @@ function lessonView(l){
       <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
         <div class="stagev">
         <div class="player big">
-          ${yt?`<div class="screen yt"><div id="ytp"></div><iframe class="vin" id="vin" src="vinheta/?v=1&code=${encodeURIComponent(l.module.code+' · AULA '+String(l.n).padStart(2,'0'))}&title=${encodeURIComponent(l.title)}" title="Vinheta Fosfena" aria-hidden="true" tabindex="-1"></iframe><button class="vinplay" id="vinplay" aria-label="Assistir à aula"><span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></button></div>`:`<div class="screen" id="screen" role="button" tabindex="0" aria-label="Reproduzir ou pausar">${vsrc?`<video id="vid" src="${esc(vsrc)}" preload="metadata" playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>`:poster(l,true)+'<span class="sample">Prévia · sem vídeo real</span>'}<span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>`}
+          ${yt?`<div class="screen yt"><div id="ytp"></div><iframe class="vin" id="vin" src="vinheta/?v=2&code=${encodeURIComponent(l.module.code+' · AULA '+String(l.n).padStart(2,'0'))}&title=${encodeURIComponent(l.title)}" title="Vinheta Fosfena" aria-hidden="true" tabindex="-1"></iframe><button class="vinplay" id="vinplay" aria-label="Assistir à aula"><span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></button></div>`:`<div class="screen" id="screen" role="button" tabindex="0" aria-label="Reproduzir ou pausar">${vsrc?`<video id="vid" src="${esc(vsrc)}" preload="metadata" playsinline style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video>`:poster(l,true)+'<span class="sample">Prévia · sem vídeo real</span>'}<span class="bigplay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg></span></div>`}
           <div class="controls" ${yt?'hidden':''}>
             <div class="scrub" id="scrub" role="slider" aria-label="Posição do vídeo" tabindex="0"><i id="fill"></i><b id="knob"></b></div>
             <div class="crow">
@@ -786,7 +786,7 @@ function quizPanel(l, el){
 }
 function commCta(){
   return `<a class="comm-cta" href="#comunidade"><div style="display:flex;gap:14px;align-items:center"><svg class="ic2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-4 3v-3H6a2 2 0 0 1-2-2z"/><path d="M8 9h8M8 12.5h5"/></svg>
-    <div><strong>Comunidade Fosfena</strong><div style="color:var(--muted);font-size:14px">Tire dúvidas, mostre seus renders e converse com outros alunos.</div></div></div><span class="btn btn-ghost">Abrir a comunidade</span></a>`;
+    <div><strong>Comunidade vfxstudio</strong><div style="color:var(--muted);font-size:14px">Tire dúvidas, mostre seus renders e converse com outros alunos.</div></div></div><span class="btn btn-ghost">Abrir a comunidade</span></a>`;
 }
 
 /* ---------- Comunidade: chat interno com canais (prévia salva neste navegador) ---------- */
@@ -809,7 +809,7 @@ const VOICE = [
 ];
 function voiceUrl(v){ const n=JSON.stringify(me().name); return `https://meet.jit.si/${v.jitsi}#config.startWithVideoMuted=true&config.startAudioOnly=true&config.prejoinConfig.enabled=true&config.disableDeepLinking=true&userInfo.displayName=${encodeURIComponent(n)}`; }
 const CKEY='fosfena-chat-v1';
-const PROF={name:'Fosfena', role:'Professor'};
+const PROF={name:'vfxstudio', role:'Professor'};
 const t0=Date.now();
 const SAMPLE = {
   'avisos':[{id:'s1',a:PROF,t:t0-86400e3*2,x:'Bem-vindos à comunidade! As aulas 1 a 4 do NK101 já estão no ar, com prova no final de cada uma. Novas aulas toda semana.'}],
@@ -839,8 +839,8 @@ function msgHTML(m, list){
   </div><div class="mact"><button data-act="reply">Responder</button><button data-act="r" data-r="🔥">🔥</button><button data-act="r" data-r="👏">👏</button><button data-act="r" data-r="👀">👀</button></div></div>`;
 }
 function community(){
-  return `<h1 class="sr-only">Comunidade Fosfena</h1>
-    <div class="chat"><nav class="chans" aria-label="Canais"><div class="cbrand"><b>Comunidade Fosfena</b><span>Prévia</span></div><span class="lbl">Canais</span>${CHANNELS.map(c=>`<button data-c="${c.id}"><i>#</i>${c.name}<span class="cnt">${(CH.msgs[c.id]||[]).length||''}</span></button>`).join('')}<span class="lbl" style="margin-top:10px">Voz</span>${VOICE.map(v=>`<button class="v${v.kind==='live'?' lv':''}" data-v="${v.id}"><i>${v.kind==='live'?'🔴':'🔊'}</i>${esc(v.name)}<span class="vc" data-vc="${v.id}"></span></button><div class="vwho" data-vw="${v.id}"></div>`).join('')}<p class="cnote">Prévia: as mensagens de exemplo são ilustrativas e o que você envia fica só neste navegador. <button class="mono" id="chatReset">Limpar</button></p></nav>
+  return `<h1 class="sr-only">Comunidade vfxstudio</h1>
+    <div class="chat"><nav class="chans" aria-label="Canais"><div class="cbrand"><b>Comunidade vfxstudio</b><span>Prévia</span></div><span class="lbl">Canais</span>${CHANNELS.map(c=>`<button data-c="${c.id}"><i>#</i>${c.name}<span class="cnt">${(CH.msgs[c.id]||[]).length||''}</span></button>`).join('')}<span class="lbl" style="margin-top:10px">Voz</span>${VOICE.map(v=>`<button class="v${v.kind==='live'?' lv':''}" data-v="${v.id}"><i>${v.kind==='live'?'🔴':'🔊'}</i>${esc(v.name)}<span class="vc" data-vc="${v.id}"></span></button><div class="vwho" data-vw="${v.id}"></div>`).join('')}<p class="cnote">Prévia: as mensagens de exemplo são ilustrativas e o que você envia fica só neste navegador. <button class="mono" id="chatReset">Limpar</button></p></nav>
       <section class="croom" id="croom"><header class="chead"><b id="chName"></b><span id="chDesc"></span></header><div class="msgs" id="msgs" aria-live="polite"></div><div class="voice" id="voice" hidden></div>
         <form class="compose" id="compose"><div id="cxtra"></div><div class="crow2">
           <label class="iconbtn" title="Anexar imagem" aria-label="Anexar imagem"><input type="file" accept="image/*" id="cfile" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5l-8.5 8.5a5 5 0 0 1-7-7L14 5.5a3.4 3.4 0 0 1 4.8 4.8l-8.4 8.4a1.7 1.7 0 0 1-2.4-2.4l7.7-7.7"/></svg></label>
@@ -970,7 +970,7 @@ function modGrid(list, cid){
       <div class="mfoot"><div class="bar"><i style="width:${(ms.pct*100).toFixed(1)}%"></i></div><span class="mono" style="font-size:12.5px;color:var(--muted)">${ms.done} de ${ms.n} aulas · ${Math.round(ms.pct*100)}%</span></div></a>`; }).join('')}</div>`;
 }
 function modulesView(){
-  return `<div style="display:flex;flex-direction:column;gap:6px"><span class="eyebrow">Fosfena</span><h1 style="font-size:34px">Cursos</h1><p style="margin:0;color:var(--muted);max-width:60ch">Nuke e Flame são cursos separados, cada um com os seus módulos. Os códigos NK são do curso de Nuke e os FL, do curso de Flame. Novos módulos aparecem aqui assim que são publicados.</p></div>${modCards()}`;
+  return `<div style="display:flex;flex-direction:column;gap:6px"><span class="eyebrow">vfxstudio</span><h1 style="font-size:34px">Cursos</h1><p style="margin:0;color:var(--muted);max-width:60ch">Nuke e Flame são cursos separados, cada um com os seus módulos. Os códigos NK são do curso de Nuke e os FL, do curso de Flame. Novos módulos aparecem aqui assim que são publicados.</p></div>${modCards()}`;
 }
 function moduleView(m){
   const ms=modStats(m);

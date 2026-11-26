@@ -32,7 +32,7 @@
     async publicar(id, canal){ const d=await get('duvidas',id); if(!d) return;
       const t=Date.now(), qid='anon-'+d.id, x=`${d.aulaTitulo?`[${d.aulaTitulo} · ${tc(d.tempo)}] `:''}${d.texto}`;
       const msgs=[{canal, m:{id:qid, a:{name:'Dúvida anônima'}, t, x}}];
-      if(d.resposta) msgs.push({canal, m:{id:qid+'-r', a:{name:'Fosfena', role:'Professor'}, t:t+1000, x:d.resposta, r:qid}});
+      if(d.resposta) msgs.push({canal, m:{id:qid+'-r', a:{name:'vfxstudio', role:'Professor'}, t:t+1000, x:d.resposta, r:qid}});
       try{ const box=JSON.parse(localStorage.getItem(INBOX)||'[]'); localStorage.setItem(INBOX, JSON.stringify(box.concat(msgs))); }catch(e){}
       d.publicada={canal, em:new Date().toISOString()}; d.status='publicada'; return put('duvidas',d); },
     apagarDuvida:id=>del('duvidas',id),

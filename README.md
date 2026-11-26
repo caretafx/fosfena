@@ -1,6 +1,6 @@
-# Fosfena
+# vfxstudio (antes Fosfena)
 
-Site da Fosfena, escola de VFX (Nuke e Flame). Publicado pelo GitHub Pages em https://caretafx.github.io/fosfena/
+Site da vfxstudio, escola de VFX (Nuke e Flame). Publicado pelo GitHub Pages em https://caretafx.github.io/fosfena/
 
 - `index.html`: página de venda, com módulos, planos e perguntas frequentes
 - `login.html`: tela de entrada da área do aluno

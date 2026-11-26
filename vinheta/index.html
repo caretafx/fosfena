@@ -1,5 +1,5 @@
 <!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vinheta Fosfena</title>
+<title>Vinheta vfxstudio</title>
 <!-- Vinheta de abertura das aulas, rodando ao vivo (SVG + fluido WebGL).
      Fica dentro de um iframe por cima do player. Parâmetros: ?code=NK101%20·%20AULA%2001&title=Como%20instalar%20o%20Nuke
      Conversa com a página da aula por postMessage: recebe {vin:'play'}, envia {vin:'ready'|'reveal'|'done'}. -->
@@ -35,7 +35,7 @@ svg{display:block;position:absolute;left:0;top:0}
 </svg></div>
 <svg id="ringSvg" xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" style="position:absolute;left:0;top:0;pointer-events:none"><defs><filter id="rglow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g filter="url(#rglow)"><circle id="ring2" fill="none" stroke="#9B6BFF" opacity="0"/><circle id="ring" fill="none" stroke="#FFB547" opacity="0"/></g></svg>
 </div>
-<script src="fluid_vinheta.js"></script><script src="glyphs.js"></script><script src="scene.js"></script>
+<script src="fluid_vinheta.js"></script><script src="glyphs.js?v=2"></script><script src="scene.js?v=2"></script>
 <script>
 (function(){
   const q=new URLSearchParams(location.search), stage=document.getElementById('stage');
