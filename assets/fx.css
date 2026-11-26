@@ -65,6 +65,19 @@ body{background:#141518}
 .fx-cur{transition:opacity .2s}
 .fx-cur.off,.fx-ring.off{opacity:0}
 .fx-cur,.fx-ring{will-change:transform}
+/* cursor "track": igual ao marcador de tracking do Nuke (cruz no centro, quadrado do padrão e área de busca tracejada) */
+.fx-cur{width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:0;background:
+  linear-gradient(#E0A84E,#E0A84E) center/1.5px 100% no-repeat,linear-gradient(#E0A84E,#E0A84E) center/100% 1.5px no-repeat;box-shadow:none;filter:drop-shadow(0 0 4px rgba(224,168,78,.8))}
+.fx-ring{width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:0;border:1.5px solid rgba(224,168,78,.9);box-shadow:0 0 10px rgba(224,168,78,.25)}
+.fx-ring::before{content:'';position:absolute;inset:-12px;border:1px dashed rgba(224,168,78,.45);transition:inset .25s,border-color .25s}
+.fx-ring::after{content:'';position:absolute;left:-3px;top:-3px;width:5px;height:5px;background:#E0A84E;box-shadow:28px 0 #E0A84E,0 28px #E0A84E,28px 28px #E0A84E;opacity:.9;transition:box-shadow .25s}
+.fx-ring.big{width:46px;height:46px;margin:-23px 0 0 -23px;background:rgba(224,168,78,.06);border-color:#E0A84E}
+.fx-ring.big::before{inset:-16px;border-color:rgba(224,168,78,.7)}
+.fx-ring.big::after{box-shadow:44px 0 #E0A84E,0 44px #E0A84E,44px 44px #E0A84E}
+.fx-ring.down{width:22px;height:22px;margin:-11px 0 0 -11px}
+.fx-ring.down::before{inset:-6px}
+.fx-ring.down::after{box-shadow:20px 0 #E0A84E,0 20px #E0A84E,20px 20px #E0A84E}
+
 body.fx-off .aura i{animation-play-state:paused}body.fx-off .aura canvas,body.fx-off .aura .fx-fluid{display:none}
 
 /* faixa correndo */
