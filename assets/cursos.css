@@ -1,0 +1,25 @@
+/* Fosfena · cor de cada curso: Nuke em amarelo/laranja, Flame em azul/roxo.
+   Use a classe c-nk ou c-fl no bloco do curso (cabeçalho, grade de módulos, aula). */
+.c-nk{--cc:#FFB547;--cc2:#FF8A3D;--cc-rgb:255,181,71}
+.c-fl{--cc:#9B6BFF;--cc2:#5CC8FF;--cc-rgb:155,107,255}
+:is(.course-h,.mods,.mgrid,.mhead).c-nk .code-pill,:is(.course-h,.mods,.mgrid,.mhead).c-fl .code-pill{border-color:rgba(var(--cc-rgb),.65)!important;color:var(--cc)!important;background:rgba(var(--cc-rgb),.08);box-shadow:0 0 16px -4px rgba(var(--cc-rgb),.55)}
+.course-h.c-nk h2,.course-h.c-nk h3,.course-h.c-fl h2,.course-h.c-fl h3{background:linear-gradient(90deg,var(--cc),var(--cc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+:is(.course-h,.mods,.mgrid,.mhead).c-nk .tag,:is(.course-h,.mods,.mgrid,.mhead).c-fl .tag{border-color:rgba(var(--cc-rgb),.55)!important;color:var(--cc)!important}
+:is(.course-h,.mods,.mgrid,.mhead).c-nk .tag.acc,:is(.course-h,.mods,.mgrid,.mhead).c-fl .tag.acc{background:rgba(var(--cc-rgb),.12)}
+:is(.course-h,.mods,.mgrid,.mhead).c-nk .code,:is(.course-h,.mods,.mgrid,.mhead).c-fl .code{color:var(--cc)!important;border-color:rgba(var(--cc-rgb),.5)!important}
+:is(.course-h,.mods,.mgrid,.mhead).c-nk .eyebrow,:is(.course-h,.mods,.mgrid,.mhead).c-fl .eyebrow{color:var(--cc)!important}
+.c-nk .mod,.c-fl .mod,.c-nk .mcard,.c-fl .mcard{border-top:2px solid rgba(var(--cc-rgb),.75)!important;transition:box-shadow .3s,border-color .3s}
+.c-nk .mod.soon,.c-fl .mod.soon,.c-nk .mcard.later,.c-fl .mcard.later{border-top-style:dashed!important;border-color:rgba(var(--cc-rgb),.35)!important}
+.c-nk .mod:hover,.c-fl .mod:hover,.c-nk a.mcard:hover,.c-fl a.mcard:hover{box-shadow:0 0 34px -12px rgba(var(--cc-rgb),.8)}
+:is(.course-h,.mods,.mgrid,.mhead).c-nk .bar i,:is(.course-h,.mods,.mgrid,.mhead).c-fl .bar i{background:linear-gradient(90deg,var(--cc2),var(--cc))!important}
+/* aula: o destaque da página segue o curso */
+.lesson.c-fl{--accent:#9B6BFF}
+.lesson.c-nk{--accent:#E0A84E}
+/* Nuke e Flame lado a lado, cada um com o seu ambiente (tela dividida ao meio) */
+.csplit{display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(236,234,228,.1);border-radius:22px;overflow:hidden;position:relative;background:rgba(12,11,18,.35)}
+.csplit::after{content:'';position:absolute;top:24px;bottom:24px;left:50%;width:1px;background:linear-gradient(transparent,rgba(255,181,71,.5) 30%,rgba(155,107,255,.5) 70%,transparent)}
+.cside{padding:clamp(20px,3vw,34px);display:flex;flex-direction:column;gap:18px;min-width:0;background:radial-gradient(120% 70% at 50% 0%,rgba(var(--cc-rgb),.16),transparent 70%)}
+.cside .course-h{margin:0!important}
+.cside :is(.mods,.mgrid){display:grid!important;grid-template-columns:1fr!important;gap:16px!important;margin:0!important}
+.cside .mods>div{display:contents!important}
+@media (max-width:860px){.csplit{grid-template-columns:1fr}.csplit::after{display:none}.cside.c-fl{border-top:1px solid rgba(155,107,255,.35)}}

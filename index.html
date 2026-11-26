@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260106';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611260112';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <script>/* F5 sempre volta ao topo, para as animações de entrada tocarem de novo */
 try{ if('scrollRestoration' in history) history.scrollRestoration='manual';
   const nav=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
@@ -201,6 +201,7 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
 @media (max-width:420px){ .top .btn-ghost{display:none} .brand img{height:28px} }
 </style>
 <link rel="stylesheet" href="assets/fx.css?v=3">
+<link rel="stylesheet" href="assets/cursos.css?v=2">
 <link rel="stylesheet" href="assets/neon.css">
 <style>
 .top{background:rgba(20,21,24,.5)!important;-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%)}
@@ -295,10 +296,12 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
   <section class="blk" id="modulos">
     <div class="container">
       <div class="head"><span class="eyebrow">Cursos</span><h2>Dois cursos, um para cada ferramenta</h2><p>Nuke e Flame são cursos separados, cada um com os seus módulos, e a assinatura dá acesso aos dois. O de Nuke já está no ar e cresce toda semana. O de Flame está em gravação.</p></div>
-      <div class="course-h"><span class="code-pill">NK</span><h3>Curso de Nuke</h3><span class="tag acc">No ar</span></div>
-      <div class="mods">
+      <div class="csplit">
+      <div class="cside c-nk">
+      <div class="course-h c-nk"><span class="code-pill">NK</span><h3>Curso de Nuke</h3><span class="tag acc">No ar</span></div>
+      <div class="mods c-nk">
         <article class="mod">
-          <div class="mod-top"><span class="eyebrow" style="color:var(--accent)">NK101 · Nuke</span><span class="meta">4 aulas publicadas · mais em gravação</span></div>
+          <div class="mod-top"><span class="eyebrow">NK101 · Nuke</span><span class="meta">4 aulas publicadas · mais em gravação</span></div>
           <h3>Fundamentos do Nuke</h3>
           <p style="color:var(--muted)">Tudo o que você precisa para começar a trabalhar no Nuke, da instalação aos primeiros trabalhos de comp.</p>
           <ul><li><span>Como instalar o Nuke</span><span>9:59</span></li><li><span>Iniciando o Nuke</span><span>19:49</span></li><li><span>Primeiro apagamento</span><span>40:13</span></li><li><span>Primeira tela</span><span>26:25</span></li></ul>
@@ -311,13 +314,17 @@ dialog::backdrop{background:rgba(10,10,12,.7)}
         </article>
         </div>
       </div>
-      <div class="course-h" style="margin-top:44px"><span class="code-pill">FL</span><h3>Curso de Flame</h3><span class="tag">Em breve</span></div>
-      <div class="mods">
+      </div>
+      <div class="cside c-fl">
+      <div class="course-h c-fl"><span class="code-pill">FL</span><h3>Curso de Flame</h3><span class="tag">Em breve</span></div>
+      <div class="mods c-fl">
         <article class="mod soon">
           <div class="mod-top"><span class="eyebrow">FL101 · Flame</span><span class="tag">Em breve</span></div>
           <h3>Fundamentos do Flame</h3>
           <p>Primeiros passos no Flame, o finishing usado em publicidade e TV. Aulas em gravação.</p>
         </article>
+      </div>
+      </div>
       </div>
     </div>
   </section>
