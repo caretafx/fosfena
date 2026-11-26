@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>/* atualiza sozinho: se esta página estiver velha no cache, recarrega com a versão nova (ver scripts/versao.sh) */
-window.FOS_BUILD='202611260120';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
+window.FOS_BUILD='202611260135';(function(){try{fetch('version.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(v){v=(v||'').trim();if(!v||v===window.FOS_BUILD)return;var k='fosv-'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');var u=new URL(location.href);u.searchParams.set('v',v);location.replace(u.href)}).catch(function(){})}catch(e){}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Painel do professor · Fosfena</title>
@@ -171,7 +171,7 @@ textarea:focus,.drop:focus-visible{outline:2px solid var(--ambar);outline-offset
 </aside>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="assets/emblemas.js?v=3"></script>
+<script src="assets/emblemas.js?v=4"></script>
 <script>document.querySelectorAll('[data-emb]').forEach(e=>{ const t=document.createElement('template'); t.innerHTML=FosEmblema(e.dataset.emb,+e.dataset.s||40,e.className); e.replaceWith(t.content.firstChild); });</script>
 <script src="assets/revisao.js?v=1"></script>
 <script src="assets/nk101-plano.js"></script>
